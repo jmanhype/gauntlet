@@ -98,7 +98,6 @@ configuration for every run:
 ```
 $ gauntlet gate candidate-42 --profile profiles/sol-momentum-v3.toml
 resolved config: sha256:9f31…  (2 overrides: fee_bps=25, horizon=12)
-``````
 
 ## 5. Missing / stale data — dependency-aware fail-closed
 
