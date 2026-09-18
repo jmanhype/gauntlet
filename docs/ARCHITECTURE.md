@@ -91,11 +91,11 @@ gauntlet/
     contracts/                   # schemas, canonical JSON, hashes, manifests
     ledger/                      # append-only ledger and events.jsonl
     data/                        # descriptors, dependency graph, quarantine
-  policy/                      # deterministic gates and policy manifests
-  judge/
-  lab/
-  model/
-  audit/
+    policy/                    # deterministic gates and policy manifests
+    judge/
+    lab/
+    model/
+    audit/
       collectors/                # Bitquery, Hyperliquid, and Scarlett adapters
     risk/
     scoreboard/
@@ -1043,7 +1043,7 @@ never print a fabricated score or silently continue with substituted data.
 |---|---|
 | Host sleeps/reboots | Commands are rerunnable; unfinished runs remain incomplete and write-once outputs are not overwritten |
 | API 429/Cloudflare/rate limit | Collector backs off, records attempts, leaves existing snapshots unchanged |
-| Corrupt/stale source | Descriptor becomes invalid; dependent gates `BLOCKED`; quarantine event records scope |
+| Corrupt/stale source | New superseding descriptor version records the invalid/quarantined state; original bytes stay immutable and dependent gates `BLOCKED` |
 | Duplicate collector snapshot | New immutable snapshot; merge policy is explicit and provenance-preserving |
 | Nonempty output directory | Run refuses overwrite; operator chooses a new run ID |
 | Model sampling nondeterminism | Fixed seed/sample count or declared tolerance; otherwise replay fails |
