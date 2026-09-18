@@ -730,26 +730,45 @@ snapshots; only collectors make network calls.
 ### 11.2 Operation trace
 
 Every autonomous or interface operation appends canonical JSONL to
-`data/ledger/events.jsonl`:
+`data/ledger/events.jsonl`. Like the trial ledger, the event stream is
+hash-chained and append-only:
 
 ```json
 {
   "event_id": "stable-random-or-ulid",
+  "schema_version": "1",
   "timestamp_utc": "...",
   "actor": {"kind": "human|agent|mcp|collector", "identity": "..."},
   "verb": "gate.evaluate",
   "subject": "candidate/track/artifact id",
   "args_hash": "sha256:...",
   "output_hash": "sha256:...",
+  "payload_hash": "sha256:...",
+  "previous_head_hash": "sha256:...",
+  "event_hash": "sha256:...",
   "status": "OK|ERROR",
   "error_class": null,
   "trace": {"run_id": "...", "span_id": "..."}
 }
 ```
 
+`payload_hash` covers the event body without integrity fields;
+`previous_head_hash` names the prior event hash; `event_hash` covers the
+canonical envelope with `event_hash` omitted. Appends are serialized under the
+local ledger lock, and a regenerable `events-head.json` records the current
+head and byte range.
+
+Every consequential trial, dependency, gate, snapshot, collector, or owner
+operation also anchors the current event head in its trial-ledger or snapshot
+manifest entry. For an operation with no trial entry, the service appends a
+periodic `events.anchor` entry referencing the event head. Verification recomputes
+both chains and rejects any missing, reordered, rewritten, or unanchored head.
+
 The trace is evidence of action, not a replacement for the trial ledger or
-Decision Snapshot. It never contains secret values, full external payloads, or
-unredacted credentials.
+Decision Snapshot. It never contains secret values, full external payloads,
+signatures, private owner material, or unredacted credentials. Authorization
+failure events record only the verifier, key ID when supplied, failure class,
+subject, and nonce/timestamp bounds.
 
 ### 11.3 Reports and Phase 2/3 boundaries
 
@@ -829,6 +848,62 @@ artifact files rather than passing live objects across the boundary.
 - Raw external payloads are treated as untrusted data. Parsing is strict, and
   prompt-like text in a market snapshot cannot alter policy.
 
+### 14.1 Owner identity and authorization boundary
+
+GAUNTLET distinguishes structural caller identity from claimed identity. There
+are exactly two Phase 1 authority contexts:
+
+| Context | Established by | Allowed `actor.kind` |
+|---|---|---|
+| Owner CLI | Ed25519 signature made by the local owner private key | `human` |
+| Agent/MCP/service automation | Wrapper-generated untrusted-but-labeled capability context | `agent` |
+
+The owner key ceremony is local-only. The private key lives outside
+`GAUNTLET_DATA_ROOT`, normally under `~/.gauntlet/owner-key.pem`, with mode
+`0600`; the corresponding public key and key ID live in an immutable local
+trust manifest. Rotating or adding a key creates a new manifest version and
+ledger entry; it never rewrites historical verification metadata. No token or
+private key is accepted as an MCP argument, environment value passed through an
+agent, report field, or event payload.
+
+An owner-only request is a canonical action envelope containing subject IDs,
+decision vocabulary, reason, policy version, prior snapshot hash where
+applicable, timestamp, nonce, review mode, and reveal-log hash. The owner CLI
+signs that envelope locally. Core services verify the signature, key ID, nonce,
+timestamp window, decision vocabulary, policy disposition, and subject hash
+before reading the action as authorized.
+
+Agent/MCP callers receive a process-generated capability context that
+structurally sets `actor.kind=agent` and an installation/tool identity. The
+service ignores any client-supplied `actor.kind=human`, owner key ID, or
+signature claim from that path. There is no allowlist that can promote an MCP
+tool to human authority in Phase 1.
+
+Owner-only operations are:
+
+- recording any owner decision vocabulary entry (`CONTINUE`, `HOLD`,
+  `QUARANTINE`, `RELEASE`, `KILL`, `RENEW`, `PROMOTE`, `OVERRIDE`);
+- overriding `FAIL` through a permitted documented exception class;
+- authorizing a multi-axis experiment or sub-200 Verified exception;
+- renewing or changing an experiment-family budget;
+- releasing quarantine after repaired dependencies and forensics;
+- changing active risk, evidence, transition, or alert policy;
+- approving material data-cost escalation;
+- declaring or changing live eligibility. Phase 1 exposes no live-activation
+  command, and the RED real-money boundary remains unchanged.
+
+Invalid, missing, expired, replayed, wrong-subject, wrong-key, or otherwise
+unverifiable owner authorization fails closed: the action is not applied, the
+snapshot/gate state is unchanged, and a non-sensitive authorization-failure event
+is appended. Agents may prepare a recommendation or unsigned draft, but cannot
+write an owner decision.
+
+Owner decisions do not mutate the original Decision Snapshot. `record_owner_decision`
+writes a new immutable `owner-decision.json` in the snapshot directory, linked by
+the exact prior `snapshot_hash`, signed-action hash, and decision fields. The
+audit-bundle manifest includes this extension; the original snapshot bytes remain
+byte-for-byte unchanged.
+
 Integrity controls include canonical schemas, SHA-256, hash chaining, exclusive
 creation, replay verification, and durable backups. They detect accidental or
 ordinary tampering; they do not by themselves defeat a fully privileged local
@@ -841,6 +916,7 @@ attacker.
 Every command emits a run ID and records events. Operational checks cover:
 
 - ledger head/hash validity and byte counts;
+- event-chain head/hash validity and trial/snapshot anchor consistency;
 - artifact descriptor/quality/freshness summary;
 - dependency graph blockers;
 - collector success/backoff/API cost;
@@ -880,6 +956,9 @@ Architecture-level tests are contract tests, not only unit tests:
 
 1. **Ledger immutability:** append succeeds, rewrite/delete verification fails,
    old snapshots still resolve their original entry.
+   **Event integrity:** append succeeds, rewrite/delete/reorder fails, every
+   consequential operation records the event head, and forged
+   `actor.kind=human` agent traffic is rejected without state change.
 2. **Provenance round trip:** build a synthetic trial → source → config →
    transformation → run → panel → snapshot chain; delete one artifact and prove
    reconstruction blocks.
@@ -908,6 +987,15 @@ Architecture-level tests are contract tests, not only unit tests:
 14. **Factory isolation:** core import graph contains no factory dependency.
 15. **Export self-containment:** an audit bundle verifies after the original
     data root is unavailable.
+
+Additional authorization and integrity scenarios must prove:
+
+- a valid local owner signature records `actor.kind=human` and extends the exact
+  snapshot hash;
+- invalid, expired, replayed, wrong-key, wrong-subject, or MCP-submitted owner
+  actions fail closed;
+- MCP/agent capability context cannot claim human identity;
+- events.jsonl hash-chain verification detects mutation and missing anchors.
 
 Golden JSON artifacts exercise schema stability. Statistical kernels use
 property-based tests and published small-vector oracles. End-to-end tests use a
