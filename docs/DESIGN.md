@@ -8,16 +8,19 @@ is persisted and reconstructible.
 
 ## 1. Three-layer review model
 
-| Layer | Purpose | Authoritative for |
+| Layer | Purpose | Authority |
 |---|---|---|
-| **Scoreboard** | Monitoring and triage | Nothing — it points at Evidence Cards |
-| **Evidence Card** | Per-candidate decision surface | The decision record it snapshots |
-| **Forensic View** | Full diagnostics, provenance, lineage, replay | Nothing — inspection only |
+| **Decision Snapshot** (persisted artifact) | Immutable record of a decision | **Authoritative — the system of record** |
+| **Scoreboard** | Monitoring and triage | Projection only |
+| **Evidence Card** | Per-candidate decision surface | Projection of snapshot + evidence |
+| **Forensic View** | Full diagnostics, provenance, lineage, replay | Projection only |
 
 Scoreboard answers, in order: what changed, what requires owner attention,
 what is blocked or quarantined, and which stage every candidate occupies.
 Selecting a candidate opens its Evidence Card. Comparative P&L, Sharpe, or
-model confidence are never the dominant landing experience.
+model confidence are never the dominant landing experience. The immutable
+persisted Decision Snapshot is the single system of record; every surface is
+a non-authoritative projection reconstructible from persisted artifacts.
 
 ## 2. Decision framing — six separate facts
 
@@ -46,36 +49,88 @@ Every decision stores, as separate facts: computed result, policy
 disposition, recommendation, owner decision, reason, timestamp, evidence
 version, policy version, and recommendation model version.
 
-## 3. Evidence Card — standard view (default)
+## 3. Evidence Card — normative field contract
+
+Every decision surface must contain, or directly expose via a labeled
+mandatory drill-down, **each** required business decision input. A review is
+invalid if any required input is missing (rendered `BLOCKED`, never omitted).
+
+| Group | Required fields |
+|---|---|
+| **Decision facts** | Evidence set + version; gate calculation (§3a); gate state; policy disposition + policy version; advisory recommendation (optional); owner decision slot |
+| **Evidence quantity** | Raw count, effective count, effective-evidence calculation policy + version (overlap/clustering adjustment) |
+| **Performance** | After-cost expectancy; execution assumptions (fee, slippage, impact, latency) + versions; adverse-scenario results (all declared stress scenarios, each labeled PASS/FAIL) |
+| **Benchmarks** | Benchmark identity + window; comparison result; losing-condition status |
+| **Concentration panel** | Per-token, per-cluster, per-regime, per-trade contribution; removal effects (top-contributor removal rerun); dominance verdict |
+| **Robustness panel** | Declared diagnostics (bootstrap CI, PSR/DSR/PBO where applicable) + versions; each labeled PASS/FAIL/NOT_RUN with reason |
+| **Calibration panel** | Confidence-signal calibration vs untouched outcomes; selective-risk vs abstention/ungated comparison; verdict |
+| **Dual temporal status** | Walk-forward status AND prospective/untouched status, each with window and PASS/FAIL/PENDING |
+| **Integrity** | Claim-vs-realized reconciliation verdict + tolerance band + policy version; data-quality/quarantine state; dependency-graph health |
+| **Lineage & budgets** | Experiment-ledger lineage summary (trials in family, selection history); trial/compute/data budget state |
+| **Next action** | The explicit next kill/downgrade/renewal/promotion condition and its current distance |
+| **Delta** | Material changes since previous Decision Snapshot (§B) |
+
+### 3a. Gate calculation — inspectable by contract
+
+The card renders (or links one action deep to) the full calculation:
 
 ```
-CANDIDATE <id>                    STAGE: Candidate            POLICY v12
-───────────────────────────────────────────────────────────────────────
-GATE STATE:            INSUFFICIENT_EVIDENCE   (not color-coded alone)
-POLICY DISPOSITION:    HOLD
-EFFECTIVE EVIDENCE:    87 effective obs (143 raw; overlap-adjusted)
-EXPECTANCY:            +4.1 bps/trade after costs
-BENCHMARK:             vs SOL-DEX basket +9.3 bps/trade
-CONCENTRATION:         top token 41% contribution; flagged
-REGIME COVERAGE:       2 of 4 declared regimes; insufficient
-EXECUTION ASSUMPTIONS: fee 25bps RT, impact k=1.2, latency 250ms
-DATA QUALITY:          3 quarantined inputs (see Forensic)
-SEARCH HISTORY:        14 prior trials in family; ledger-linked
-COUNTEREVIDENCE:       1 unresolved regime failure (2026-09 window)
-DELTA SINCE LAST SNAPSHOT: +31 trades, concentration warning NEW
-───────────────────────────────────────────────────────────────────────
-RECOMMENDATION (advisory): continue research; resolve regime gap
-OWNER DECISION:        [ pending ]
+GATE: candidate-verified   POLICY v12   RULESET: verified-gates@v7
+  rule evidence_min        input eff_obs=143 vs >=200          FAIL
+  rule expectancy_pos      input +4.1bps vs >0                 PASS
+  rule dominance           top_token 41% > 40% cap             FAIL
+  rule regimes_covered     2/4 vs >=3                          FAIL
+  rule reconciliation      verdict PASS tol ±5%                PASS
+  rule prospective         PENDING (window open)               BLOCKED
+AGGREGATE: worst-of-rules → FAIL (any FAIL) ; pending rule → INSUFFICIENT_EVIDENCE
 ```
+
+Formula/rule identifiers, policy version, every material input and
+threshold, per-rule results, and the aggregate derivation are all exposed.
 
 Forensic diagnostics run automatically before major evidence transitions.
 When clean, the owner sees no raw diagnostics — only failed checks, material
 warnings, anomalous diagnostics, changed assumptions, and unresolved
 counterevidence. Full forensic drill-down is always available.
 
-**Mandatory forensic execution before:** Candidate → Verified, any
-live-eligibility transition, critical owner override. A soft, reversible
-exploratory kill requires no full forensic review.
+### 3b. Major transitions and critical overrides — versioned enumeration
+
+"Major transition" and "critical override" are defined by a versioned
+enumeration (policy artifact `transitions@vN`), including at minimum:
+
+- Candidate → Verified, and any future live-eligibility transition.
+- Verified-status downgrade; integrity-driven invalidation.
+- Quarantine release; Candidate kill; Verified kill.
+- Experiment-family stop and renewal.
+- Policy or evidence-version transitions affecting an active candidate.
+- Any owner override of a FAIL/BLOCKED gate (critical override class).
+
+Additions to the enumeration are policy changes, versioned and ledgered. A
+soft, reversible exploratory kill requires no full forensic review.
+
+## 3c. Owner decision model
+
+Owner decision vocabulary: `CONTINUE`, `HOLD`, `QUARANTINE`, `RELEASE`,
+`KILL`, `RENEW`, `PROMOTE`, `OVERRIDE`.
+
+| Gate state | Permitted owner decisions |
+|---|---|
+| `PASS` | CONTINUE, HOLD, QUARANTINE, KILL, PROMOTE (if disposition ELIGIBLE_FOR_PROMOTION and forensics complete) |
+| `FAIL` | CONTINUE (research only), HOLD, QUARANTINE, KILL, OVERRIDE-exception class only |
+| `BLOCKED` | HOLD, QUARANTINE, KILL — never PROMOTE; unblocking requires dependency repair, not owner will |
+| `INSUFFICIENT_EVIDENCE` | CONTINUE (accumulate), HOLD, QUARANTINE, KILL |
+
+**Override/exception classes (fail-closed):**
+
+- Owner preference never converts FAIL/BLOCKED into promotion. Overrides may
+  only authorize a *documented exception* (e.g., sub-200 Verified minimum),
+  recorded as a separate ledgered exception with: authorization identity,
+  reason, the unchanged computed results, required forensic result, and the
+  policy version under which the exception is granted.
+- `BLOCKED` is hard fail-closed: no exception class may promote; only
+  repairing the dependency and recomputing can unblock.
+- Every OVERRIDE requires completed forensics (§3b) and a Decision Snapshot
+  recording the exception separately from the computed gate.
 
 ## 4. Agent / CLI — explicit reproducibility
 
@@ -128,6 +183,15 @@ link to the affected Evidence Card. Routine summaries remain reports, never
 pages. Alert volume and acknowledgment behavior are tracked so alert fatigue
 is itself measurable.
 
+"Major," "material," and "research-invalidating" are **versioned policy
+classifications** (`alert-policy@vN`), not free-text judgments. Every alert
+records measurable audit fields: severity class + policy version, stable
+event ID, group key, cooldown state, acknowledgment identity and latency,
+escalation path and outcome, and post-cooldown repeat count. Alert-fatigue
+metrics are computed from these fields (alert rate per day, unacknowledged
+actionable alerts, median ack latency, repeats after cooldown, escalation
+rate) and reported on the Scoreboard.
+
 ## 7. Scoreboard navigation
 
 Primary lifecycle axis: **Exploratory → Candidate → Verified**.
@@ -152,8 +216,9 @@ default-sorts by P&L, Sharpe, model confidence, or recommendation strength.
 
 **A. Decision snapshots.** Every consequential owner decision creates an
 immutable snapshot containing the exact evidence, gate calculation, policy
-disposition, recommendation, review mode, and artifact versions used at
-decision time.
+disposition, recommendation (with visibility state), review mode, the
+**ordered reveal log** (what information was displayed, in what order, before
+the decision), and artifact versions used at decision time.
 
 **B. Decision delta.** Every Evidence Card identifies what materially
 changed since the previous decision snapshot.
@@ -182,7 +247,8 @@ owner decisions rather than assuming one ordering is optimal.
 **H. Audit export.** Any decision or candidate exports as a self-contained
 audit bundle: evidence snapshot, provenance, gate results, policy
 disposition, configuration, experiment lineage, recommendation, owner
-decision, and relevant hashes and versions.
+decision, review mode, complete mode/reveal log, recommendation visibility,
+and relevant hashes and versions.
 
 ## Surface mapping
 
