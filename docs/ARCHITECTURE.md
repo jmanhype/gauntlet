@@ -270,3 +270,160 @@ as the historical result.
 
 All projections are deterministic for a snapshot ID and can be deleted and
 regenerated without losing decisions.
+
+## 5. Append-only experiment/trial ledger
+
+### 5.1 Storage format
+
+The live trial system of record is canonical JSONL:
+
+```text
+data/ledger/trials.jsonl
+data/ledger/events.jsonl
+data/ledger/trial-head.json       # regenerable compact head pointer
+```
+
+Every physical write opens the destination exclusively and refuses overwrite.
+Output directories likewise refuse to replace a non-empty run. These checks are
+detectable, not cryptographic denial-of-service protection; the ledger is also
+periodically copied to durable backup/Git storage.
+
+A trial entry has a stable envelope and a typed payload:
+
+```json
+{
+  "schema_version": "1",
+  "entry_type": "trial.registered",
+  "trial_id": "trial_...",
+  "family_id": "family_...",
+  "venue_track": "solana_dex",
+  "recorded_at_utc": "...",
+  "actor": {"kind": "human|agent|collector", "identity": "..."},
+  "payload_hash": "sha256:...",
+  "previous_head_hash": "sha256:...",
+  "entry_hash": "sha256:...",
+  "payload": {}
+}
+```
+
+`payload_hash` hashes canonical payload JSON. `entry_hash` hashes the canonical
+envelope with `entry_hash` omitted and `previous_head_hash` included. A verifier
+recomputes every hash and head chain. Rewriting or deleting an old line breaks
+the chain and invalidates later decisions that cannot be reconstructed from an
+independent durable backup.
+
+Content-addressed payloads too large for JSONL live under
+`data/evidence/sha256/<aa>/<full-sha>/`; the ledger stores only their hash and
+storage-relative path. These files are write-once. Derived indexes, queues, and
+SQLite caches may exist, but are always reconstructible projections.
+
+### 5.2 Required trial payload
+
+Every `trial.registered` entry records the full BUSINESS contract before outcome
+interpretation:
+
+- hypothesis and success/failure interpretation;
+- strategy family and parent/ancestor relationships;
+- venue track and requested transfer hypothesis, if any;
+- data window, split manifest hash, source descriptor hashes, and frozen status;
+- feature manifest and preprocessing/version hashes;
+- parameters and full search space, including variants intentionally attempted;
+- execution assumptions and versioned adverse scenarios;
+- benchmark identity and benchmark role;
+- family trial/compute/data budgets and stop condition;
+- one-axis declaration or owner-approved multi-axis exception and attribution plan;
+- policy/risk/evaluation versions;
+- resolved configuration hash;
+- declared dependencies and gate criticality.
+
+Outcome entries are appended separately (`trial.result`, `trial.rejected`,
+`trial.promoted`, `family.stopped`, `owner.exception`, and so on). They never
+modify the registration payload. Status transitions record actor, reason,
+timestamp, from/to state, evidence version, and policy version.
+
+### 5.3 Trial-history accounting in gates
+
+The gate engine does not accept a candidate-selected metric as an isolated
+number. It consumes a precomputed lineage summary derived only from immutable
+ledger entries:
+
+- total related trials and failed ancestors;
+- parameter/threshold variants and search-space evaluations;
+- changed experimental axes and owner-approved exceptions;
+- family budget consumption and stop/renewal state;
+- selection history across walk-forward folds;
+- risk-parameter versions;
+- multiplicity inputs and deflation/PBO/FDR accounting;
+- venue/role contamination declarations.
+
+Missing, broken, or unverifiable lineage is gate-critical and yields `BLOCKED`.
+A valid lineage with insufficient effective observations yields
+`INSUFFICIENT_EVIDENCE`; a valid lineage that disproves a threshold yields
+`FAIL`. Exhausted family budget can produce a family policy disposition
+independently of the candidate gate, but the recorded gate calculation remains
+unchanged.
+
+## 6. Decision Snapshot store and provenance
+
+### 6.1 Immutable snapshot layout
+
+Each consequential decision creates a content-addressed, write-once directory:
+
+```text
+data/decisions/<decision_id>/
+  snapshot.json          # exact decision facts and artifact graph
+  manifest.json          # file hashes and snapshot Merkle root
+  evidence/              # or content-addressed references
+  policy/
+  projections/           # optional cached Evidence Card output
+```
+
+`snapshot.json` includes the separate DESIGN facts: evidence set/version,
+inspectable gate calculation, gate state, policy disposition and version,
+advisory recommendation and visibility state, owner decision slot, review mode,
+ordered reveal log, artifact versions, delta from the prior snapshot, dependency
+health, recommendation model/agent version, and relevant hashes. The snapshot is
+the system of record; UI and reports are projections.
+
+The snapshot manifest hashes every embedded file and records the content hash
+and storage-relative path of every external artifact. A snapshot verification
+failure blocks promotion, export approval, and later decisions that depend on it.
+
+### 6.2 Provenance chain
+
+Every displayed evidence claim reaches the following chain:
+
+```text
+ledger entry
+  → source data/artifact content hash
+    → resolved configuration + policy/model/code versions
+      → deterministic transformation manifest
+        → producing run manifest and output artifact
+          → lab panel
+            → gate input
+              → Decision Snapshot
+```
+
+A transformation record names its implementation module and code version, input
+hashes, output hashes, environment/dependency lock hash, seeds, venue/timezone,
+and complete CLI/resolved configuration. Replay compares a new output hash or,
+where nondeterministic model sampling is allowed, a declared deterministic seed
+and tolerance.
+
+Reconstruction starts only from the snapshot manifest, never from current mutable
+UI state. Missing source bytes, configuration, model checkpoint, code version, or
+dependency definition make the snapshot non-replayable and the affected gate
+`BLOCKED`.
+
+### 6.3 Evidence Cards and audit export
+
+Evidence Cards render the normative DESIGN fields or a labeled one-action
+drill-down. Missing mandatory evidence is visible and blocks; it is never
+omitted. A card links the delta, next action and current distance, concentration
+and robustness panels, dual temporal status, calibration, integrity/quarantine,
+lineage/budgets, and gate arithmetic.
+
+`export_audit_bundle` copies or content-addresses all referenced artifacts into a
+self-contained directory with the snapshot, reveal log, policy versions, code
+manifest, provenance graph, and verification report. The export itself is
+append-only and receives a bundle manifest and Merkle root.
