@@ -1,0 +1,29 @@
+# Credentials and environment
+.env
+.env.*
+!.env.example
+
+# Data and artifacts — private cloud storage, never git
+*.pkl
+*.parquet
+*.joblib
+data/
+*_cleaned/
+internet_holdout/
+paper_trading/
+scarlett_snapshots/
+scarlett_calibration/
+
+# Vendored source repos (clone separately; see INVENTORY.md)
+multi-agent-system/
+jev-dspy-lab/
+Kronos/
+claude-code-plugin-marketplace/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# OS
+.DS_Store
