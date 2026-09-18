@@ -703,3 +703,246 @@ For each trial/family, audit emits a role declaration:
 A contamination check walks the provenance graph before major transitions and
 blocks if the same Scarlett artifact serves incompatible roles without an
 approved, explicit redesign and replacement benchmark.
+
+## 11. Interface architecture
+
+### 11.1 One core, thin wrappers
+
+CLI and FastMCP import the same service functions. Neither wrapper owns policy,
+state, storage formats, or evaluation logic. A Phase 1 invocation runs and exits;
+FastMCP is spawned by an AI client and is not installed as a daemon.
+
+| Surface | Phase 1 behavior |
+|---|---|
+| `gauntlet collect` | Runs approved collectors and appends local snapshots/events |
+| `gauntlet audit` | Records/reconciles external claims from local snapshots |
+| `gauntlet gate` | Materializes dependencies, evaluates deterministic rules, writes snapshot |
+| `gauntlet factory` | Registers and runs isolated candidate search/races |
+| `gauntlet tournament` | Runs registered candidates through judge/prospective tracks |
+| `gauntlet scoreboard` | Regenerates current projections |
+| `gauntlet report` | Writes static Markdown/HTML/JSON files under `data/reports` |
+| `gauntlet review/forensic/decide/export` | Expose Decision Snapshot operations |
+| FastMCP tools | Same verbs and JSON contracts, spawned on demand |
+
+All wrappers accept `--json`, `--no-color`, and ASCII fallback. They read local
+snapshots; only collectors make network calls.
+
+### 11.2 Operation trace
+
+Every autonomous or interface operation appends canonical JSONL to
+`data/ledger/events.jsonl`:
+
+```json
+{
+  "event_id": "stable-random-or-ulid",
+  "timestamp_utc": "...",
+  "actor": {"kind": "human|agent|mcp|collector", "identity": "..."},
+  "verb": "gate.evaluate",
+  "subject": "candidate/track/artifact id",
+  "args_hash": "sha256:...",
+  "output_hash": "sha256:...",
+  "status": "OK|ERROR",
+  "error_class": null,
+  "trace": {"run_id": "...", "span_id": "..."}
+}
+```
+
+The trace is evidence of action, not a replacement for the trial ledger or
+Decision Snapshot. It never contains secret values, full external payloads, or
+unredacted credentials.
+
+### 11.3 Reports and Phase 2/3 boundaries
+
+Phase 1 reports are files and stdout/stderr only. There is no web server,
+daemon, GraphQL, gRPC, TUI, or inbound command channel.
+
+Phase 2 alerting is an outbound Hunter Stack webhook with a local fallback event;
+alerts follow `alert-policy@vN`, deduplication/grouping, cooldown, escalation,
+acknowledgment, and direct Evidence Card linkage. Phase 3 Streamlit/Telegram
+remain read-only projections. No phase adds order placement.
+
+## 12. Risk policy lineage and separation
+
+The initial portfolio limits derive from the QTS risk configuration extracted
+from `multi-agent-system/config/risk.json` (referenced by the extraction manifest
+as the QTS battle-tested limits). The canonical GAUNTLET artifact is
+`policies/risk/qts.risk@v1.json`; later versions are appended, never overwritten.
+
+Its lineage manifest records:
+
+- source repository/file/content hash;
+- import date and normalizing transformation;
+- every parameter, unit, scope, and semantic explanation;
+- venue applicability and required adaptation;
+- owner authorization;
+- mapping from original fields to GAUNTLET fields.
+
+Portfolio policy enforces position size, leverage, concentration, correlation,
+daily loss, drawdown, consecutive losses, timing, and circuit breakers for
+paper/research portfolios. Research evidence gates enforce trades, effective
+observations, execution realism, robustness, calibration, lineage, benchmark,
+prospective performance, and regime coverage.
+
+The domains intersect only through explicit state transitions:
+
+- a risk-boundary violation can create `HOLD`, `QUARANTINE`, or a stop action;
+- an evidence `FAIL` cannot be cured by a conservative risk policy;
+- an evidence `PASS` cannot override a risk boundary or authorize exposure;
+- changing sizing/stops/exposure during optimization creates a new trial and
+  changes the trial-history input.
+
+No GAUNTLET Phase 1 component submits an order. The portfolio state used by risk
+checks is simulated/paper state and is labeled `MODELED`.
+
+## 13. Technology decisions and trade-offs
+
+| Decision | Choice | Rationale | Trade-off / mitigation |
+|---|---|---|---|
+| Language/runtime | Python managed by `uv`, portable pure-Python where practical | Matches extraction code, laptop/Mac mini portability, scientific ecosystem | Slower than Rust; heavy work isolated and profiled |
+| Repository | One Python/uv monorepo with module packages | Shared contracts and end-to-end tests without release coupling | Needs import boundaries and contract tests |
+| Storage | Parquet + canonical JSON/JSONL under `GAUNTLET_DATA_ROOT` | Local, inspectable, portable, no service, suits cadence work | No transactional DB; use exclusive writes, hash chains, indexes, durable backups |
+| Content addressing | SHA-256 over canonical bytes | Provenance and deduplication | Verification cost; cache verified roots |
+| Model stack | PyTorch/Kronos adapters behind `model/` | Reuse proven architecture and fine-tuning path | Heavy dependency; isolate from judge/factory import paths |
+| Factory stack | Optional `factory` extra/execution environment pinning NumPy 1.23.5 | Preserves VBT/GEPA behavior while core remains NumPy 2.x | Adds invocation boundary; core never imports factory |
+| API/MCP | Typer-style CLI + FastMCP thin wrappers | Owner/AI operability without a daemon | Duplicate verbs must be contract-tested |
+| Reports | Static files | Host can sleep; no server state | No live dashboard until Phase 3 |
+| Database server | Rejected for Phase 1 | Cost/ops simplicity and local snapshots | SQLite/index projections may be rebuilt from JSONL/Parquet |
+
+The core lockfile and CI environment exclude the factory extra. Factory commands
+run in the isolated optional environment (for example `uv run --extra factory`)
+or a dedicated uv environment using the same project manifest. Factory emits
+artifact files rather than passing live objects across the boundary.
+
+## 14. Security and access model
+
+- Local single-owner operation; no multi-tenant authentication in Phase 1.
+- FastMCP binds localhost by default and exposes only approved tools; remote
+  access, if later enabled, traverses the existing authenticated tunnel.
+- Secrets remain in local `.env`/process environment. They are not persisted in
+  snapshots, reports, events, exports, manifests, or hashes.
+- Collector requests record method/path/query and sanitized headers, never
+  bearer tokens.
+- No wrapper, MCP tool, report, or automation exposes an order-placement verb.
+- Actors are identified in ledger/events; agent recommendations are advisory.
+- Audit exports can include sensitive research data and remain local unless the
+  owner explicitly chooses another channel.
+- Raw external payloads are treated as untrusted data. Parsing is strict, and
+  prompt-like text in a market snapshot cannot alter policy.
+
+Integrity controls include canonical schemas, SHA-256, hash chaining, exclusive
+creation, replay verification, and durable backups. They detect accidental or
+ordinary tampering; they do not by themselves defeat a fully privileged local
+attacker.
+
+## 15. Operational concerns
+
+### 15.1 Observability
+
+Every command emits a run ID and records events. Operational checks cover:
+
+- ledger head/hash validity and byte counts;
+- artifact descriptor/quality/freshness summary;
+- dependency graph blockers;
+- collector success/backoff/API cost;
+- trial and family budget consumption;
+- replay verification status;
+- gate/snapshot verification;
+- report generation and output hashes.
+
+Failures return nonzero status and machine-readable JSON where applicable. They
+never print a fabricated score or silently continue with substituted data.
+
+### 15.2 Failure modes and response
+
+| Failure | Phase 1 response |
+|---|---|
+| Host sleeps/reboots | Commands are rerunnable; unfinished runs remain incomplete and write-once outputs are not overwritten |
+| API 429/Cloudflare/rate limit | Collector backs off, records attempts, leaves existing snapshots unchanged |
+| Corrupt/stale source | Descriptor becomes invalid; dependent gates `BLOCKED`; quarantine event records scope |
+| Duplicate collector snapshot | New immutable snapshot; merge policy is explicit and provenance-preserving |
+| Nonempty output directory | Run refuses overwrite; operator chooses a new run ID |
+| Model sampling nondeterminism | Fixed seed/sample count or declared tolerance; otherwise replay fails |
+| Factory/core dependency conflict | Run in optional isolated factory environment; core lock never installs extra |
+| Ledger verification failure | Stop decisions, surface integrity failure, restore from durable backup |
+| Disk full | Run fails before partial evidence is interpreted; write-ahead staging and verification prevent partial promotion |
+
+### 15.3 Deployment
+
+Phase 1 runs from a Git checkout on macOS with `uv`; data stays under
+`GAUNTLET_DATA_ROOT`, with `SOLANA_DEX_DATA_ROOT` accepted only as a migration
+fallback. A later Linux/Docker deployment uses the same code and storage layout.
+Backups treat ledger, descriptors, policies, source snapshots, checkpoints, and
+Decision Snapshots as required; generated reports/indexes are rebuildable.
+
+## 16. Testing and acceptance strategy
+
+Architecture-level tests are contract tests, not only unit tests:
+
+1. **Ledger immutability:** append succeeds, rewrite/delete verification fails,
+   old snapshots still resolve their original entry.
+2. **Provenance round trip:** build a synthetic trial → source → config →
+   transformation → run → panel → snapshot chain; delete one artifact and prove
+   reconstruction blocks.
+3. **Dependency fail-closed:** stale/corrupt/missing/unknown inputs produce
+   `INVALID` dependent metrics and `BLOCKED`, while noncritical gaps visibly
+   reduce coverage.
+4. **Precedence table:** exhaustive combinations prove
+   `BLOCKED > FAIL > INSUFFICIENT_EVIDENCE > PASS`.
+5. **Policy historical interpretation:** upgrade a ruleset and prove an old
+   snapshot still evaluates under its recorded manifest.
+6. **Temporal leakage:** target crossing train boundary, future normalization,
+   and post-outcome split mutation all fail.
+7. **Prospective recording:** outcomes cannot alter pre-outcome signals; late
+   signals are labeled historical.
+8. **Effective evidence:** overlapping labels, correlated tokens, repeated
+   regimes, and adaptive counts reduce/report effective observations.
+9. **Venue isolation:** cross-venue artifact cannot enter a single-venue gate
+   without the explicit transfer type.
+10. **Role isolation:** Scarlett benchmark/candidate conflict is blocked.
+11. **Exact quote:** missing reserve yields failed evidence, never a fill;
+     constant-product math matches a vectorized oracle.
+12. **Risk separation:** risk breach changes disposition, never gate arithmetic;
+     evidence pass does not authorize an order.
+13. **Interface parity:** CLI and FastMCP verbs produce identical resolved
+     configuration/output contracts and append events.
+14. **Factory isolation:** core import graph contains no factory dependency.
+15. **Export self-containment:** an audit bundle verifies after the original
+    data root is unavailable.
+
+Golden JSON artifacts exercise schema stability. Statistical kernels use
+property-based tests and published small-vector oracles. End-to-end tests use a
+synthetic market dataset small enough for CI.
+
+## 17. Architecture-to-story constraints
+
+Implementation stories must embed these non-negotiables:
+
+- no candidate run without prior `trial.registered` lineage and resolved config;
+- no gate without descriptor closure, quality/freshness checks, and criticality;
+- no promotion path around `BLOCKED`;
+- no report field synthesized to hide a mandatory gap;
+- no venue/role mixing or post-hoc threshold selection;
+- no deletion/update path for trials, source snapshots, policies, or snapshots;
+- no factory import from core and no core dependency on VBT/NumPy 1.23.5;
+- no collector calls from report/MCP read paths;
+- no order-placement interface.
+
+Required early wiring stories are:
+
+1. canonical contracts + hash/manifest verifier;
+2. append-only ledger and event writer/verifier;
+3. evidence descriptors + dependency graph evaluator;
+4. resolved-config profile CLI;
+5. judge walk-forward and exact-reserve adapters;
+6. lab metrics + effective-evidence kernel;
+7. policy manifests + deterministic precedence engine;
+8. Decision Snapshot writer/reconstructor;
+9. scoreboard/report projection;
+10. risk policy import/versioning;
+11. interface parity and event tracing;
+12. end-to-end synthetic integrity drill.
+
+The highest-risk integration points are judge→lab panel contracts, dependency
+graph→gate inputs, ledger lineage→multiplicity accounting, and snapshot→report
+reconstruction. Each needs a dedicated integration story rather than incidental
+unit coverage.
