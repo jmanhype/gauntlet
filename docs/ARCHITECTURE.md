@@ -97,12 +97,16 @@ gauntlet/
     lab/
     model/
     audit/
+      collectors/                # Bitquery, Hyperliquid, and Scarlett adapters
     risk/
     scoreboard/
   policies/                      # immutable policy and transition manifests
   profiles/                      # immutable run profiles
   data/                          # GAUNTLET_DATA_ROOT default/local artifacts
     raw/                         # append-only venue and external snapshots
+      solana_dex/
+      hyperliquid/
+      external/
     evidence/                    # content-addressed derived artifacts
     decisions/                   # immutable Decision Snapshots
     reports/                     # regenerable static projections
@@ -136,7 +140,7 @@ metric to be independently recomputed.
 
 | Contract | PRODUCES | CONSUMES |
 |---|---|---|
-| Walk-forward run | `fold_manifest.json`, train/validation/test membership, locked selection, row-level test predictions and trades, run report | Frozen source bars/events, candidate/model profile, split policy, feature provenance |
+| Walk-forward run | `fold_manifest.json`, train/validation/test membership, locked selection, row-level test predictions and trades, run report | Frozen `solana.bars` and `solana.events` descriptors produced by `audit/collectors/bitquery.py`, candidate/model profile, split policy, feature provenance |
 | Exact Solana execution | Trade-level entry/exit reserve hashes, exact constant-product quotes, fee/impact/latency/fill-failure scenarios, invalid-quote counts | Locked walk-forward trades and event-level AMM reserve snapshots |
 | Prospective paper stream | Pre-outcome signal records, later resolved records, open/skipped/failure reasons, immutable status transitions | Frozen model/candidate manifest, append-only venue snapshots, prospective policy |
 | Transfer test | Separate Hyperliquid evaluation artifacts and execution assumptions | Solana candidate fingerprint and frozen Hyperliquid transfer population |
@@ -209,14 +213,17 @@ Instance/window normalization must use only the lookback portion, as in the
 Kronos dataset implementation. Checkpoint bytes and preprocessing code/config
 hashes are required for replay.
 
-### 4.5 `audit/` — external claims, recorder, and role isolation
+### 4.5 `audit/` — collection, external claims, and role isolation
 
 **Responsibility**
 
-Own all Scarlett recording and external-claim verification, adapted from
-`scarlett_snapshot.py`, `scarlett_calibration.py`, and
-`validate_anti_scarlett.py`. It is the only Phase 1 interface layer allowed to
-call external APIs; report/MCP/CLI consumers read local snapshots.
+Own all outbound collection through `audit/collectors/`, plus external-claim
+verification. `bitquery.py` owns Solana DEX discovery snapshots and their raw →
+bars/events transformations; `hyperliquid.py` owns Hyperliquid transfer-population
+market/order snapshots and their venue-derived tables; Scarlett collectors are
+adapted from `scarlett_snapshot.py`, `scarlett_calibration.py`, and
+`validate_anti_scarlett.py`. `audit/collectors/` is the only Phase 1 component
+allowed to call external APIs; report/MCP/CLI consumers read local snapshots.
 
 Scarlett can be benchmark, candidate/information source, or audit target, but
 never two roles for the same decision without an explicit contamination analysis
@@ -224,13 +231,40 @@ and a replacement benchmark.
 
 | Contract | PRODUCES | CONSUMES |
 |---|---|---|
-| External snapshot | Raw paginated response, request metadata (without credentials), collector/version, fetch time, content hash | Rate-limited external API and versioned collector policy |
+| Bitquery raw snapshot | Immutable request/response pages, cursors, watermark, retry/backoff map, API-cost event, content hash | Local owner-approved Bitquery credential, versioned collector policy, family/API budget |
+| Bitquery derived data | `solana.bars` and `solana.events` descriptors + Parquet partitions, transformation manifest, quality/freshness/criticality declarations | Registered raw snapshot descriptors and versioned cleaning code/config |
+| Hyperliquid raw snapshot | Immutable paginated market/order responses, cursors, watermark, retry/backoff map, API-cost event, content hash | Local credential if required, versioned collector policy, family/API budget |
+| Hyperliquid derived data | `hyperliquid.bars`, `hyperliquid.order_book`, and other declared transfer tables/descriptors with transformation provenance | Registered raw snapshot descriptors and versioned transform code/config |
+| Scarlett/external snapshot | Raw paginated response, request metadata (without credentials), collector/version, fetch time, content hash | Rate-limited external API and versioned collector policy |
+| Collection health | Duplicate/deduplication report, partial-capture state, API-cost/budget state, failure/quarantine events | Collector policy, event ledger, descriptor registry |
 | Claim decomposition | Claimed metric/capability, source, actual model/process identity, decision role, materiality tolerance | Immutable snapshots and historical artifacts |
 | Audit reconciliation | Independent recalculation, outcome data, differences, verdict | Claim record and relevant lab kernel |
 | Role declaration | Role enum, permitted uses, contamination constraints | Trial/family manifest |
 
-Collector secrets remain in the process environment and are never copied into
-payloads, events, reports, exports, or hashes.
+Collector execution rules are mandatory:
+
+- credentials are injected only into the collector process, never accepted as
+  CLI/MCP arguments, and never copied into payloads, events, reports, exports,
+  or hashes;
+- pagination records every cursor, page hash, terminal condition, and source
+  watermark;
+- requests use bounded exponential backoff for transient failures and record
+  429/Cloudflare/rate-limit behavior without retry storms;
+- estimated and actual API cost append budget events before and after capture;
+  an exhausted or unauthorized budget fails before additional spend;
+- duplicate detection keys on collector identity, normalized request, cursor,
+  source watermark, and payload hash; an exact redownload is retained as an
+  immutable duplicate observation rather than silently replacing an older page;
+- raw-to-derived registration is atomic enough to fail closed: a capture is not
+  marked complete until every page and descriptor is present and verified;
+- partial capture, truncation, malformed data, unexplained cursor regression, or
+  checksum failure creates a new quarantined descriptor version for that capture
+  scope and blocks dependent gates; it never overwrites the original snapshot;
+- a failed request with no accepted payload appends a failure event and leaves
+  prior descriptors unchanged.
+
+`judge/` is not a collector. It consumes frozen `solana.bars` and
+`solana.events` descriptors explicitly produced by `audit/collectors/bitquery.py`.
 
 ### 4.6 `risk/` — portfolio policy kernel
 
@@ -440,6 +474,12 @@ registered with a versioned descriptor:
 {
   "descriptor_schema": "gauntlet.evidence.v1",
   "artifact_id": "...",
+  "descriptor_id": "...",
+  "descriptor_version": 2,
+  "descriptor_hash": "sha256:...",
+  "supersedes_descriptor_hash": "sha256:...",
+  "effective_at_utc": "...",
+  "superseded_at_utc": null,
   "kind": "bars|events|reserves|forecasts|trades|panel|claim|config|model",
   "venue_track": "solana_dex|hyperliquid|external|cross_venue_transfer",
   "content_hash": "sha256:...",
@@ -454,8 +494,13 @@ registered with a versioned descriptor:
 }
 ```
 
-Descriptors are themselves ledgered and content-hashed. A derived artifact must
-reference the exact descriptor versions used to create it.
+Descriptors are immutable, ledgered, and content-hashed. A correction, quality
+transition, or quarantine never edits an existing descriptor: it creates a new
+descriptor version whose `supersedes_descriptor_hash` names the original and
+whose `effective_at_utc` is the ledger event time. The prior version records
+only its later `superseded_at_utc` through an event-sourced index projection;
+its bytes are never changed. A derived artifact must reference the exact
+descriptor hashes used to create it.
 
 ### 7.2 Versioned dependency graph
 
@@ -491,12 +536,23 @@ Quarantine is represented by append-only state, not destructive relocation:
 1. collector or evaluator detects a defect;
 2. a quarantine event records scope, reason, affected artifacts/trials/gates,
    and actor;
-3. the artifact descriptor gains a quarantined quality state;
+3. the quarantine event references the exact original descriptor hash and
+   produces a new immutable descriptor version with
+   `quality.state=QUARANTINED` and `supersedes_descriptor_hash` pointing to that
+   original;
 4. affected projections and candidates are visibly quarantined;
 5. repair creates new descriptors and runs rather than mutating the defective
    payload;
 6. owner `RELEASE` requires repaired dependencies, automatic forensics, and a
    recomputed gate.
+
+Descriptor selection is time-bound. Gate evaluation and snapshot reconstruction
+resolve the descriptor version active at the operation's recorded `as_of`:
+`effective_at_utc <= as_of` and, when present,
+`superseded_at_utc > as_of`. A run manifest that already binds an exact
+descriptor hash always uses that hash. Historical snapshots therefore continue
+to reconstruct the population and quality state they recorded, even after a
+later quarantine, correction, or repair.
 
 ### 7.4 MODELED versus OBSERVED
 
@@ -965,6 +1021,12 @@ Architecture-level tests are contract tests, not only unit tests:
 3. **Dependency fail-closed:** stale/corrupt/missing/unknown inputs produce
    `INVALID` dependent metrics and `BLOCKED`, while noncritical gaps visibly
    reduce coverage.
+   **Append-only quarantine:** original descriptor bytes/hash remain unchanged;
+   quarantine creates a superseding version; an old `as_of` selects the original
+   while a later `as_of` selects the quarantine state.
+   **Collection contracts:** pagination truncation, rate-limit exhaustion,
+   budget exhaustion, duplicate payload, malformed response, and partial capture
+   each fail closed or register the declared duplicate/quarantine state.
 4. **Precedence table:** exhaustive combinations prove
    `BLOCKED > FAIL > INSUFFICIENT_EVIDENCE > PASS`.
 5. **Policy historical interpretation:** upgrade a ruleset and prove an old
