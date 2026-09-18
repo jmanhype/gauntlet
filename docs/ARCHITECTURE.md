@@ -427,3 +427,279 @@ lineage/budgets, and gate arithmetic.
 self-contained directory with the snapshot, reveal log, policy versions, code
 manifest, provenance graph, and verification report. The export itself is
 append-only and receives a bundle manifest and Merkle root.
+
+## 7. Dependency-aware, fail-closed data layer
+
+### 7.1 Evidence descriptor
+
+No dataset participates in a gate as a bare path. Each raw snapshot, derived
+table, model output, external claim, benchmark, configuration, and policy is
+registered with a versioned descriptor:
+
+```json
+{
+  "descriptor_schema": "gauntlet.evidence.v1",
+  "artifact_id": "...",
+  "kind": "bars|events|reserves|forecasts|trades|panel|claim|config|model",
+  "venue_track": "solana_dex|hyperliquid|external|cross_venue_transfer",
+  "content_hash": "sha256:...",
+  "source": {"collector": "...", "request": "...", "uri_or_lineage": "..."},
+  "observation_basis": "OBSERVED|MODELED",
+  "coverage": {"start": "...", "end_exclusive": "...", "tokens": "policy-ref"},
+  "freshness": {"watermark_at": "...", "max_age": "...", "as_of": "..."},
+  "quality": {"checks": [], "state": "VALID|STALE|CORRUPT|INCOMPLETE|QUARANTINED"},
+  "dependencies": [{"artifact_id": "...", "relation": "requires"}],
+  "criticality": "GATE_CRITICAL|NON_CRITICAL|UNKNOWN",
+  "downstream_metrics": ["expectancy", "calibration.ece"]
+}
+```
+
+Descriptors are themselves ledgered and content-hashed. A derived artifact must
+reference the exact descriptor versions used to create it.
+
+### 7.2 Versioned dependency graph
+
+The evaluator materializes a directed graph from descriptor dependencies and
+computes closure for each gate input. It evaluates in this order:
+
+1. content hash and schema validity;
+2. source/provenance reachability;
+3. freshness at the declared decision `as_of`;
+4. declared quality checks;
+5. dependency health, recursively;
+6. `OBSERVED`/`MODELED` eligibility for the metric;
+7. criticality classification.
+
+Criticality is not inferred at review time. It comes from the versioned evidence
+policy. `UNKNOWN` is fail-closed and equivalent to gate-critical until a policy
+version explicitly classifies the input.
+
+### 7.3 Blocking and quarantine
+
+Gate-critical missing, stale, corrupt, incomplete, replay-failed, or
+unknown-criticality evidence marks dependent metrics `INVALID` and the gate
+`BLOCKED`. No owner exception can promote through `BLOCKED`; the dependency must
+be repaired and the gate recomputed.
+
+Explicitly noncritical evidence may be absent without invalidating unaffected
+metrics, but the Evidence Card must prominently show reduced coverage and the
+missing dependency. Silent forward-fill, interpolation, substitution, or
+imputation is prohibited for gate inputs.
+
+Quarantine is represented by append-only state, not destructive relocation:
+
+1. collector or evaluator detects a defect;
+2. a quarantine event records scope, reason, affected artifacts/trials/gates,
+   and actor;
+3. the artifact descriptor gains a quarantined quality state;
+4. affected projections and candidates are visibly quarantined;
+5. repair creates new descriptors and runs rather than mutating the defective
+   payload;
+6. owner `RELEASE` requires repaired dependencies, automatic forensics, and a
+   recomputed gate.
+
+### 7.4 MODELED versus OBSERVED
+
+`OBSERVED` means a value was collected from a venue, external system, source
+artifact, or realized outcome without research-layer substitution. `MODELED`
+means produced by GAUNTLET simulation, estimation, normalization, model
+forecast, fill scenario, or imputation permitted only outside gate metrics.
+
+Every row and aggregate carries this label. A `MODELED` value cannot populate a
+rule whose contract requires observed outcomes, realized reserve/order-book
+state, realized fills, external claims, or untouched prospective evidence.
+Composite scenarios may combine labels only if each component label and formula
+is inspectable.
+
+## 8. Data governance and reproducibility
+
+### 8.1 Temporal populations and leakage boundaries
+
+Every trial declares one temporal split manifest:
+
+- UTC timestamps, bars, horizon, feature lookback, normalization window, and
+  target horizon;
+- train, validation, test, prospective, and frozen windows;
+- embargo/purge gap at each boundary;
+- walk-forward fold order and expanding-window policy;
+- selection locks and test interpretation policy.
+
+A sample may train or tune only if both its feature observation time and target
+completion time are before the boundary. Validation selects a variant; the
+following test window remains untouched by that selection. Feature statistics
+and model normalization use only information available at prediction time.
+Checkpoint selection is governed by the training/validation boundary, not test
+performance.
+
+Frozen evaluation sets are content-addressed. Once registered for a trial, their
+membership, source hashes, and split policy cannot change. Later corrections
+create a new trial and preserve the invalid population.
+
+### 8.2 Untouched prospective evidence
+
+Before an outcome can be known, the prospective recorder appends:
+
+- candidate/model/config/policy fingerprints;
+- signal timestamp and all information available then;
+- intended action, notional, horizon, and execution assumptions;
+- confidence/path share and its semantics;
+- dependency snapshot and status.
+
+The record is hash-chained and immutable. Outcomes are appended later with the
+venue state used to resolve them. Backfilling a signal after observing its label
+is labeled historical, not prospective, and can never satisfy dual temporal
+evidence.
+
+### 8.3 Overlap, clustering, and regime handling
+
+Raw resolved trades and effective independent observations are always reported
+separately. The versioned effective-evidence policy declares:
+
+- label/trade overlap window and overlap reduction algorithm;
+- serial-dependence model or conservative treatment;
+- token identity, correlated-token clustering method/threshold/window, and
+  whether cluster definitions were frozen before outcomes;
+- regime taxonomy, point-in-time features used for assignment, and required
+  coverage;
+- venue, strategy variant, family, and time-block grouping;
+- how raw observations reduce to the effective count.
+
+Clustering may not reuse post-outcome returns unless the method and freeze time
+are explicit and included in replay. Effective evidence may be adaptive upward;
+it can never turn a required regime gap or unresolved overlap into `PASS`.
+
+### 8.4 Venue-specific execution state
+
+Solana DEX fills require an event-level pool/reserve state at or before the
+simulated order, exact constant-product quote math, explicit fee assumptions,
+and a documented alignment rule. Missing or invalid reserve state is a failed
+quote/evidence gap, not a fill. Price-only Solana results remain exploratory.
+
+Hyperliquid transfer tests use Hyperliquid market/order-book mechanics, fees,
+latency, failure modes, and benchmarks. A source fingerprint may transfer as a
+hypothesis; Solana evidence and Hyperliquid evidence remain separate populations.
+
+### 8.5 Replay contract
+
+A replay run resolves the same code version, dependency lock, source hashes,
+model checkpoints, feature/preprocessing version, seeds, sampler settings,
+configuration, venue/timezone, and policy versions. It writes to a new run
+directory and compares output hashes. Sampling-based models require fixed seeds
+and sample counts or a pre-declared statistical tolerance. Replay reports are
+retained; success/failure is a data-integrity input.
+
+## 9. Deterministic gate and policy engine
+
+### 9.1 Rule result semantics
+
+Rules return one of:
+
+- `PASS` — all required inputs valid and threshold satisfied;
+- `FAIL` — inputs valid and threshold not satisfied;
+- `BLOCKED` — required dependency missing/invalid, replay failed, lineage broken,
+  or required evidence structurally unavailable;
+- `PENDING` / `INSUFFICIENT_EVIDENCE` — inputs are valid but the declared window,
+  sample, or effective observation requirement is not yet complete.
+
+Aggregate precedence is fixed and independent of rule order:
+
+```text
+any BLOCKED                    → BLOCKED
+else any FAIL                  → FAIL
+else any PENDING or INSUFFICIENT→ INSUFFICIENT_EVIDENCE
+else                            → PASS
+```
+
+The engine is a pure function of `(evidence_bundle, ruleset_manifest,
+policy_manifest, dependency_state, as_of)`. It does not read wall-clock time,
+query current data, call an LLM, or infer thresholds. Unknown rule outputs are
+converted to `BLOCKED`.
+
+### 9.2 Versioned immutable manifests
+
+Gate and policy capabilities are independently versioned:
+
+- `evidence-policy@vN` — required panels, input kinds, criticality, freshness;
+- `gate-rules@vN` — rule IDs, formulas, operators, thresholds, and precedence;
+- `disposition-policy@vN` — gate/state-to-owner-action mapping;
+- `transitions@vN` — enumerated major transitions and forensic requirements;
+- `effective-evidence@vN` — overlap/cluster/serial calculation;
+- `alert-policy@vN` — materiality and interruption classifications;
+- `risk-policy@vN` — portfolio limits, semantically separate.
+
+Each manifest has a canonical JSON content hash, schema version, creator, created
+time, changelog, and status. Once referenced by a trial or snapshot it is
+immutable. Policy additions are new versions; old decisions are always
+interpreted under their original manifest hashes.
+
+### 9.3 Inspectable calculation
+
+Every rule result records:
+
+- rule ID, formula ID, and ruleset/policy versions;
+- artifact ID and hash for each material input;
+- numeric observed value, comparator, and threshold;
+- effective-evidence calculation reference;
+- `OBSERVED`/`MODELED` labels where material;
+- per-rule state and reason;
+- policy disposition derivation.
+
+The aggregate exposes the exact precedence branch selected. An Evidence Card can
+show the full arithmetic directly or one action deep, but cannot summarize away
+rule identifiers, inputs, or failed checks.
+
+### 9.4 Resolved configurations
+
+Every run resolves defaults, profile, CLI/MCP overrides, environment-independent
+research values, artifact versions, and hashes into one canonical configuration.
+`--show-config` prints it; `--diff-config` compares it to a profile or prior run.
+A hidden research-critical default is a defect. Runtime paths and secret names
+may be redacted, but the redaction rule itself is versioned and never changes a
+research threshold.
+
+## 10. Venue separation and Scarlett role isolation
+
+### 10.1 Isolated evidence tracks
+
+`venue_track` is part of ledger, dataset, trial, candidate, execution, benchmark,
+and snapshot identity.
+
+| Track | Purpose | Evidence effect |
+|---|---|---|
+| `solana_dex` | Primary discovery population | Only Solana DEX trades/reserves contribute to discovery gates |
+| `hyperliquid` | Mirror, benchmark, and transfer testing | Separate population, mechanics, and frozen evaluation sets |
+| `cross_venue_transfer` | Explicit transfer hypothesis | Tests a frozen source fingerprint on Hyperliquid; neither population is pooled |
+| `external` | Scarlett/audit snapshots | Claim evidence or benchmark under declared role, never silently mixed |
+
+Track boundaries are enforced at descriptor, artifact, metric, and gate layers.
+Aggregate venues may be shown only as side-by-side panels with separate counts
+and assumptions; they cannot supply the effective observation count for a
+single-venue candidate gate.
+
+### 10.2 Transfer testing
+
+A transfer trial records the exact Solana candidate fingerprint, why transfer is
+plausible, frozen Hyperliquid window, adaptation permitted (none, recalibration,
+or retraining), benchmark, and execution model. Any Hyperliquid adaptation is a
+new trial with lineage to the source. Success establishes only the declared
+transfer hypothesis; it does not retroactively strengthen the Solana discovery
+population.
+
+### 10.3 Scarlett recorder and role enforcement
+
+The recorder snapshots profiles, markets, forecasts, and setups with pagination,
+rate-limit/backoff metadata, collector version, and fetch time. It never merges
+duplicate IDs by recency silently: snapshot provenance and merge policy are
+recorded so calibration inputs remain reconstructible.
+
+For each trial/family, audit emits a role declaration:
+
+| Role | Permitted use | Conflict |
+|---|---|---|
+| Benchmark | Independent comparison only | Cannot contribute signal to candidate |
+| Candidate/information source | Candidate feature/forecast with model lineage and calibration | Cannot be benchmark for that candidate |
+| Audit target | Claim decomposition and reconciliation | Cannot become evidence of candidate edge without separate candidate trial |
+
+A contamination check walks the provenance graph before major transitions and
+blocks if the same Scarlett artifact serves incompatible roles without an
+approved, explicit redesign and replacement benchmark.
