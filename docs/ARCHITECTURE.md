@@ -182,6 +182,9 @@ optional extra in the core lock. The core runtime uses
 launches factory work only as a subprocess using that project's lock (for
 example `uv --project factory run ...`) and receives content-hashed artifact
 files. Neither project imports the other's numerical stack.
+The root project must not map `factory` as a uv workspace/source dependency, and
+the root lock must contain no factory or NumPy 1.23.5 resolution. CI verifies
+the two lockfiles independently.
 
 ### 4.3 `lab/` — independent evidence mathematics
 
@@ -815,7 +818,7 @@ appended even when no artifact is produced.
 | `evaluate_dependencies` | Descriptor IDs or evidence-set ID, `as_of`, evidence-policy hash, required metric/rule set | Selected descriptor-version hashes, graph hash, freshness/quality closure, criticality result, affected metrics, coverage, quarantine state | `POLICY_HASH_INVALID`, `DESCRIPTOR_UNVERIFIED`, `GRAPH_MALFORMED`; a resolvable but failed check returns `BLOCKED` in the evaluation result, not a command crash |
 | `evaluate_gate` | Trial/candidate ID, dependency-evaluation hash, required panel artifact hashes, gate-rules/policy hashes, `as_of` | Per-rule inputs/results/reasons, aggregate state under fixed precedence, disposition, inspectable calculation artifact | `PANEL_CONTRACT_INVALID`, `ARTIFACT_HASH_MISMATCH`, `POLICY_INCOMPATIBLE`, `DEPENDENCY_EVALUATION_STALE`; structurally unavailable required evidence becomes rule `BLOCKED` |
 | `write_decision_snapshot` | Valid gate result, evidence bundle refs, recommendation/review mode/ordered reveal log, capability context, current event head | Immutable Decision Snapshot ID/hash + manifest; no owner decision is implied | `ACTOR_CONTEXT_INVALID`, `GATE_RESULT_INVALID`, `REVEAL_LOG_INVALID`, `EVENT_CHAIN_INVALID`, `SNAPSHOT_EXISTS` |
-| `record_owner_decision` | Locally signed owner action envelope, exact subject snapshot/gate hashes, decision vocabulary, reason, policy/reveal references, nonce | Write-once `owner-decision.json` extension linked to original snapshot; original snapshot hash unchanged | `AUTHORIZATION_DENIED`, `SIGNATURE_INVALID`, `KEY_UNKNOWN`, `NONCE_REPLAY`, `SUBJECT_HASH_MISMATCH`, `DECISION_NOT_PERMITTED`, `FORENSICS_REQUIRED`, `POLICY_VERSION_MISMATCH` |
+| `record_owner_decision` | Locally signed owner action envelope, exact subject snapshot/gate hashes, decision vocabulary, reason, policy/reveal references, nonce | Write-once `owner-decisions/<action-id>.json` extension linked to original snapshot; original snapshot hash unchanged | `AUTHORIZATION_DENIED`, `SIGNATURE_INVALID`, `KEY_UNKNOWN`, `NONCE_REPLAY`, `SUBJECT_HASH_MISMATCH`, `DECISION_NOT_PERMITTED`, `FORENSICS_REQUIRED`, `POLICY_VERSION_MISMATCH` |
 | `project_evidence_card` | Snapshot ID/hash, projection policy/version, output format, drill-down policy | Deterministic Evidence Card JSON/Markdown projection hash; all mandatory fields or explicit blocked/missing labels | `SNAPSHOT_VERIFICATION_FAILED`, `PROJECTION_POLICY_INVALID`, `FORMAT_UNSUPPORTED`; a valid snapshot with missing source coverage projects `BLOCKED`, not a synthetic metric |
 | `export_audit_bundle` | Snapshot hash, bundle policy/version, artifact selection, destination policy | Self-contained immutable bundle path/ID, Merkle root, verification report | `ARTIFACT_MISSING`, `VERIFICATION_FAILED`, `DESTINATION_NOT_EMPTY`, `BUNDLE_POLICY_INVALID` |
 
@@ -824,6 +827,12 @@ profile hash, defaults, explicit CLI/MCP overrides, artifact/policy versions,
 and code/environment hashes; `--show-config` and `--diff-config` call it without
 running research. Interface-parity tests compare CLI and MCP outputs and ledger
 events for every successful and representative error path.
+
+Successful service calls emit `trial.registered`, `dependency.evaluated`,
+`gate.evaluated`, `snapshot.written`, `owner.decision.recorded`,
+`evidence_card.projected`, and `audit_bundle.exported`, respectively. Failed
+calls emit the same operation verb with `status=ERROR`, error code, subject, and
+input/output hashes, without inventing an artifact.
 
 ### 11.3 Operation trace
 
@@ -836,7 +845,7 @@ hash-chained and append-only:
   "event_id": "stable-random-or-ulid",
   "schema_version": "1",
   "timestamp_utc": "...",
-  "actor": {"kind": "human|agent|mcp|collector", "identity": "..."},
+  "actor": {"kind": "human|agent|collector", "identity": "..."},
   "verb": "gate.evaluate",
   "subject": "candidate/track/artifact id",
   "args_hash": "sha256:...",
@@ -959,10 +968,12 @@ are exactly two Phase 1 authority contexts:
 The owner key ceremony is local-only. The private key lives outside
 `GAUNTLET_DATA_ROOT`, normally under `~/.gauntlet/owner-key.pem`, with mode
 `0600`; the corresponding public key and key ID live in an immutable local
-trust manifest. Rotating or adding a key creates a new manifest version and
-ledger entry; it never rewrites historical verification metadata. No token or
-private key is accepted as an MCP argument, environment value passed through an
-agent, report field, or event payload.
+trust manifest. The initial trust manifest is created by a local bootstrap
+command before the first owner action; if that manifest or usable private key is
+absent, every owner-only operation fails closed. Rotating or adding a key creates
+a new manifest version and ledger entry; it never rewrites historical
+verification metadata. No token or private key is accepted as an MCP argument,
+environment value passed through an agent, report field, or event payload.
 
 An owner-only request is a canonical action envelope containing subject IDs,
 decision vocabulary, reason, policy version, prior snapshot hash where
@@ -997,10 +1008,10 @@ is appended. Agents may prepare a recommendation or unsigned draft, but cannot
 write an owner decision.
 
 Owner decisions do not mutate the original Decision Snapshot. `record_owner_decision`
-writes a new immutable `owner-decision.json` in the snapshot directory, linked by
-the exact prior `snapshot_hash`, signed-action hash, and decision fields. The
-audit-bundle manifest includes this extension; the original snapshot bytes remain
-byte-for-byte unchanged.
+writes a new immutable `owner-decisions/<action-id>.json` in the snapshot
+directory, linked by the exact prior `snapshot_hash`, signed-action hash, and
+decision fields. The audit-bundle manifest includes all such extensions; the
+original snapshot bytes remain byte-for-byte unchanged.
 
 Integrity controls include canonical schemas, SHA-256, hash chaining, exclusive
 creation, replay verification, and durable backups. They detect accidental or
