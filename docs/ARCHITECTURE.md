@@ -796,7 +796,36 @@ FastMCP is spawned by an AI client and is not installed as a daemon.
 All wrappers accept `--json`, `--no-color`, and ASCII fallback. They read local
 snapshots; only collectors make network calls.
 
-### 11.2 Operation trace
+### 11.2 Minimum core service API
+
+CLI and FastMCP must call exactly these typed services. Wrappers do not write
+ledger/storage directly and cannot bypass an error contract. Each call receives
+a common envelope containing operation, structural capability context,
+canonical arguments, requested `as_of`, and either an immutable resolved-config
+hash or a profile-plus-explicit-overrides form to resolve first. Research- or
+state-mutating services reject an incomplete or hidden-value configuration.
+
+Every result carries `OK` or `ERROR`, service version, input hashes, output
+hashes, event head, and a machine-readable error code/message. Error events are
+appended even when no artifact is produced.
+
+| Service | Required inputs | Required outputs / effects | Error states |
+|---|---|---|---|
+| `register_trial` | Hypothesis, family, venue track, strategy family, axes/exception state, source descriptor hashes, split/feature/execution/benchmark/risk references, budgets, profile + overrides | Canonical `ResolvedConfig` + hash; immutable `trial.registered` entry; trial/family IDs; descriptor bindings | `CONFIG_INVALID`, `SOURCE_DESCRIPTOR_MISSING`, `LINEAGE_INVALID`, `MULTI_AXIS_UNAUTHORIZED`, `BUDGET_EXHAUSTED`, `DUPLICATE_TRIAL`, `LEDGER_CONFLICT` |
+| `evaluate_dependencies` | Descriptor IDs or evidence-set ID, `as_of`, evidence-policy hash, required metric/rule set | Selected descriptor-version hashes, graph hash, freshness/quality closure, criticality result, affected metrics, coverage, quarantine state | `POLICY_HASH_INVALID`, `DESCRIPTOR_UNVERIFIED`, `GRAPH_MALFORMED`; a resolvable but failed check returns `BLOCKED` in the evaluation result, not a command crash |
+| `evaluate_gate` | Trial/candidate ID, dependency-evaluation hash, required panel artifact hashes, gate-rules/policy hashes, `as_of` | Per-rule inputs/results/reasons, aggregate state under fixed precedence, disposition, inspectable calculation artifact | `PANEL_CONTRACT_INVALID`, `ARTIFACT_HASH_MISMATCH`, `POLICY_INCOMPATIBLE`, `DEPENDENCY_EVALUATION_STALE`; structurally unavailable required evidence becomes rule `BLOCKED` |
+| `write_decision_snapshot` | Valid gate result, evidence bundle refs, recommendation/review mode/ordered reveal log, capability context, current event head | Immutable Decision Snapshot ID/hash + manifest; no owner decision is implied | `ACTOR_CONTEXT_INVALID`, `GATE_RESULT_INVALID`, `REVEAL_LOG_INVALID`, `EVENT_CHAIN_INVALID`, `SNAPSHOT_EXISTS` |
+| `record_owner_decision` | Locally signed owner action envelope, exact subject snapshot/gate hashes, decision vocabulary, reason, policy/reveal references, nonce | Write-once `owner-decision.json` extension linked to original snapshot; original snapshot hash unchanged | `AUTHORIZATION_DENIED`, `SIGNATURE_INVALID`, `KEY_UNKNOWN`, `NONCE_REPLAY`, `SUBJECT_HASH_MISMATCH`, `DECISION_NOT_PERMITTED`, `FORENSICS_REQUIRED`, `POLICY_VERSION_MISMATCH` |
+| `project_evidence_card` | Snapshot ID/hash, projection policy/version, output format, drill-down policy | Deterministic Evidence Card JSON/Markdown projection hash; all mandatory fields or explicit blocked/missing labels | `SNAPSHOT_VERIFICATION_FAILED`, `PROJECTION_POLICY_INVALID`, `FORMAT_UNSUPPORTED`; a valid snapshot with missing source coverage projects `BLOCKED`, not a synthetic metric |
+| `export_audit_bundle` | Snapshot hash, bundle policy/version, artifact selection, destination policy | Self-contained immutable bundle path/ID, Merkle root, verification report | `ARTIFACT_MISSING`, `VERIFICATION_FAILED`, `DESTINATION_NOT_EMPTY`, `BUNDLE_POLICY_INVALID` |
+
+`resolve_config` is the shared helper used before these services. It records
+profile hash, defaults, explicit CLI/MCP overrides, artifact/policy versions,
+and code/environment hashes; `--show-config` and `--diff-config` call it without
+running research. Interface-parity tests compare CLI and MCP outputs and ledger
+events for every successful and representative error path.
+
+### 11.3 Operation trace
 
 Every autonomous or interface operation appends canonical JSONL to
 `data/ledger/events.jsonl`. Like the trial ledger, the event stream is
@@ -839,7 +868,7 @@ signatures, private owner material, or unredacted credentials. Authorization
 failure events record only the verifier, key ID when supplied, failure class,
 subject, and nonce/timestamp bounds.
 
-### 11.3 Reports and Phase 2/3 boundaries
+### 11.4 Reports and Phase 2/3 boundaries
 
 Phase 1 reports are files and stdout/stderr only. There is no web server,
 daemon, GraphQL, gRPC, TUI, or inbound command channel.
@@ -1058,7 +1087,8 @@ Architecture-level tests are contract tests, not only unit tests:
 12. **Risk separation:** risk breach changes disposition, never gate arithmetic;
      evidence pass does not authorize an order.
 13. **Interface parity:** CLI and FastMCP verbs produce identical resolved
-     configuration/output contracts and append events.
+    configuration/output/error contracts for every minimum core service and
+    append equivalent events; neither wrapper writes storage directly.
 14. **Factory isolation:** core import graph contains no factory dependency;
      root `uv.lock` resolves only core NumPy 2.x, `factory/uv.lock` resolves
      only NumPy 1.23.5, and a wrong-version lock fails CI before execution.
