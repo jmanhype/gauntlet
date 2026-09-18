@@ -231,8 +231,9 @@ hashes are required for replay.
 **Responsibility**
 
 Own all outbound collection through `audit/collectors/`, plus external-claim
-verification. `bitquery.py` owns Solana DEX discovery snapshots and their raw →
-bars/events transformations; `hyperliquid.py` owns Hyperliquid transfer-population
+verification. `audit/collectors/bitquery.py` owns Solana DEX discovery snapshots
+and their raw → bars/events transformations;
+`audit/collectors/hyperliquid.py` owns Hyperliquid transfer-population
 market/order snapshots and their venue-derived tables; Scarlett collectors are
 adapted from `scarlett_snapshot.py`, `scarlett_calibration.py`, and
 `validate_anti_scarlett.py`. `audit/collectors/` is the only Phase 1 component
