@@ -58,15 +58,16 @@ invalid if any required input is missing (rendered `BLOCKED`, never omitted).
 | Group | Required fields |
 |---|---|
 | **Decision facts** | Evidence set + version; gate calculation (§3a); gate state; policy disposition + policy version; advisory recommendation (optional); owner decision slot |
-| **Evidence quantity** | Raw count, effective count, effective-evidence calculation policy + version (overlap/clustering adjustment) |
-| **Performance** | After-cost expectancy; execution assumptions (fee, slippage, impact, latency) + versions; adverse-scenario results (all declared stress scenarios, each labeled PASS/FAIL) |
+| **Evidence quantity** | Raw count, effective count, effective-evidence calculation policy + version, and the full calculation disclosure: overlap window, clustering keys, serial-dependence treatment, regime handling, and the explicit reduction from raw trades to effective observations |
+| **Reconciliation** | Claimed metric values, independently recomputed values, per-metric differences, tolerance band, provenance of both claim and recomputation, policy version, verdict |
+| **Performance** | After-cost expectancy; execution assumptions with versions — fee model, slippage model, reserve-depth/market-impact model (venue-specific reserve or order-book state), fill-failure handling, latency — plus all four mandated adverse-scenario classes (fee stress, slippage/impact stress, fill-failure stress, latency stress), each labeled PASS/FAIL with inputs |
 | **Benchmarks** | Benchmark identity + window; comparison result; losing-condition status |
-| **Concentration panel** | Per-token, per-cluster, per-regime, per-trade contribution; removal effects (top-contributor removal rerun); dominance verdict |
-| **Robustness panel** | Declared diagnostics (bootstrap CI, PSR/DSR/PBO where applicable) + versions; each labeled PASS/FAIL/NOT_RUN with reason |
-| **Calibration panel** | Confidence-signal calibration vs untouched outcomes; selective-risk vs abstention/ungated comparison; verdict |
+| **Concentration panel** | Contribution and removal effects (top-contributor removal rerun) across: trade, token, cluster, regime, **venue, strategy variant, and execution artifact**; dominance verdict per axis |
+| **Robustness panel** | Mandatory: bootstrap or equivalent uncertainty evidence + explicit multiplicity accounting (PSR/DSR/PBO or documented equivalent) — each named, versioned, labeled PASS/FAIL/NOT_RUN with reason; "where applicable" requires a recorded justification when a diagnostic is omitted |
+| **Calibration panel** | Reliability by confidence bin, Brier score, expected calibration error, selective-risk-versus-coverage curve, gated-vs-ungated comparison; each with version and verdict |
 | **Dual temporal status** | Walk-forward status AND prospective/untouched status, each with window and PASS/FAIL/PENDING |
 | **Integrity** | Claim-vs-realized reconciliation verdict + tolerance band + policy version; data-quality/quarantine state; dependency-graph health |
-| **Lineage & budgets** | Experiment-ledger lineage summary (trials in family, selection history); trial/compute/data budget state |
+| **Lineage & budgets** | Complete lineage: every related trial, parameter-search record, risk-parameter version, and failed ancestor reachable from the card; trial/compute/data budget state |
 | **Next action** | The explicit next kill/downgrade/renewal/promotion condition and its current distance |
 | **Delta** | Material changes since previous Decision Snapshot (§B) |
 
@@ -82,7 +83,11 @@ GATE: candidate-verified   POLICY v12   RULESET: verified-gates@v7
   rule regimes_covered     2/4 vs >=3                          FAIL
   rule reconciliation      verdict PASS tol ±5%                PASS
   rule prospective         PENDING (window open)               BLOCKED
-AGGREGATE: worst-of-rules → FAIL (any FAIL) ; pending rule → INSUFFICIENT_EVIDENCE
+AGGREGATE (deterministic precedence):
+  any rule BLOCKED           → BLOCKED   (fail-closed dominates)
+  else any rule FAIL         → FAIL
+  else any rule PENDING/INSUF→ INSUFFICIENT_EVIDENCE
+  else                       → PASS
 ```
 
 Formula/rule identifiers, policy version, every material input and
@@ -131,6 +136,22 @@ Owner decision vocabulary: `CONTINUE`, `HOLD`, `QUARANTINE`, `RELEASE`,
   repairing the dependency and recomputing can unblock.
 - Every OVERRIDE requires completed forensics (§3b) and a Decision Snapshot
   recording the exception separately from the computed gate.
+
+### 3d. Experiment-family action matrix
+
+Family-level decisions apply to an experiment family (not one candidate) and
+are recorded against the family's ledger entry:
+
+| Family state | Permitted owner decisions | Forensics |
+|---|---|---|
+| Active within budget | CONTINUE | Automatic summary |
+| Budget exhausted / stop condition hit | KILL (family stop), RENEW (owner-authorized extension with new budget + reason) | Mandatory before RENEW |
+| Integrity-invalidated | KILL; RENEW only after integrity repair | Mandatory |
+
+Quarantine release is a candidate-level decision: from `QUARANTINED`, the
+owner may `RELEASE` back to the prior stage only after the blocking condition
+is repaired and automatic forensics pass; `RELEASE` never bypasses a
+recomputed gate.
 
 ## 4. Agent / CLI — explicit reproducibility
 
