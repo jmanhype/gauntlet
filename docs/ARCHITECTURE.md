@@ -83,7 +83,7 @@ artifacts and registered manifest contracts rather than shared mutable objects.
 
 ```text
 gauntlet/
-  pyproject.toml                 # core lock excludes factory pins
+  pyproject.toml                 # core project; NumPy 2.x lock
   uv.lock
   src/gauntlet/
     cli.py                       # Phase 1 CLI; thin wrapper over core services
@@ -91,12 +91,11 @@ gauntlet/
     contracts/                   # schemas, canonical JSON, hashes, manifests
     ledger/                      # append-only ledger and events.jsonl
     data/                        # descriptors, dependency graph, quarantine
-    policy/                      # deterministic gates and policy manifests
-    judge/
-    factory/
-    lab/
-    model/
-    audit/
+  policy/                      # deterministic gates and policy manifests
+  judge/
+  lab/
+  model/
+  audit/
       collectors/                # Bitquery, Hyperliquid, and Scarlett adapters
     risk/
     scoreboard/
@@ -110,6 +109,10 @@ gauntlet/
     evidence/                    # content-addressed derived artifacts
     decisions/                   # immutable Decision Snapshots
     reports/                     # regenerable static projections
+  factory/
+    pyproject.toml              # separately locked gauntlet-factory project
+    uv.lock
+    src/gauntlet_factory/       # NumPy 1.23.5 / VBT / GEPA candidate work
   tests/
 ```
 
@@ -172,6 +175,13 @@ labeled exploratory and recorded as versioned trial axes.
 Factory code must remain import-isolated from the core environment. A primitive
 race result is not judge evidence until the selected candidate fingerprint is
 locked and passed to `judge/`.
+
+Concretely, `factory/` is a separately locked `gauntlet-factory` project, not an
+optional extra in the core lock. The core runtime uses
+`numpy>=2.0,<3.0`; the factory runtime uses `numpy==1.23.5`. The core CLI
+launches factory work only as a subprocess using that project's lock (for
+example `uv --project factory run ...`) and receives content-hashed artifact
+files. Neither project imports the other's numerical stack.
 
 ### 4.3 `lab/` — independent evidence mathematics
 
@@ -349,7 +359,10 @@ independent durable backup.
 Content-addressed payloads too large for JSONL live under
 `data/evidence/sha256/<aa>/<full-sha>/`; the ledger stores only their hash and
 storage-relative path. These files are write-once. Derived indexes, queues, and
-SQLite caches may exist, but are always reconstructible projections.
+other lookup projections use only Parquet partitions, canonical JSON/JSONL, or
+in-memory structures loaded from those files. Phase 1 has **no database engine
+dependency of any kind**, including SQLite; every projection is fully
+regenerable from immutable source artifacts.
 
 ### 5.2 Required trial payload
 
@@ -874,19 +887,19 @@ checks is simulated/paper state and is labeled `MODELED`.
 | Decision | Choice | Rationale | Trade-off / mitigation |
 |---|---|---|---|
 | Language/runtime | Python managed by `uv`, portable pure-Python where practical | Matches extraction code, laptop/Mac mini portability, scientific ecosystem | Slower than Rust; heavy work isolated and profiled |
-| Repository | One Python/uv monorepo with module packages | Shared contracts and end-to-end tests without release coupling | Needs import boundaries and contract tests |
+| Repository | One source monorepo with the core project and separately locked `gauntlet-factory` project | Shared contracts and end-to-end tests without incompatible dependency resolution | Needs subprocess boundary and lockfile tests |
 | Storage | Parquet + canonical JSON/JSONL under `GAUNTLET_DATA_ROOT` | Local, inspectable, portable, no service, suits cadence work | No transactional DB; use exclusive writes, hash chains, indexes, durable backups |
 | Content addressing | SHA-256 over canonical bytes | Provenance and deduplication | Verification cost; cache verified roots |
 | Model stack | PyTorch/Kronos adapters behind `model/` | Reuse proven architecture and fine-tuning path | Heavy dependency; isolate from judge/factory import paths |
-| Factory stack | Optional `factory` extra/execution environment pinning NumPy 1.23.5 | Preserves VBT/GEPA behavior while core remains NumPy 2.x | Adds invocation boundary; core never imports factory |
+| Factory stack | `factory/pyproject.toml` + `factory/uv.lock` pinning `numpy==1.23.5`; separate subprocess runtime | Preserves VBT/GEPA behavior while core remains NumPy 2.x | Adds invocation boundary; core never imports factory |
 | API/MCP | Typer-style CLI + FastMCP thin wrappers | Owner/AI operability without a daemon | Duplicate verbs must be contract-tested |
 | Reports | Static files | Host can sleep; no server state | No live dashboard until Phase 3 |
-| Database server | Rejected for Phase 1 | Cost/ops simplicity and local snapshots | SQLite/index projections may be rebuilt from JSONL/Parquet |
+| Database engines | No server **and no embedded engine** in Phase 1; JSON/Parquet/in-memory projections only | Cost/ops simplicity, portability, and fully regenerable local snapshots | Lookup/index work is manual; SQLite may be proposed only in Phase 2+ through an explicit requirements change |
 
-The core lockfile and CI environment exclude the factory extra. Factory commands
-run in the isolated optional environment (for example `uv run --extra factory`)
-or a dedicated uv environment using the same project manifest. Factory emits
-artifact files rather than passing live objects across the boundary.
+The core project and lockfile resolve `numpy>=2.0,<3.0`. The separate factory
+project and lockfile resolve `numpy==1.23.5`. Core commands never install or
+import the factory project; the launcher uses the factory lock in a subprocess.
+Factory emits artifact files rather than passing live objects across the boundary.
 
 ## 14. Security and access model
 
@@ -994,7 +1007,7 @@ never print a fabricated score or silently continue with substituted data.
 | Duplicate collector snapshot | New immutable snapshot; merge policy is explicit and provenance-preserving |
 | Nonempty output directory | Run refuses overwrite; operator chooses a new run ID |
 | Model sampling nondeterminism | Fixed seed/sample count or declared tolerance; otherwise replay fails |
-| Factory/core dependency conflict | Run in optional isolated factory environment; core lock never installs extra |
+| Factory/core dependency conflict | Launcher refuses if the expected separate lock/NumPy version is absent; core never installs factory |
 | Ledger verification failure | Stop decisions, surface integrity failure, restore from durable backup |
 | Disk full | Run fails before partial evidence is interpreted; write-ahead staging and verification prevent partial promotion |
 
@@ -1046,9 +1059,14 @@ Architecture-level tests are contract tests, not only unit tests:
      evidence pass does not authorize an order.
 13. **Interface parity:** CLI and FastMCP verbs produce identical resolved
      configuration/output contracts and append events.
-14. **Factory isolation:** core import graph contains no factory dependency.
+14. **Factory isolation:** core import graph contains no factory dependency;
+     root `uv.lock` resolves only core NumPy 2.x, `factory/uv.lock` resolves
+     only NumPy 1.23.5, and a wrong-version lock fails CI before execution.
 15. **Export self-containment:** an audit bundle verifies after the original
     data root is unavailable.
+16. **No Phase 1 database engine:** dependency metadata and import scan prove
+    neither core nor factory depends on SQLite or another DB engine; deleting
+    all generated JSON/Parquet index projections allows full regeneration.
 
 Additional authorization and integrity scenarios must prove:
 
@@ -1073,7 +1091,9 @@ Implementation stories must embed these non-negotiables:
 - no report field synthesized to hide a mandatory gap;
 - no venue/role mixing or post-hoc threshold selection;
 - no deletion/update path for trials, source snapshots, policies, or snapshots;
-- no factory import from core and no core dependency on VBT/NumPy 1.23.5;
+- no factory import from core; factory uses only its separate
+  `numpy==1.23.5` lock while core uses only its NumPy 2.x lock;
+- no SQLite or other database engine dependency in Phase 1;
 - no collector calls from report/MCP read paths;
 - no order-placement interface.
 
