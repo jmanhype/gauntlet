@@ -1,17 +1,19 @@
 ---
 id: VK-jkkn
 title: "Resolve immutable run configurations"
-status: open
+status: in_progress
 priority: 0
 type: feature
 labels: [integration, phase-1]
 parent: VK-egll
 created_at: 2026-09-18T23:31:16Z
 created_by: speed
-updated_at: 2026-09-18T23:31:16Z
-content_hash: "sha256:532d8051bcf527a62d7c2288bd12983fb54754c853665af2bd18e066aadb3288"
+updated_at: 2026-09-19T04:15:20Z
+content_hash: "sha256:ac520a8edd21a95d417f6a224c5318e965bcc35f012b8df86e00e2d38a347216"
 blocks: [VK-pg9j, VK-mfn6, VK-si5s, VK-0pfo, VK-0c4c, VK-ddoh, VK-dblr, VK-3f9f, VK-rkdr]
 was_blocked_by: [VK-1vhm, VK-kmbs]
+assignee: dev-VK-jkkn
+follows: [VK-1vhm, VK-kmbs]
 ---
 
 ## Description
@@ -109,10 +111,15 @@ status: new
 - 2026-09-19T01:37:42Z dep_added: blocks VK-rkdr
 - 2026-09-19T02:37:33Z dep_removed: was_blocked_by VK-1vhm
 - 2026-09-19T04:11:59Z dep_removed: was_blocked_by VK-kmbs
+- 2026-09-19T04:15:20Z status: open -> in_progress
+- 2026-09-19T04:15:20Z auto-follows: linked to predecessor VK-1vhm
+- 2026-09-19T04:15:20Z auto-follows: linked to predecessor VK-kmbs
+- 2026-09-19T04:15:20Z claimed by dev-VK-jkkn
 
 ## Links
 - Parent: [[VK-egll]]
 - Blocks: [[VK-pg9j]], [[VK-mfn6]], [[VK-si5s]], [[VK-0pfo]], [[VK-0c4c]], [[VK-ddoh]], [[VK-dblr]], [[VK-3f9f]], [[VK-rkdr]]
 - Was blocked by: [[VK-1vhm]], [[VK-kmbs]]
+- Follows: [[VK-1vhm]], [[VK-kmbs]]
 
 ## Comments
