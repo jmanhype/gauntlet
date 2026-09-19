@@ -4,7 +4,7 @@ title: "Register Kronos model lineage"
 status: in_progress
 priority: 2
 type: feature
-labels: [integration, phase-1]
+labels: [integration, phase-1, delivered]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:19Z
 created_by: speed
