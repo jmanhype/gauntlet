@@ -8,8 +8,8 @@ labels: [integration, phase-1]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T02:41:31Z
-content_hash: "sha256:18785d9b65afb830dee378f38aa3cce8a190ce71a650df5ef6708571fcbfa7d1"
+updated_at: 2026-09-19T02:41:37Z
+content_hash: "sha256:1930831014aa502dee79c6a6c41c2b6a8d46e75b4a399ab3f191aa67c9365231"
 blocks: [VK-kmbs, VK-pg9j, VK-mfn6, VK-si5s, VK-jbae, VK-0pfo, VK-ddoh, VK-bns7, VK-52g6, VK-3f9f, VK-3v14]
 was_blocked_by: [VK-1vhm]
 assignee: dev-VK-wa2q
@@ -97,7 +97,15 @@ status: new
 
 
 ## Notes
+## nd_contract
+status: in_progress
 
+### evidence
+- Claimed: 2026-09-19
+- Scope: implement the four PRODUCES ledger modules and real-file integrity tests only.
+
+### proof
+- [ ] (pending)
 
 ## History
 - 2026-09-18T23:31:15Z dep_added: blocked_by VK-1vhm
