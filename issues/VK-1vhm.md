@@ -8,8 +8,8 @@ labels: [integration, phase-1, walking-skeleton, delivered]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T02:33:04Z
-content_hash: "sha256:03998e098af70b2ff3ad11cdd551e0651353cc76cfd992a0934a7606509b081b"
+updated_at: 2026-09-19T02:33:13Z
+content_hash: "sha256:ed4d8d9c43ce9da2b9b60ed2d9bac5f7da6f7ba7f6bc45ccaa128460fdbad3ff"
 blocks: [VK-wa2q, VK-kmbs, VK-jkkn, VK-bns7, VK-52g6, VK-3f9f, VK-aej2]
 assignee: dev-VK-1vhm
 ---
@@ -202,7 +202,9 @@ Commands run:
 - `pvg verify ... --format=text`
 
 Summary: PASS — 6 passed; integration no-mock real-tree tamper test PASS; coverage 81%; pvg verify PASS.
-Commit SHA: `26f70aeffa5013c86bfb5b5400853904107351ae` on `story/VK-1vhm`.
+### Commit
+- SHA: 26f70aeffa5013c86bfb5b5400853904107351ae
+- Branch: story/VK-1vhm
 
 ## nd_contract
 status: delivered
