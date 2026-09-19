@@ -9,7 +9,7 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
 updated_at: 2026-09-19T02:37:33Z
-content_hash: "sha256:f5de1e9e8c81f00899360ca6577d1859cd75095e67b3374bda6c2ce2442fe660"
+content_hash: "sha256:0bb0500fc19b482cfe140973735fd7a05bb1be5e3b0ba0554d5708e2ee78edd2"
 assignee: dev-VK-1vhm
 closed_at: 2026-09-19T02:37:33Z
 close_reason: "Accepted: all seven contract acceptance criteria verified from committed code and independent tests."
@@ -96,6 +96,18 @@ status: new
 
 
 ## Notes
+
+
+## nd_contract
+status: accepted
+
+### evidence
+- PM closeout applied via pvg story accept on 2026-09-18.
+
+### proof
+- [x] Story closed after accepted label was applied.
+
+
 ## PM Decision
 ACCEPTED [$(date +%Y-%m-%d)]: Evidence reviewed against every acceptance criterion and independently verified.
 
