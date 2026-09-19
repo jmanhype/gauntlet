@@ -9,7 +9,7 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:16Z
 created_by: speed
 updated_at: 2026-09-19T04:35:18Z
-content_hash: "sha256:99b8fbefca4fe03331120c892461f7d8639d3bfea23005157bd6b7863a8aaa4e"
+content_hash: "sha256:4b498e43fdd191af9b497d7a82a91390e9f18dda90bb3398c376d94595f20c36"
 blocks: [VK-pg9j, VK-mfn6, VK-si5s, VK-0pfo, VK-0c4c, VK-ddoh, VK-dblr, VK-3f9f, VK-rkdr]
 was_blocked_by: [VK-1vhm, VK-kmbs]
 follows: [VK-1vhm, VK-kmbs, VK-wa2q]
@@ -94,6 +94,18 @@ status: new
 
 
 ## Notes
+
+
+## nd_contract
+status: rejected
+
+### evidence
+- PM rejection applied via pvg story reject on 2026-09-18.
+
+### proof
+- [ ] Story requires another developer delivery before it can be accepted.
+
+
 ## nd_contract
 status: delivered
 
