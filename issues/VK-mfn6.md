@@ -1,19 +1,20 @@
 ---
 id: VK-mfn6
 title: "Register Kronos model lineage"
-status: in_progress
+status: closed
 priority: 2
 type: feature
 labels: [integration, phase-1, delivered]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:19Z
 created_by: speed
-updated_at: 2026-09-19T17:05:55Z
-content_hash: "sha256:bd3ce7acd6483785c998c384105ccc0ad3d01c3ac9da80d8fd079180c263167e"
-blocks: [VK-7ubc, VK-zvia, VK-ldg1]
+updated_at: 2026-09-19T17:06:07Z
+content_hash: "sha256:680874107e67551146c87d6e3e60f68b014e80110e0d2ee3e37790476d88d17c"
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-mfn6
 follows: [VK-wa2q, VK-kmbs, VK-jkkn]
+closed_at: 2026-09-19T17:06:07Z
+close_reason: "Accepted: independently reran story/full suites (7/7 and 59/59), pvg verify, git diff check, static dependency/secret scans, deterministic hash review, and LOC/budget checks. Exact checkpoint lineage, point-in-time bounds, replayability, MODELED semantics, and missing-byte BLOCKED behavior are verified."
 ---
 
 ## Description
@@ -171,10 +172,13 @@ status: delivered
 - 2026-09-19T16:35:13Z auto-follows: linked to predecessor VK-jkkn
 - 2026-09-19T16:35:13Z claimed by dev-VK-mfn6
 - 2026-09-19T17:05:08Z status: in_progress -> in_progress
+- 2026-09-19T17:06:08Z status: in_progress -> closed
+- 2026-09-19T17:06:08Z dep_removed: no_longer_blocks VK-7ubc
+- 2026-09-19T17:06:08Z dep_removed: no_longer_blocks VK-zvia
+- 2026-09-19T17:06:08Z dep_removed: no_longer_blocks VK-ldg1
 
 ## Links
 - Parent: [[VK-u40v]]
-- Blocks: [[VK-7ubc]], [[VK-zvia]], [[VK-ldg1]]
 - Was blocked by: [[VK-wa2q]], [[VK-kmbs]], [[VK-jkkn]]
 - Follows: [[VK-wa2q]], [[VK-kmbs]], [[VK-jkkn]]
 
