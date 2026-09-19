@@ -4,7 +4,7 @@ title: "Resolve immutable run configurations"
 status: in_progress
 priority: 0
 type: feature
-labels: [integration, phase-1]
+labels: [integration, phase-1, delivered]
 parent: VK-egll
 created_at: 2026-09-18T23:31:16Z
 created_by: speed
