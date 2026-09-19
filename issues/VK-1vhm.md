@@ -8,8 +8,8 @@ labels: [integration, phase-1, walking-skeleton, delivered]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T02:32:22Z
-content_hash: "sha256:ad5998cdb0d604515a4ed9199d5b461cc4c273c6b79fd6d240bc094fb92e9d38"
+updated_at: 2026-09-19T02:32:44Z
+content_hash: "sha256:e1a03aed4db4def7db71a054ba5ba8aea90cdd1ab172885ad5090c991cd68cc9"
 blocks: [VK-wa2q, VK-kmbs, VK-jkkn, VK-bns7, VK-52g6, VK-3f9f, VK-aej2]
 assignee: dev-VK-1vhm
 ---
@@ -192,6 +192,17 @@ status: in_progress
 
 ### proof
 - [ ] Pending implementation and verification.
+
+## Implementation Evidence (DELIVERED)
+
+### CI/Test Results
+Commands run:
+- `uv run pytest tests/integrity/test_contracts.py`
+- `uv run --with pytest-cov pytest tests/integrity/test_contracts.py --cov=gauntlet.contracts --cov-report=term-missing`
+- `pvg verify ... --format=text`
+
+Summary: PASS — 6 passed; integration no-mock real-tree tamper test PASS; coverage 81%; pvg verify PASS.
+Commit SHA: `26f70aeffa5013c86bfb5b5400853904107351ae` on `story/VK-1vhm`.
 
 ## nd_contract
 status: delivered
