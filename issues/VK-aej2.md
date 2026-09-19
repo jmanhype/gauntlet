@@ -8,8 +8,8 @@ labels: [integration, phase-1, walking-skeleton]
 parent: VK-1rbc
 created_at: 2026-09-19T01:37:42Z
 created_by: speed
-updated_at: 2026-09-19T04:45:11Z
-content_hash: "sha256:1d5b11c2d0818e416e04bc1e37ce8996680c99406354fbeff7b413d01111cea1"
+updated_at: 2026-09-19T04:57:30Z
+content_hash: "sha256:39d3d50feec1d0dc2e933d721ca34f8d23e2e5621291e71335bb89973d6f05da"
 blocks: [VK-2e0k, VK-uyca]
 was_blocked_by: [VK-1vhm]
 assignee: dev-VK-aej2
@@ -93,6 +93,80 @@ status: new
 
 
 ## Notes
+## Implementation Evidence (DELIVERED)
+
+PROOF:
+
+### CI/Test Results
+- Commands run:
+  - `uv run pytest tests/policy/test_precedence_skeleton.py`
+  - `uv run pytest tests/`
+  - `uv run --with pytest-cov pytest tests/ --cov=gauntlet.policy --cov=gauntlet.contracts.schemas --cov-report=term`
+- Required targeted result: `8 passed in 0.02s`.
+- Full-suite result: `43 passed in 0.43s` (baseline before change: `35 passed in 0.50s`).
+- Scoped coverage: `TOTAL 228 statements, 25 missed, 89%`; new precedence module `100%`, policy package `100%`, synthetic module `83%`, extended schema validator `88%`.
+- Warnings/failures: none in the recorded targeted, full, and coverage runs.
+- Key user-facing integration output:
+  - `AGGREGATE: BLOCKED (any BLOCKED)`
+  - `OUTPUT_HASH: sha256:409b3773cb6832a298bd8364fd4d4f3481245facc42ae48fe5a452aa929f17a9`
+  - `FAILED_OR_BLOCKED_RULES:`
+  - `- synthetic.expectancy: FAIL — synthetic expectancy is below zero`
+  - `- synthetic.replay_integrity: BLOCKED — one synthetic replay input is intentionally unavailable`
+
+### Commit
+- Branch: `story/VK-aej2`
+- SHA: `db2c5b8ee16511557064530c6429142df8da1e60`
+- Commit: `feat(VK-aej2): establish deterministic gate precedence`
+- Diff: 5 files, 441 insertions, 1 deletion (within the ~5-file/under-450-changed-LOC budget).
+- Push: intentionally not performed; dispatcher requested commit only and did not authorize push.
+
+### pvg verify
+- Command: `pvg verify src/gauntlet/contracts/schemas.py src/gauntlet/policy/__init__.py src/gauntlet/policy/precedence.py src/gauntlet/policy/synthetic.py tests/policy/test_precedence_skeleton.py --include-tests --format=text`
+- Output: `VERIFY: PASSED (5 files scanned, 0 issues)`
+
+### AC Verification
+| AC # | Requirement | Code Location | Test Location | Status |
+|---|---|---|---|---|
+| 1 | Exhaustive combinations prove BLOCKED > FAIL > INSUFFICIENT_EVIDENCE > PASS independent of order | `src/gauntlet/policy/precedence.py:43` | `tests/policy/test_precedence_skeleton.py:25,32` | PASS |
+| 2 | Content-hashed synthetic bundle contains all inspectable IDs, hashes, values, comparators, thresholds, labels, states, and reasons | `src/gauntlet/policy/synthetic.py:53,117`; schema at `src/gauntlet/contracts/schemas.py:26` | `tests/policy/test_precedence_skeleton.py:68,99` | PASS |
+| 3 | Unknown or malformed rule output becomes BLOCKED | `src/gauntlet/policy/precedence.py:51` | `tests/policy/test_precedence_skeleton.py:41,99` | PASS |
+| 4 | No external I/O, current-data query, LLM call, or threshold inference | pure `precedence.py`; seeded pure `synthetic.py` | `tests/policy/test_precedence_skeleton.py:52` plus real end-to-end test at line 116 | PASS |
+| 5 | Deterministic seed reproduces canonical bundle and output hashes; different seed changes content | `src/gauntlet/policy/synthetic.py:117` | `tests/policy/test_precedence_skeleton.py:87` | PASS |
+| 6 | User-facing output displays selected precedence branch and every failed/blocked synthetic rule | `SyntheticEvidenceBundle.output` in `src/gauntlet/policy/synthetic.py:124` | `tests/policy/test_precedence_skeleton.py:116` | PASS |
+
+LEARNINGS:
+- The synthetic bundle can remain completely local and deterministic by deriving only seed-bound artifact hashes from fixed rule contracts; rule states and thresholds stay explicit rather than inferred.
+- The first malformed-bundle test exposed that the generic schema string check accepted an empty generator version; adding synthetic-specific non-empty validation closed that fail-closed gap before delivery.
+- `pytest-cov` is not a project dependency, so scoped coverage was measured with an ephemeral `uv run --with pytest-cov` invocation without changing the project manifest or lockfile.
+
+### OBSERVATIONS (unrelated)
+- `pvg notes search` exited 1 because it selected vault `Claude`, while the available vault list included `nd-vault` and others. Story context was complete through `pvg nd show`, so implementation was not blocked.
+
+### DISCOVERED_BUG
+  title: pvg notes search selects an unavailable configured vault
+  context: While following the developer vault-context check, both `pvg notes search 'VK-aej2 precedence synthetic evidence bundle'` and the pattern query failed with `vlt: vault "Claude" not found`. The live nd vault resolves correctly through `pvg nd`, so this appears isolated to pvg notes vault selection/configuration rather than backlog storage.
+  affected_files: pvg notes/vault configuration (no repository source file identified)
+  discovered_during: VK-aej2
+
+## nd_contract
+status: delivered
+
+### evidence
+- Commit: `db2c5b8ee16511557064530c6429142df8da1e60` on `story/VK-aej2`.
+- Targeted: `uv run pytest tests/policy/test_precedence_skeleton.py` → `8 passed in 0.02s`.
+- Full: `uv run pytest tests/` → `43 passed in 0.43s`.
+- Scoped coverage: `89%` (228 statements, 25 missed).
+- Static delivery gate: `pvg verify ... --include-tests --format=text` → `VERIFY: PASSED (5 files scanned, 0 issues)`.
+- No merge and no push performed.
+
+### proof
+- [x] AC #1: Exhaustive state/multiplicity combinations and order permutations prove fixed precedence. (Code: `src/gauntlet/policy/precedence.py`, Test: `tests/policy/test_precedence_skeleton.py`)
+- [x] AC #2: Synthetic bundle is canonical/content/output hashed and exposes every declared inspectable field. (Code: `src/gauntlet/policy/synthetic.py`, Test: same test file)
+- [x] AC #3: Unknown and malformed rule outputs aggregate to BLOCKED. (Code: `src/gauntlet/policy/precedence.py`, Test: same test file)
+- [x] AC #4: Kernel has no I/O/current-data/LLM/threshold-inference path. (Code: `src/gauntlet/policy/precedence.py`, Test: AST purity test and real integration)
+- [x] AC #5: Same seed is byte/hash identical; different seed changes canonical content. (Code: `src/gauntlet/policy/synthetic.py`, Test: same test file)
+- [x] AC #6: Real no-mock integration prints selected branch, output hash, and both failed/blocked rules. (Code: `src/gauntlet/policy/synthetic.py`, Test: same test file)
+
 ## nd_contract
 status: in_progress
 
