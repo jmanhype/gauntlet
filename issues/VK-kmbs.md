@@ -1,18 +1,19 @@
 ---
 id: VK-kmbs
 title: "Register evidence descriptors with fail-closed dependencies"
-status: open
+status: in_progress
 priority: 0
 type: feature
 labels: [integration, phase-1, rejected]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T04:02:05Z
-content_hash: "sha256:a27bdd232cf2faefad781d255d830d3c26a9bbdc2a04c8ead2e3eceb3b09810c"
+updated_at: 2026-09-19T04:03:20Z
+content_hash: "sha256:e5708d4f8f3006756c1b069c6d5d75eef9c67df3d698ce5c4f261b5ff684d340"
 blocks: [VK-jkkn, VK-pg9j, VK-mfn6, VK-0pfo, VK-0c4c, VK-2e0k, VK-3f9f, VK-4qfy, VK-3v14]
 was_blocked_by: [VK-1vhm, VK-wa2q]
 follows: [VK-1vhm, VK-wa2q]
+assignee: dev-VK-kmbs
 ---
 
 ## Description
@@ -252,6 +253,8 @@ status: in_progress
 - 2026-09-19T03:56:00Z status: in_progress -> in_progress
 - 2026-09-19T04:01:30Z status: in_progress -> open
 - 2026-09-19T04:01:30Z released by speed
+- 2026-09-19T04:03:20Z status: open -> in_progress
+- 2026-09-19T04:03:20Z claimed by dev-VK-kmbs
 
 ## Links
 - Parent: [[VK-egll]]
