@@ -9,7 +9,7 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:16Z
 created_by: speed
 updated_at: 2026-09-19T04:15:20Z
-content_hash: "sha256:ac520a8edd21a95d417f6a224c5318e965bcc35f012b8df86e00e2d38a347216"
+content_hash: "sha256:796fdfa5817b5408354da1d8ce24d045ae44957c1af1ddfc6cf46ef6f7139f88"
 blocks: [VK-pg9j, VK-mfn6, VK-si5s, VK-0pfo, VK-0c4c, VK-ddoh, VK-dblr, VK-3f9f, VK-rkdr]
 was_blocked_by: [VK-1vhm, VK-kmbs]
 assignee: dev-VK-jkkn
@@ -95,7 +95,16 @@ status: new
 
 
 ## Notes
+## nd_contract
+status: in_progress
 
+### evidence
+- Claimed: 2026-09-19
+- Worktree: /Users/speed/Downloads/AI_Videos/google-usercontent/gauntlet/.claude/worktrees/dev-VK-jkkn
+- Branch: story/VK-jkkn
+
+### proof
+- [ ] (pending)
 
 ## History
 - 2026-09-18T23:31:16Z dep_added: blocked_by VK-1vhm
