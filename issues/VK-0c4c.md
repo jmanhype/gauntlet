@@ -9,7 +9,7 @@ parent: VK-0auj
 created_at: 2026-09-18T23:31:22Z
 created_by: speed
 updated_at: 2026-09-19T05:29:35Z
-content_hash: "sha256:c8dc3864ecc9c8e16efc45906ec5b36aa474f063dffc59b422ac4af261d7dd91"
+content_hash: "sha256:000942cc20b4a86951f8464af626af6bb9f2788b0635433773520f110facb66a"
 blocks: [VK-2g0f, VK-ddoh, VK-sbdy, VK-aumt, VK-dblr, VK-vqvy]
 was_blocked_by: [VK-pg9j, VK-kmbs, VK-jkkn]
 assignee: dev-VK-0c4c
@@ -117,6 +117,18 @@ CONSUMES:
 1. The P1 walking skeleton generates and registers a deterministic synthetic solana_dex bars/events population locally; it has no Bitquery dependency and makes no network call.
 2. Synthetic data is clearly labeled synthetic fixture evidence for wiring and is not promotable venue evidence.
 3. Collector-derived descriptors bind only in later integration stories after the collector epic.
+
+
+## nd_contract
+status: delivered
+
+### evidence
+- Transitioned via pvg story deliver on 2026-09-19.
+
+### proof
+- [ ] Developer evidence block must remain authoritative above this contract.
+
+
 ## Implementation Evidence (DELIVERED)
 
 PROOF:
