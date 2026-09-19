@@ -8,8 +8,8 @@ labels: [integration, phase-1, walking-skeleton, delivered]
 parent: VK-1rbc
 created_at: 2026-09-19T01:37:42Z
 created_by: speed
-updated_at: 2026-09-19T04:57:30Z
-content_hash: "sha256:9d412dd38cf111e16f1c9a9b92dd2c5a21c7647ddc66ed46dfa92d7e5ac3f3e5"
+updated_at: 2026-09-19T04:57:31Z
+content_hash: "sha256:9a2c987c5fb50c1afee20686a0affc89c7cb4d6debe4e99bccaf92f6cd0b99b4"
 blocks: [VK-2e0k, VK-uyca]
 was_blocked_by: [VK-1vhm]
 assignee: dev-VK-aej2
@@ -93,6 +93,18 @@ status: new
 
 
 ## Notes
+
+
+## nd_contract
+status: delivered
+
+### evidence
+- Transitioned via pvg story deliver on 2026-09-18.
+
+### proof
+- [ ] Developer evidence block must remain authoritative above this contract.
+
+
 ## Implementation Evidence (DELIVERED)
 
 PROOF:
