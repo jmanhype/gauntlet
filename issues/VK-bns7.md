@@ -9,10 +9,10 @@ parent: VK-1rbc
 created_at: 2026-09-18T23:31:31Z
 created_by: speed
 updated_at: 2026-09-18T23:33:49Z
-content_hash: "sha256:ec3115d415af1989a41d8a1850b0fe781e7628699121b349aa13eb6b339e7a85"
-blocked_by: [VK-2e0k, VK-wa2q]
+content_hash: "sha256:738d4cf9bd39db2eaa91664ecc0a894dc44aaf20f3f6e2e072a9e25f99e9ab31"
+blocked_by: [VK-2e0k]
 blocks: [VK-52g6, VK-1ptl, VK-21gm, VK-6khc, VK-dblr, VK-uyca, VK-3v14]
-was_blocked_by: [VK-1vhm]
+was_blocked_by: [VK-1vhm, VK-wa2q]
 ---
 
 ## Description
@@ -112,12 +112,13 @@ status: new
 - 2026-09-18T23:31:45Z dep_added: blocks VK-uyca
 - 2026-09-19T01:37:42Z dep_added: blocks VK-3v14
 - 2026-09-19T02:37:33Z dep_removed: was_blocked_by VK-1vhm
+- 2026-09-19T03:17:05Z dep_removed: was_blocked_by VK-wa2q
 
 ## Links
 - Parent: [[VK-1rbc]]
 - Blocks: [[VK-52g6]], [[VK-1ptl]], [[VK-21gm]], [[VK-6khc]], [[VK-dblr]], [[VK-uyca]], [[VK-3v14]]
-- Blocked by: [[VK-2e0k]], [[VK-wa2q]]
-- Was blocked by: [[VK-1vhm]]
+- Blocked by: [[VK-2e0k]]
+- Was blocked by: [[VK-1vhm]], [[VK-wa2q]]
 
 ## Comments
 

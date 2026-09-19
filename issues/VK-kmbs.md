@@ -9,10 +9,9 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
 updated_at: 2026-09-18T23:33:49Z
-content_hash: "sha256:c5faf38b08a3f7a30f241b9668d4eae577b21b51375fdfc7538d74ab0127da34"
-blocked_by: [VK-wa2q]
+content_hash: "sha256:1ff3e192398a2daef37af30e52d696c723de2cf797234c6581a553d80ae28cc7"
 blocks: [VK-jkkn, VK-pg9j, VK-mfn6, VK-0pfo, VK-0c4c, VK-2e0k, VK-3f9f, VK-4qfy, VK-3v14]
-was_blocked_by: [VK-1vhm]
+was_blocked_by: [VK-1vhm, VK-wa2q]
 ---
 
 ## Description
@@ -119,12 +118,12 @@ NORMATIVE DESCRIPTOR ENUMERATIONS (authoritative for implementation):
 - 2026-09-19T01:37:42Z dep_added: blocks VK-4qfy
 - 2026-09-19T01:37:42Z dep_added: blocks VK-3v14
 - 2026-09-19T02:37:33Z dep_removed: was_blocked_by VK-1vhm
+- 2026-09-19T03:17:05Z dep_removed: was_blocked_by VK-wa2q
 
 ## Links
 - Parent: [[VK-egll]]
 - Blocks: [[VK-jkkn]], [[VK-pg9j]], [[VK-mfn6]], [[VK-0pfo]], [[VK-0c4c]], [[VK-2e0k]], [[VK-3f9f]], [[VK-4qfy]], [[VK-3v14]]
-- Blocked by: [[VK-wa2q]]
-- Was blocked by: [[VK-1vhm]]
+- Was blocked by: [[VK-1vhm]], [[VK-wa2q]]
 
 ## Comments
 

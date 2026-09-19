@@ -1,19 +1,20 @@
 ---
 id: VK-wa2q
 title: "Append immutable trial ledgers with operation events"
-status: in_progress
+status: closed
 priority: 0
 type: feature
 labels: [integration, phase-1, delivered]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T03:17:04Z
-content_hash: "sha256:2d721d6c6759895a9de6f3654e360987e981d61b83c2b324c7d4b41425512a57"
-blocks: [VK-kmbs, VK-pg9j, VK-mfn6, VK-si5s, VK-jbae, VK-0pfo, VK-ddoh, VK-bns7, VK-52g6, VK-3f9f, VK-3v14]
+updated_at: 2026-09-19T03:17:05Z
+content_hash: "sha256:63861a10974c607ff0fe2724fcf210ff09c08087a8fc218f39aaf89e6c21952d"
 was_blocked_by: [VK-1vhm]
 assignee: dev-VK-wa2q
 follows: [VK-1vhm]
+closed_at: 2026-09-19T03:17:05Z
+close_reason: "Accepted: independently tested and code-reviewed immutable trial/event chains at 824b1e6."
 ---
 
 ## Description
@@ -238,10 +239,21 @@ status: in_progress
 - 2026-09-19T02:41:31Z auto-follows: linked to predecessor VK-1vhm
 - 2026-09-19T02:41:31Z claimed by dev-VK-wa2q
 - 2026-09-19T03:11:31Z status: in_progress -> in_progress
+- 2026-09-19T03:17:05Z status: in_progress -> closed
+- 2026-09-19T03:17:05Z dep_removed: no_longer_blocks VK-kmbs
+- 2026-09-19T03:17:05Z dep_removed: no_longer_blocks VK-pg9j
+- 2026-09-19T03:17:05Z dep_removed: no_longer_blocks VK-mfn6
+- 2026-09-19T03:17:05Z dep_removed: no_longer_blocks VK-si5s
+- 2026-09-19T03:17:05Z dep_removed: no_longer_blocks VK-jbae
+- 2026-09-19T03:17:05Z dep_removed: no_longer_blocks VK-0pfo
+- 2026-09-19T03:17:05Z dep_removed: no_longer_blocks VK-ddoh
+- 2026-09-19T03:17:05Z dep_removed: no_longer_blocks VK-bns7
+- 2026-09-19T03:17:05Z dep_removed: no_longer_blocks VK-52g6
+- 2026-09-19T03:17:05Z dep_removed: no_longer_blocks VK-3f9f
+- 2026-09-19T03:17:05Z dep_removed: no_longer_blocks VK-3v14
 
 ## Links
 - Parent: [[VK-egll]]
-- Blocks: [[VK-kmbs]], [[VK-pg9j]], [[VK-mfn6]], [[VK-si5s]], [[VK-jbae]], [[VK-0pfo]], [[VK-ddoh]], [[VK-bns7]], [[VK-52g6]], [[VK-3f9f]], [[VK-3v14]]
 - Was blocked by: [[VK-1vhm]]
 - Follows: [[VK-1vhm]]
 
