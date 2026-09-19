@@ -157,16 +157,17 @@ def resolve_config(profile: Path, overrides: Mapping[str, object], artifact_vers
     if not isinstance(overrides, Mapping): raise _invalid("overrides must be an object", "$.overrides")
     if any(not isinstance(key, str) for key in overrides): raise _invalid("override keys must be strings", "$.overrides")
     if not isinstance(artifact_versions, ArtifactVersions): raise _invalid("artifact_versions has the wrong type", "$.artifact_versions")
+    _reject_secrets(overrides, "$.overrides")
+    _reject_secrets(artifact_versions.mapping(), "$.artifact_versions")
     versions = _validate_versions(artifact_versions)
     document, profile_hash = _profile(Path(profile))
+    _reject_secrets(document, "$")
     profile_values = dict(document["values"])  # type: ignore[arg-type]
-    _reject_secrets(profile_values, "$.values")
     profile_values = _validate_values(profile_values)
     unknown_overrides = sorted(set(overrides) - set(_REQUIRED_FIELDS))
     if unknown_overrides: raise _invalid(f"unregistered override field(s): {unknown_overrides}", f"$.overrides.{unknown_overrides[0]}")
     checked_overrides = _validate_values({**profile_values, **overrides})
     explicit = {key: checked_overrides[key] for key in overrides}
-    _reject_secrets(explicit, "$.overrides")
 
     effective = {**profile_values, **explicit}
     redacted_fields = ["runtime.data_root"]

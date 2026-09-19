@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-import json
-from dataclasses import FrozenInstanceError, replace
-from pathlib import Path
+import json; from dataclasses import FrozenInstanceError, replace; from pathlib import Path
 import pytest
 from gauntlet.config import ArtifactVersions, ConfigError, diff_config, resolve_config
 from gauntlet.contracts.canonical import sha256_digest
@@ -11,21 +9,8 @@ from gauntlet.data.descriptors import descriptor_digest
 from gauntlet.ledger import Actor, verify_chains
 
 
-PROFILE = """schema_version = "1"
-profile_id = "sol-momentum-v3"
-profile_version = 1
-
-[values]
-venue_track = "solana_dex"
-data_start = "2025-01-01"
-data_end = "2025-12-31"
-seed = 42
-lookback = 16
-horizon = 12
-threshold = 0.55
-fee_bps = 20
-"""
-OWNER = Actor("human", "owner")
+PROFILE = 'schema_version = "1"\nprofile_id = "sol-momentum-v3"\nprofile_version = 1\n\n[values]\nvenue_track = "solana_dex"\ndata_start = "2025-01-01"\ndata_end = "2025-12-31"\nseed = 42\nlookback = 16\nhorizon = 12\nthreshold = 0.55\nfee_bps = 20\n'
+OWNER = Actor("human", "owner"); SECRET = "sk-" + "x" * 24
 
 
 def versions(policy: str = "policy@v1") -> ArtifactVersions:
@@ -75,6 +60,20 @@ def test_versioned_redaction_and_secret_refusal_are_fail_closed(tmp_path: Path) 
     assert rejection.value.code == "CONFIG_INVALID" and rejection.value.path == "$.values.api_key"
     with pytest.raises(ConfigError) as unknown: resolve_config(profile, {"unknown_threshold": 1}, versions())
     assert unknown.value.code == "CONFIG_INVALID" and unknown.value.path == "$.overrides.unknown_threshold"
+
+
+@pytest.mark.parametrize("field", tuple(ArtifactVersions.__dataclass_fields__))
+def test_secret_shaped_artifact_versions_are_rejected_before_emission(tmp_path: Path, field: str) -> None:
+    with pytest.raises(ConfigError) as rejection: resolve_config(write_profile(tmp_path), {}, replace(versions(), **{field: SECRET}))
+    assert rejection.value.code == "CONFIG_INVALID" and rejection.value.path == f"$.artifact_versions.{field}"
+
+
+def test_secret_shaped_profile_metadata_and_override_are_rejected_before_emission(tmp_path: Path) -> None:
+    profile = write_profile(tmp_path, PROFILE.replace('profile_id = "sol-momentum-v3"', f'profile_id = "{SECRET}"'))
+    with pytest.raises(ConfigError) as rejection: resolve_config(profile, {}, versions())
+    assert rejection.value.code == "CONFIG_INVALID" and rejection.value.path == "$.profile_id"
+    with pytest.raises(ConfigError) as override: resolve_config(write_profile(tmp_path / "clean"), {"threshold": SECRET}, versions())
+    assert override.value.code == "CONFIG_INVALID" and override.value.path == "$.overrides.threshold"
 
 
 def test_missing_incomplete_and_malformed_inputs_reject_before_mutation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
