@@ -94,15 +94,20 @@ def _timestamp(policy: SplitPolicy, index: int) -> str:
 
 def _membership(population: FrozenPopulation, start: str, signal_end: str, completion_end: str) -> tuple[str, ...]:
     start_at, signal_end_at, end_at = _parse(start), _parse(signal_end), _parse(completion_end)
-    rows = []
+    rows, bar_times = [], {row.timestamp_utc for row in population.bars}
     for row in population.bars:
         observed = _parse(row.feature_observed_at_utc)
         completed = _parse(row.target_completed_at_utc)
         if observed > _parse(row.timestamp_utc):
             raise SplitError("FUTURE_FEATURE_REJECTED", f"feature for {row.row_id} is observed after its signal", f"$.bars.{row.row_id}")
         signal = _parse(row.timestamp_utc)
-        if start_at <= signal < signal_end_at and completed >= end_at: raise SplitError("TARGET_CROSSES_BOUNDARY", f"target for {row.row_id} crosses the segment completion boundary", f"$.bars.{row.row_id}")
-        if start_at <= signal < signal_end_at and completed < end_at:
+        if start_at <= signal < signal_end_at:
+            expected_completion = signal + timedelta(seconds=population.policy.target_horizon_bars * population.policy.bar_interval_seconds)
+            if row.target_completed_at_utc not in bar_times:
+                raise SplitError("TARGET_BAR_MISSING", f"target for {row.row_id} has no bar at {row.target_completed_at_utc}", f"$.bars.{row.row_id}")
+            if completed != expected_completion:
+                raise SplitError("TARGET_HORIZON_INVALID", f"target for {row.row_id} is not the declared target horizon", f"$.bars.{row.row_id}")
+            if completed >= end_at: raise SplitError("TARGET_CROSSES_BOUNDARY", f"target for {row.row_id} crosses the segment completion boundary", f"$.bars.{row.row_id}")
             if completed <= observed: raise SplitError("TARGET_INVALID", f"target for {row.row_id} does not complete after observation", f"$.bars.{row.row_id}")
             rows.append(row.row_id)
     return tuple(rows)

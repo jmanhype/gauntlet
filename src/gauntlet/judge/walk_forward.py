@@ -18,7 +18,7 @@ from gauntlet.data.dependency import DependencyEvaluation, evaluate_dependencies
 from gauntlet.ledger import Actor, EventRecord, append_event, regenerate_heads
 from gauntlet.ledger._common import LedgerError, data_root_path
 
-from .splits import SplitManifest, build_split_manifest
+from .splits import SplitError, SplitManifest, build_split_manifest
 from .synthetic import BarRow, FrozenPopulation
 
 
@@ -209,10 +209,12 @@ def _evaluate_fold(fold: WalkForwardFold, rows: list[BarRow], selected: Candidat
     trades: list[Trade] = []
     for row_id in fold.test_membership:
         row = by_id[row_id]; index = indices[row_id]; score = _features(row, rows, selected, policy_window)
-        intended = _action(score, selected); entry_index = index + 1; exit_index = index + target_horizon
+        intended = _action(score, selected); entry_index = index + 1
         if entry_index >= len(rows) or _parse(rows[entry_index].timestamp_utc) - _parse(row.timestamp_utc) != timedelta(seconds=interval): return (), (), f"NEXT_BAR_MISSING:{row_id}"
-        if intended != "FLAT" and (exit_index >= len(rows) or _parse(rows[exit_index].timestamp_utc) != _parse(row.target_completed_at_utc)): return (), (), f"TARGET_BAR_MISSING:{row_id}"
-        entry, outcome = rows[entry_index], rows[exit_index]; label = outcome.close / row.close - 1
+        expected_target = _parse(row.timestamp_utc) + timedelta(seconds=target_horizon * interval)
+        outcome = next((item for item in rows if item.timestamp_utc == row.target_completed_at_utc), None)
+        if outcome is None or _parse(row.target_completed_at_utc) != expected_target: return (), (), f"TARGET_BAR_MISSING:{row_id}"
+        entry = rows[entry_index]; label = outcome.close / row.close - 1
         prediction = Prediction(row_id, fold.fold_id, row.timestamp_utc, entry.timestamp_utc, row.venue, row.token, intended, round(score, 12), round(label, 12), row.target_completed_at_utc, "MODELED", "MODELED", selected.fingerprint)
         predictions.append(prediction)
         if intended != "FLAT":
@@ -268,17 +270,27 @@ def _event(root: Path, request: WalkForwardRequest, run_hash: str, output_hash: 
     return appended.head_hash, appended.record, False
 
 
+def _publish(request: WalkForwardRequest, dependency: DependencyEvaluation, split: SplitManifest | None, folds: tuple[WalkForwardFold, ...], predictions: tuple[Prediction, ...], trades: tuple[Trade, ...], blocked: str | None, as_of: datetime) -> WalkForwardRun:
+    selected_fingerprints = [str(fold.selection_lock["candidate_fingerprint"]) for fold in folds]
+    report: dict[str, object] = {"schema_version": "gauntlet.walk-forward-run.v1", "status": "BLOCKED" if blocked else "OK", "blocked_reason": blocked, "venue": "solana_dex", "population_hash": request.population.population_hash, "population_evidence_class": "SYNTHETIC_FIXTURE", "promotable_venue_evidence": False, "config_hash": request.config.config_hash, "feature_provenance": dict(request.feature_provenance), "source_descriptor_hashes": sorted((str(request.population.bars_descriptor["descriptor_hash"]), str(request.population.events_descriptor["descriptor_hash"]))), "selected_fingerprints": selected_fingerprints, "factory_ranking": {"admissible": False, "ranking_score_is_judge_evidence": False, "entry_condition": "selected_fingerprint_locked"}, "dependency_evaluation": _dependency_mapping(dependency), "fold_count": len(folds), "test_membership_digests_after_evaluation": [sha256_digest(canonical_json(list(fold.test_membership))) for fold in folds], "prediction_count": len(predictions), "trade_count": len(trades), "execution": {"entry": "NEXT_BAR", "gap_policy": "BLOCKED", "imputed_fill": False}}
+    fold_manifest = split.mapping() if split is not None else {"schema_version": "gauntlet.walk-forward-split.v1", "population_hash": request.population.population_hash, "status": "BLOCKED", "error_code": blocked}
+    evaluation_hash = sha256_digest(canonical_json({"folds": [fold.mapping() for fold in folds], "predictions": [prediction.mapping() for prediction in predictions], "report": report, "trades": [trade.mapping() for trade in trades]})); report["evaluation_hash"] = evaluation_hash
+    bundle = {"fold_manifest": fold_manifest, "predictions": [prediction.mapping() for prediction in predictions], "run_report": report, "trades": [trade.mapping() for trade in trades]}; canonical = canonical_json(bundle); run_hash = sha256_digest(canonical)
+    files = {"fold_manifest.json": canonical_json(fold_manifest), "predictions.json": canonical_json(bundle["predictions"]), "trades.json": canonical_json(bundle["trades"]), "run_report.json": canonical_json(report)}; root = data_root_path(None); paths = _write_bundle(root, run_hash, files)
+    event_head, event_record, replayed = _event(root, request, run_hash, sha256_digest(canonical), _utc_z(as_of))
+    return WalkForwardRun("BLOCKED" if blocked else "OK", run_hash, canonical, MappingProxyType(report), folds, predictions, trades, MappingProxyType(paths), event_head, MappingProxyType(dict(event_record)), replayed)
+
+
 def evaluate_walk_forward(request: WalkForwardRequest) -> WalkForwardRun:
     """Evaluate validation-selected variants on untouched following test windows."""
 
-    candidates = _validate_request(request)
-    split = _split(request)
-    rows = list(request.population.bars)
-    end_utc = str(request.population.bars_descriptor["coverage"]["end_exclusive_utc"])
-    as_of = request.as_of or _parse(end_utc)
-    dependency = _dependency(request, as_of)
+    candidates = _validate_request(request); rows = list(request.population.bars); as_of = request.as_of or _parse(str(request.population.bars_descriptor["coverage"]["end_exclusive_utc"])); dependency = _dependency(request, as_of)
     folds: list[WalkForwardFold] = []; predictions: list[Prediction] = []; trades: list[Trade] = []
     blocked: str | None = dependency.status if dependency.status not in ("OK", "DEGRADED") else None
+    try: split = _split(request)
+    except SplitError as error:
+        if error.code in {"TARGET_BAR_MISSING", "TARGET_HORIZON_INVALID"}: return _publish(request, dependency, None, (), (), (), error.code, as_of)
+        raise
     if blocked is None:
         for fold in split.folds:
             test_digest = sha256_digest(canonical_json(list(fold.test_membership)))
@@ -292,19 +304,7 @@ def evaluate_walk_forward(request: WalkForwardRequest) -> WalkForwardRun:
                 blocked = gap; break
             predictions.extend(fold_predictions)
             trades.extend(fold_trades)
-    selected_fingerprints = [str(fold.selection_lock["candidate_fingerprint"]) for fold in folds]
-    report: dict[str, object] = {"schema_version": "gauntlet.walk-forward-run.v1", "status": "BLOCKED" if blocked else "OK", "blocked_reason": blocked, "venue": "solana_dex", "population_hash": request.population.population_hash, "population_evidence_class": "SYNTHETIC_FIXTURE", "promotable_venue_evidence": False, "config_hash": request.config.config_hash, "feature_provenance": dict(request.feature_provenance), "source_descriptor_hashes": sorted((str(request.population.bars_descriptor["descriptor_hash"]), str(request.population.events_descriptor["descriptor_hash"]))), "selected_fingerprints": selected_fingerprints, "factory_ranking": {"admissible": False, "ranking_score_is_judge_evidence": False, "entry_condition": "selected_fingerprint_locked"}, "dependency_evaluation": _dependency_mapping(dependency), "fold_count": len(split.folds), "test_membership_digests_after_evaluation": [sha256_digest(canonical_json(list(fold.test_membership))) for fold in folds], "prediction_count": len(predictions), "trade_count": len(trades), "execution": {"entry": "NEXT_BAR", "gap_policy": "BLOCKED", "imputed_fill": False}}
-    evaluation_hash = sha256_digest(canonical_json({"folds": [fold.mapping() for fold in folds], "predictions": [prediction.mapping() for prediction in predictions], "report": report, "trades": [trade.mapping() for trade in trades]}))
-    report["evaluation_hash"] = evaluation_hash
-    bundle = {"fold_manifest": split.mapping(), "predictions": [prediction.mapping() for prediction in predictions], "run_report": report, "trades": [trade.mapping() for trade in trades]}
-    canonical = canonical_json(bundle)
-    run_hash = sha256_digest(canonical)
-    files = {"fold_manifest.json": canonical_json(split.mapping()), "predictions.json": canonical_json(bundle["predictions"]), "trades.json": canonical_json(bundle["trades"]), "run_report.json": canonical_json(report)}
-    root = data_root_path(None)
-    paths = _write_bundle(root, run_hash, files)
-    output_hash = sha256_digest(canonical)
-    event_head, event_record, replayed = _event(root, request, run_hash, output_hash, _utc_z(as_of))
-    return WalkForwardRun("BLOCKED" if blocked else "OK", run_hash, canonical, MappingProxyType(report), tuple(folds), tuple(predictions), tuple(trades), MappingProxyType(paths), event_head, MappingProxyType(dict(event_record)), replayed)
+    return _publish(request, dependency, split, tuple(folds), tuple(predictions), tuple(trades), blocked, as_of)
 
 
 __all__ = ["CandidateVariant", "FactoryRankingEntry", "JUDGE_POLICY_HASH", "Prediction", "Trade", "WalkForwardError", "WalkForwardFold", "WalkForwardRequest", "WalkForwardRun", "evaluate_walk_forward"]
