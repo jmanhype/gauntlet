@@ -8,8 +8,8 @@ labels: [integration, phase-1, walking-skeleton, delivered]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T02:30:32Z
-content_hash: "sha256:a8a8530971b3fadbec0ead420af0c6d60e8365992667066f3577464dcda1171b"
+updated_at: 2026-09-19T02:32:22Z
+content_hash: "sha256:ad5998cdb0d604515a4ed9199d5b461cc4c273c6b79fd6d240bc094fb92e9d38"
 blocks: [VK-wa2q, VK-kmbs, VK-jkkn, VK-bns7, VK-52g6, VK-3f9f, VK-aej2]
 assignee: dev-VK-1vhm
 ---
@@ -192,6 +192,16 @@ status: in_progress
 
 ### proof
 - [ ] Pending implementation and verification.
+
+## nd_contract
+status: delivered
+
+### evidence
+- Delivery repair: appended the authoritative delivered contract after prior note blocks so the last nd_contract is delivered.
+- Commit `26f70aeffa5013c86bfb5b5400853904107351ae`; `uv run pytest tests/integrity/test_contracts.py` -> 6 passed; coverage 81%; pvg verify PASS.
+
+### proof
+- [x] AC #1 through AC #7: verified by the Implementation Evidence table and recorded test output.
 
 ## History
 - 2026-09-18T23:31:15Z dep_added: blocks VK-wa2q
