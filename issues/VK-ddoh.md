@@ -8,8 +8,8 @@ labels: [integration, phase-1, accepted]
 parent: VK-0auj
 created_at: 2026-09-18T23:31:23Z
 created_by: speed
-updated_at: 2026-09-19T16:28:10Z
-content_hash: "sha256:f2322de3ada3c436a3472aa8ed795fa56d12a0ea169f04a54ef80aa7fb4b1fb4"
+updated_at: 2026-09-19T16:28:11Z
+content_hash: "sha256:b9fbb8d076cc60d54d5c50deafe0c00c76f613006fa7fec59b3541c24f969082"
 was_blocked_by: [VK-wa2q, VK-jkkn, VK-0c4c]
 assignee: dev-VK-ddoh
 follows: [VK-wa2q, VK-jkkn, VK-0c4c]
@@ -98,6 +98,18 @@ status: new
 
 
 ## Notes
+
+
+## nd_contract
+status: accepted
+
+### evidence
+- PM closeout applied via pvg story accept on 2026-09-19.
+
+### proof
+- [x] Story closed after accepted label was applied.
+
+
 ## Implementation Evidence
 
 Commands run:
