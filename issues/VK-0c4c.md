@@ -1,18 +1,19 @@
 ---
 id: VK-0c4c
 title: "Enforce walk-forward evaluation discipline"
-status: open
+status: in_progress
 priority: 1
 type: feature
 labels: [integration, phase-1, walking-skeleton, rejected]
 parent: VK-0auj
 created_at: 2026-09-18T23:31:22Z
 created_by: speed
-updated_at: 2026-09-19T05:37:41Z
-content_hash: "sha256:1e532040f5d431b6acfbf682212473028ac45357a30d452cf551e9b23619b495"
+updated_at: 2026-09-19T05:39:09Z
+content_hash: "sha256:27c33819853d128d1bf4e898caa64f33a4c34ef1265c547afd72de90a7fd7f2c"
 blocks: [VK-2g0f, VK-ddoh, VK-sbdy, VK-aumt, VK-dblr, VK-vqvy]
 was_blocked_by: [VK-pg9j, VK-kmbs, VK-jkkn]
 follows: [VK-kmbs, VK-jkkn]
+assignee: dev-VK-0c4c
 ---
 
 ## Description
@@ -275,6 +276,8 @@ status: new
 - 2026-09-19T05:29:35Z status: in_progress -> in_progress
 - 2026-09-19T05:37:41Z status: in_progress -> open
 - 2026-09-19T05:37:41Z released by speed
+- 2026-09-19T05:39:09Z status: open -> in_progress
+- 2026-09-19T05:39:09Z claimed by dev-VK-0c4c
 
 ## Links
 - Parent: [[VK-0auj]]
