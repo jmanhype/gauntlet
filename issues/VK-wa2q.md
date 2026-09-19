@@ -9,7 +9,7 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
 updated_at: 2026-09-19T03:17:06Z
-content_hash: "sha256:63861a10974c607ff0fe2724fcf210ff09c08087a8fc218f39aaf89e6c21952d"
+content_hash: "sha256:590860e399299309457505fc46ad8efff91ad5b27b1f22625ac715f92666e7e0"
 was_blocked_by: [VK-1vhm]
 assignee: dev-VK-wa2q
 follows: [VK-1vhm]
@@ -98,6 +98,18 @@ status: new
 
 
 ## Notes
+
+
+## nd_contract
+status: accepted
+
+### evidence
+- PM closeout applied via pvg story accept on 2026-09-18.
+
+### proof
+- [x] Story closed after accepted label was applied.
+
+
 ## PM Decision
 ACCEPTED [2026-09-19]: Evidence reviewed and independently verified at story commit 824b1e668bb8261e92599db6260b263692e15fb3.
 
