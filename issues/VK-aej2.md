@@ -1,19 +1,20 @@
 ---
 id: VK-aej2
 title: "Establish synthetic deterministic gate precedence"
-status: in_progress
+status: closed
 priority: 0
 type: feature
 labels: [integration, phase-1, walking-skeleton, delivered]
 parent: VK-1rbc
 created_at: 2026-09-19T01:37:42Z
 created_by: speed
-updated_at: 2026-09-19T04:58:07Z
-content_hash: "sha256:fb4db343e7c9bdd8db7f03b88270939fde1839bd6454a32cfe6fe35134e5dc6d"
-blocks: [VK-2e0k, VK-uyca]
+updated_at: 2026-09-19T05:02:19Z
+content_hash: "sha256:f9e442e42148d5dde29e64eff70269d98d2b47679a6a75bb1466d54c5d0ad03f"
 was_blocked_by: [VK-1vhm]
 assignee: dev-VK-aej2
 follows: [VK-1vhm]
+closed_at: 2026-09-19T05:02:19Z
+close_reason: "Accepted: independently verified fixed precedence, deterministic schema-valid synthetic bundles, fail-closed malformed handling, purity, hashes, integration output, tests, coverage, scope, and diff budget at db2c5b8."
 ---
 
 ## Description
@@ -215,10 +216,12 @@ status: in_progress
 - 2026-09-19T04:45:11Z auto-follows: linked to predecessor VK-1vhm
 - 2026-09-19T04:45:11Z claimed by dev-VK-aej2
 - 2026-09-19T04:57:30Z status: in_progress -> in_progress
+- 2026-09-19T05:02:19Z status: in_progress -> closed
+- 2026-09-19T05:02:19Z dep_removed: no_longer_blocks VK-2e0k
+- 2026-09-19T05:02:19Z dep_removed: no_longer_blocks VK-uyca
 
 ## Links
 - Parent: [[VK-1rbc]]
-- Blocks: [[VK-2e0k]], [[VK-uyca]]
 - Was blocked by: [[VK-1vhm]]
 - Follows: [[VK-1vhm]]
 

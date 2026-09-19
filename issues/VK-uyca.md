@@ -9,9 +9,10 @@ parent: VK-1rbc
 created_at: 2026-09-18T23:31:44Z
 created_by: speed
 updated_at: 2026-09-19T01:38:27Z
-content_hash: "sha256:6df3f360a373b38df915ae4bc5b3e69fe5c6dc42df816a4a17f5d1354452fdb1"
-blocked_by: [VK-2e0k, VK-bns7, VK-52g6, VK-aej2]
+content_hash: "sha256:0ffd04172ec89efd5573917cd9dd6377cc427edb1203c1672cb6691179322aec"
+blocked_by: [VK-2e0k, VK-bns7, VK-52g6]
 blocks: [VK-hiuk]
+was_blocked_by: [VK-aej2]
 ---
 
 ## Description
@@ -116,10 +117,12 @@ status: new
 - 2026-09-18T23:31:45Z dep_added: blocked_by VK-52g6
 - 2026-09-18T23:31:48Z dep_added: blocks VK-hiuk
 - 2026-09-19T01:37:44Z dep_added: blocked_by VK-aej2
+- 2026-09-19T05:02:19Z dep_removed: was_blocked_by VK-aej2
 
 ## Links
 - Parent: [[VK-1rbc]]
 - Blocks: [[VK-hiuk]]
-- Blocked by: [[VK-2e0k]], [[VK-bns7]], [[VK-52g6]], [[VK-aej2]]
+- Blocked by: [[VK-2e0k]], [[VK-bns7]], [[VK-52g6]]
+- Was blocked by: [[VK-aej2]]
 
 ## Comments
