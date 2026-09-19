@@ -8,8 +8,8 @@ labels: [integration, phase-1, delivered]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T03:11:32Z
-content_hash: "sha256:b4fe676abdfff7bb03a648a0c03935385a937d3f6385cda681a7faca5e901dc0"
+updated_at: 2026-09-19T03:11:59Z
+content_hash: "sha256:29e68dc7487112f7c0ab9eff3e644a71b7419ae3ed08859d03264f106c96f11d"
 blocks: [VK-kmbs, VK-pg9j, VK-mfn6, VK-si5s, VK-jbae, VK-0pfo, VK-ddoh, VK-bns7, VK-52g6, VK-3f9f, VK-3v14]
 was_blocked_by: [VK-1vhm]
 assignee: dev-VK-wa2q
@@ -97,7 +97,23 @@ status: new
 
 
 ## Notes
+## nd_contract
+status: delivered
 
+### evidence
+- Commit: `824b1e668bb8261e92599db6260b263692e15fb3` on `story/VK-wa2q`.
+- Commands run: `uv run --with coverage coverage run -m pytest tests/`; `uv run --with coverage coverage report --include='src/gauntlet/ledger/*' --precision=2`; `uv run pytest tests/integrity/test_ledger.py`; `pvg verify src/gauntlet/ledger/__init__.py src/gauntlet/ledger/_common.py src/gauntlet/ledger/events.py src/gauntlet/ledger/heads.py src/gauntlet/ledger/trials.py src/gauntlet/ledger/verify.py tests/integrity/test_ledger.py --format=text`.
+- Summary: full suite PASS 11/11; required ledger suite PASS 5/5; ledger coverage 85.61%; pvg verify PASS with 0 issues.
+- Implementation evidence and AC table are in the `## Implementation Evidence (DELIVERED)` note above.
+
+### proof
+- [x] AC #1: complete typed `trial.registered` append and exact envelope.
+- [x] AC #2: canonical OK/ERROR operation events with required metadata and hashes.
+- [x] AC #3: both chains reject byte edits, deletion, and reorder while original verifies.
+- [x] AC #4: failed events claim no artifact and preserve the trial result head.
+- [x] AC #5: appends serialize and reject stale/conflicting prior heads without overwrite.
+- [x] AC #6: sensitive credential/key/signature/unredacted payload material is rejected.
+- [x] AC #7: heads regenerate deterministically with head and byte range.
 
 ## nd_contract
 status: delivered
