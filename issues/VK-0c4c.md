@@ -8,8 +8,8 @@ labels: [integration, phase-1, walking-skeleton]
 parent: VK-0auj
 created_at: 2026-09-18T23:31:22Z
 created_by: speed
-updated_at: 2026-09-19T05:04:39Z
-content_hash: "sha256:07a7130a32bddb5fd796cbe0d47ea3becf2b45067a17ca3570f824a69fd65d68"
+updated_at: 2026-09-19T05:29:30Z
+content_hash: "sha256:852f29733abfb3fbf2d49c7f2f70fe1acebf000d96d465cbcfe9a7d0320da0b7"
 blocks: [VK-2g0f, VK-ddoh, VK-sbdy, VK-aumt, VK-dblr, VK-vqvy]
 was_blocked_by: [VK-pg9j, VK-kmbs, VK-jkkn]
 assignee: dev-VK-0c4c
@@ -117,6 +117,79 @@ CONSUMES:
 1. The P1 walking skeleton generates and registers a deterministic synthetic solana_dex bars/events population locally; it has no Bitquery dependency and makes no network call.
 2. Synthetic data is clearly labeled synthetic fixture evidence for wiring and is not promotable venue evidence.
 3. Collector-derived descriptors bind only in later integration stories after the collector epic.
+## Implementation Evidence (DELIVERED)
+
+PROOF:
+
+### CI/Test Results
+- Commands run:
+  - `uv run pytest tests/judge/test_walk_forward.py`
+  - `uv run pytest tests/`
+  - `pvg verify src/gauntlet/judge/__init__.py src/gauntlet/judge/splits.py src/gauntlet/judge/synthetic.py src/gauntlet/judge/walk_forward.py tests/judge/test_walk_forward.py --format=text`
+- Summary: judge integration PASS (4/4); full suite PASS (47/47); pvg verify PASS (5 files, 0 issues).
+- Coverage: AC contract coverage 100% (10/10 original-plus-repair criteria). Line coverage was not collected because this Phase 1 project has no configured coverage tool or dependency.
+- Key output:
+  - `collected 4 items ... 4 passed in 0.14s`
+  - `collected 47 items ... 47 passed in 0.61s`
+  - `VERIFY: PASSED (5 files scanned, 0 issues)`
+
+### Commit
+- Branch: `story/VK-0c4c`
+- SHA: `7cd18956dc362f664b379555e4d76adf751693e8`
+- Diff budget: 5 files changed, 749 insertions (story limit: ~8 files, under 750 changed LOC).
+
+### Wiring
+- `src/gauntlet/judge/synthetic.py:129` registers immutable synthetic bars/events descriptors through the existing descriptor registry and emits no network/Bitquery call.
+- `src/gauntlet/judge/splits.py:111` builds canonical strict train/validation/test memberships and pending selection locks.
+- `src/gauntlet/judge/walk_forward.py:271` evaluates dependency state, selects only on validation, locks the selected fingerprint, executes next-bar test entries, writes immutable run artifacts, and appends a hash-chained event.
+- Real resolver wiring is exercised by `tests/judge/test_walk_forward.py:25` through `resolve_config`; no config logic was duplicated.
+
+### pvg verify
+- `VERIFY: PASSED (5 files scanned, 0 issues)`
+
+### AC Verification
+| AC # | Requirement | Code Location | Test Location | Status |
+|---|---|---|---|---|
+| 1 | UTC boundaries, bars, horizon, lookback, normalization, target horizon, embargo/purge, fold order, selection locks | `src/gauntlet/judge/splits.py` | `tests/judge/test_walk_forward.py::test_split_manifest_records_strict_boundaries_labels_and_locks` | PASS |
+| 2 | Validation selects one variant and following test window is untouched | `src/gauntlet/judge/walk_forward.py::_select` and `evaluate_walk_forward` | `test_real_multi_fold_evaluation_selects_on_validation_and_replays_rows` | PASS |
+| 3 | Boundary-crossing targets, future normalization, and post-outcome mutation fail | `src/gauntlet/judge/splits.py::_membership`; `walk_forward.py::_provenance` and `_validate_request` | `test_split_manifest...` and `test_fail_closed_rejections...` | PASS |
+| 4 | Locked fingerprint, provenance, config hash, source hashes, selected fold recorded | `walk_forward.py::evaluate_walk_forward` | `test_real_multi_fold...` | PASS |
+| 5 | Row predictions/trades carry timestamps, venue, token, action, labels, and MODELED basis | `walk_forward.py::Prediction` and `Trade` | `test_real_multi_fold...` | PASS |
+| 6 | Next-bar entry and gaps/missing dependencies BLOCK without fills | `walk_forward.py::_evaluate_fold` and `_dependency` | `test_real_multi_fold...` and `test_fail_closed...` | PASS |
+| 7 | Factory output remains exploratory until selected fingerprint lock; ranking score is not judge evidence | `walk_forward.py::FactoryRankingEntry` and run report | `test_real_multi_fold...` | PASS |
+| Repair 1 | Deterministic local synthetic solana_dex bars/events population, no network/Bitquery | `synthetic.py::build_synthetic_population` | `test_synthetic_population_is_deterministic_registered_and_local` | PASS |
+| Repair 2 | Fixture labeled synthetic and not promotable venue evidence | `synthetic.py::BarRow`, `EventRow`, `FrozenPopulation` | `test_synthetic_population...` | PASS |
+| Repair 3 | Collector-derived descriptors do not bind in this skeleton | Judge dependency roots are only synthetic descriptors; no collector import | AST/source assertion in `test_synthetic_population...` | PASS |
+
+LEARNINGS:
+- Rebuilding the expected split manifest inside evaluation is an inexpensive strong invariant for detecting post-outcome membership tampering.
+- Completion-aware boundaries (signal cutoff plus target-horizon cushion) make label leakage explicit instead of silently dropping incomplete final rows.
+- Population-specific synthetic artifact IDs allow different seeds to coexist as independent immutable version-1 descriptors in one local registry.
+
+### OBSERVATIONS (unrelated)
+- None.
+
+## nd_contract
+status: delivered
+
+### evidence
+- Commit: `7cd18956dc362f664b379555e4d76adf751693e8` on `story/VK-0c4c`.
+- Tests: `uv run pytest tests/judge/test_walk_forward.py` -> 4 passed; `uv run pytest tests/` -> 47 passed.
+- Verification: `pvg verify ... --format=text` -> PASSED, 5 files, 0 issues.
+- Immutable wiring: synthetic descriptor trials, write-once run files, and one hash-chained `gate.evaluate` event are verified by the real integration test.
+
+### proof
+- [x] AC #1: Fold manifest records every declared temporal and selection-lock field.
+- [x] AC #2: Validation-only selection locks one variant before the untouched following test window.
+- [x] AC #3: Target-boundary, future-normalization, and population/split mutation attacks fail closed.
+- [x] AC #4: Candidate, feature, config, source-descriptor, and selected-fold provenance is recorded.
+- [x] AC #5: Complete row-level prediction/trade replay fields include labels and MODELED basis.
+- [x] AC #6: Entries require the exact next bar; gaps/missing dependencies return BLOCKED without imputation.
+- [x] AC #7: Factory ranking remains exploratory and its score is excluded from judge evidence.
+- [x] Repair AC #1: Deterministic synthetic population is generated and registered locally with no network or Bitquery dependency.
+- [x] Repair AC #2: Synthetic fixture is explicitly non-promotable venue evidence.
+- [x] Repair AC #3: No collector-derived descriptor is bound by this walking skeleton.
+
 ## nd_contract
 status: in_progress
 
