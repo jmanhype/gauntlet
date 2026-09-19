@@ -4,11 +4,11 @@ title: "Append immutable trial ledgers with operation events"
 status: closed
 priority: 0
 type: feature
-labels: [integration, phase-1, delivered, accepted]
+labels: [integration, phase-1, accepted]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T03:17:05Z
+updated_at: 2026-09-19T03:17:06Z
 content_hash: "sha256:63861a10974c607ff0fe2724fcf210ff09c08087a8fc218f39aaf89e6c21952d"
 was_blocked_by: [VK-1vhm]
 assignee: dev-VK-wa2q
