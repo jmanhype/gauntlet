@@ -1,18 +1,17 @@
 ---
 id: VK-jkkn
 title: "Resolve immutable run configurations"
-status: in_progress
+status: open
 priority: 0
 type: feature
 labels: [integration, phase-1, delivered]
 parent: VK-egll
 created_at: 2026-09-18T23:31:16Z
 created_by: speed
-updated_at: 2026-09-19T04:31:09Z
-content_hash: "sha256:c4c82552086edb40aaca37c2cad52725e60bf859316e9e90c5df76d62ce9add3"
+updated_at: 2026-09-19T04:35:17Z
+content_hash: "sha256:c7064baf68c175239158639cc552fb98b56370cac62f66f6526c44bc14b15003"
 blocks: [VK-pg9j, VK-mfn6, VK-si5s, VK-0pfo, VK-0c4c, VK-ddoh, VK-dblr, VK-3f9f, VK-rkdr]
 was_blocked_by: [VK-1vhm, VK-kmbs]
-assignee: dev-VK-jkkn
 follows: [VK-1vhm, VK-kmbs, VK-wa2q]
 ---
 
@@ -223,6 +222,8 @@ status: in_progress
 - 2026-09-19T04:15:20Z claimed by dev-VK-jkkn
 - 2026-09-19T04:30:38Z status: in_progress -> in_progress
 - 2026-09-19T04:30:38Z auto-follows: linked to predecessor VK-wa2q
+- 2026-09-19T04:35:17Z status: in_progress -> open
+- 2026-09-19T04:35:17Z released by speed
 
 ## Links
 - Parent: [[VK-egll]]
