@@ -8,8 +8,8 @@ labels: [integration, phase-1, walking-skeleton, accepted]
 parent: VK-0auj
 created_at: 2026-09-18T23:31:22Z
 created_by: speed
-updated_at: 2026-09-19T05:50:42Z
-content_hash: "sha256:56d43b4e0c72403f2eb799f10d12ba39ccdb8a67289ebac71d6eaad1fc02f428"
+updated_at: 2026-09-19T05:51:26Z
+content_hash: "sha256:5789def94f670df434459f3f37eff42a5317c0a6fb6f86dce5f6943124d55a25"
 was_blocked_by: [VK-pg9j, VK-kmbs, VK-jkkn]
 follows: [VK-kmbs, VK-jkkn]
 assignee: dev-VK-0c4c
@@ -118,7 +118,32 @@ CONSUMES:
 1. The P1 walking skeleton generates and registers a deterministic synthetic solana_dex bars/events population locally; it has no Bitquery dependency and makes no network call.
 2. Synthetic data is clearly labeled synthetic fixture evidence for wiring and is not promotable venue evidence.
 3. Collector-derived descriptors bind only in later integration stories after the collector epic.
+## PM Decision
+ACCEPTED [2026-09-19]: Full re-review passed; the prior absent-target/FLAT rejection is closed.
 
+## nd_contract
+status: accepted
+
+### evidence
+- Reviewed fix commit `4242e830dcb426a07b305d200091b3a09da142ab` on `story/VK-0c4c`.
+- `uv run pytest tests/judge/test_walk_forward.py -vv` -> 5 passed.
+- `uv run pytest tests/ -vv` -> 48 passed, no skips or warnings.
+- `pvg verify ... --format=text` -> PASSED, 5 files, 0 issues.
+- Independent no-mock adversarial replay: registered absent target `2026-01-01T00:23:30Z` with FLAT-only selection -> split `TARGET_BAR_MISSING` at `$.bars.bar-000023`; public run `BLOCKED`; predictions and trades empty; no alternate-row label.
+- Additional adversarial checks: `TARGET_HORIZON_INVALID`, `FUTURE_FEATURE_REJECTED`, and `POPULATION_MUTATED`.
+- Final story range: 5 files, 747 insertions; no network, Bitquery, collector, database, gate-engine, panel, or real-order scope creep.
+
+### proof
+- [x] AC #1: Fold temporal metadata and selection locks verified.
+- [x] AC #2: Validation-only selection precedes untouched following test membership.
+- [x] AC #3: Temporal, future-normalization, and mutation attacks fail closed.
+- [x] AC #4: Candidate, provenance, config, descriptor, and fold identities recorded.
+- [x] AC #5: Labels are emitted only from exact existing declared target bars for BUY and FLAT.
+- [x] AC #6: Next-bar entry and every target/dependency gap BLOCK without fills.
+- [x] AC #7: Factory ranking remains exploratory and is not judge evidence.
+- [x] Repair AC #1: Deterministic local synthetic population has no network or Bitquery dependency.
+- [x] Repair AC #2: Synthetic fixture evidence is non-promotable.
+- [x] Repair AC #3: No collector-derived descriptor binding was introduced.
 
 ## nd_contract
 status: accepted
