@@ -9,7 +9,7 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
 updated_at: 2026-09-19T04:03:20Z
-content_hash: "sha256:e5708d4f8f3006756c1b069c6d5d75eef9c67df3d698ce5c4f261b5ff684d340"
+content_hash: "sha256:9065f27ac27be6123c03f42f8c3e73505f62a9fee323caad6ebd9f5eecfb8a68"
 blocks: [VK-jkkn, VK-pg9j, VK-mfn6, VK-0pfo, VK-0c4c, VK-2e0k, VK-3f9f, VK-4qfy, VK-3v14]
 was_blocked_by: [VK-1vhm, VK-wa2q]
 follows: [VK-1vhm, VK-wa2q]
@@ -106,7 +106,15 @@ NORMATIVE DESCRIPTOR ENUMERATIONS (authoritative for implementation):
 - quality.state: VALID | STALE | CORRUPT | INCOMPLETE | QUARANTINED.
 - observation_basis: OBSERVED | MODELED.
 - venue_track: solana_dex | hyperliquid | cross_venue_transfer | external.
+## nd_contract
+status: in_progress
 
+### evidence
+- Rework claimed: 2026-09-18
+- Base commit: 43dd14eeef18443f3ca5314c4c721b62496a20d6
+
+### proof
+- [ ] Fix deterministic transitive dependency propagation and add PM-shaped regression.
 
 ## nd_contract
 status: rejected
