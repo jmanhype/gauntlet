@@ -9,7 +9,7 @@ parent: VK-u40v
 created_at: 2026-09-18T23:31:19Z
 created_by: speed
 updated_at: 2026-09-19T17:06:08Z
-content_hash: "sha256:680874107e67551146c87d6e3e60f68b014e80110e0d2ee3e37790476d88d17c"
+content_hash: "sha256:b1e41f03f737dd6b589fcc2abdaa116b8a617262dc8619e3d068a828d144d75a"
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-mfn6
 follows: [VK-wa2q, VK-kmbs, VK-jkkn]
@@ -96,6 +96,18 @@ status: new
 
 
 ## Notes
+
+
+## nd_contract
+status: accepted
+
+### evidence
+- PM closeout applied via pvg story accept on 2026-09-19.
+
+### proof
+- [x] Story closed after accepted label was applied.
+
+
 ## Implementation Evidence
 
 Commands run:
