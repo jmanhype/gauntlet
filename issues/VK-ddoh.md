@@ -9,7 +9,7 @@ parent: VK-0auj
 created_at: 2026-09-18T23:31:23Z
 created_by: speed
 updated_at: 2026-09-19T16:27:04Z
-content_hash: "sha256:b17dea7c138bab4434087a371c317d5d7c5dcf5b6f04acc3a95056be959461a0"
+content_hash: "sha256:a7c99e4746ddd0b861394d7ca7535a30aeab92e43e76699301460d18afea8917"
 blocks: [VK-zvia, VK-vqvy]
 was_blocked_by: [VK-wa2q, VK-jkkn, VK-0c4c]
 assignee: dev-VK-ddoh
@@ -97,6 +97,16 @@ status: new
 
 
 ## Notes
+
+
+## nd_contract
+status: delivered
+
+### evidence
+- Transitioned via pvg story deliver on 2026-09-19.
+
+### proof
+- [ ] Developer evidence block must remain authoritative above this contract.
 
 
 ## History
