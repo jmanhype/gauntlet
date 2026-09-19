@@ -1,19 +1,20 @@
 ---
 id: VK-0c4c
 title: "Enforce walk-forward evaluation discipline"
-status: in_progress
+status: closed
 priority: 1
 type: feature
 labels: [integration, phase-1, walking-skeleton, delivered]
 parent: VK-0auj
 created_at: 2026-09-18T23:31:22Z
 created_by: speed
-updated_at: 2026-09-19T05:47:18Z
-content_hash: "sha256:74a6fa052ea87377a7eaef7b56ee695016e1298ea7ca8c7fc8d2f8823f31e100"
-blocks: [VK-2g0f, VK-ddoh, VK-sbdy, VK-aumt, VK-dblr, VK-vqvy]
+updated_at: 2026-09-19T05:50:41Z
+content_hash: "sha256:b79fe0aaee68d0884b685991d94d6b05bd09a24cf9aafdb6a9a326f9e8961985"
 was_blocked_by: [VK-pg9j, VK-kmbs, VK-jkkn]
 follows: [VK-kmbs, VK-jkkn]
 assignee: dev-VK-0c4c
+closed_at: 2026-09-19T05:50:41Z
+close_reason: "Accepted: strict target-horizon and target-bar validation now applies to every BUY and FLAT prediction; the prior absent-target adversary returns BLOCKED with no imputed label."
 ---
 
 ## Description
@@ -382,10 +383,16 @@ status: new
 - 2026-09-19T05:39:09Z status: open -> in_progress
 - 2026-09-19T05:39:09Z claimed by dev-VK-0c4c
 - 2026-09-19T05:46:18Z status: in_progress -> in_progress
+- 2026-09-19T05:50:41Z status: in_progress -> closed
+- 2026-09-19T05:50:41Z dep_removed: no_longer_blocks VK-2g0f
+- 2026-09-19T05:50:41Z dep_removed: no_longer_blocks VK-ddoh
+- 2026-09-19T05:50:41Z dep_removed: no_longer_blocks VK-sbdy
+- 2026-09-19T05:50:41Z dep_removed: no_longer_blocks VK-aumt
+- 2026-09-19T05:50:41Z dep_removed: no_longer_blocks VK-dblr
+- 2026-09-19T05:50:41Z dep_removed: no_longer_blocks VK-vqvy
 
 ## Links
 - Parent: [[VK-0auj]]
-- Blocks: [[VK-2g0f]], [[VK-ddoh]], [[VK-sbdy]], [[VK-aumt]], [[VK-dblr]], [[VK-vqvy]]
 - Was blocked by: [[VK-pg9j]], [[VK-kmbs]], [[VK-jkkn]]
 - Follows: [[VK-kmbs]], [[VK-jkkn]]
 

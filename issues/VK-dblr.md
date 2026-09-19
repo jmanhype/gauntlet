@@ -9,10 +9,10 @@ parent: VK-rakf
 created_at: 2026-09-18T23:31:35Z
 created_by: speed
 updated_at: 2026-09-18T23:31:35Z
-content_hash: "sha256:2c266c02a55161fff6b91dcb5838c92f4b499f5e392130f23c157da68b28e27b"
-blocked_by: [VK-0c4c, VK-si5s, VK-2e0k, VK-bns7, VK-52g6, VK-ealt]
+content_hash: "sha256:4245dda42fb5b2e0ccb70918753879b11f70e4b9963ee19c21131a23bc3fedfb"
+blocked_by: [VK-si5s, VK-2e0k, VK-bns7, VK-52g6, VK-ealt]
 blocks: [VK-hiuk]
-was_blocked_by: [VK-jkkn]
+was_blocked_by: [VK-jkkn, VK-0c4c]
 ---
 
 ## Description
@@ -121,11 +121,12 @@ status: new
 - 2026-09-18T23:31:37Z dep_added: blocked_by VK-ealt
 - 2026-09-18T23:31:47Z dep_added: blocks VK-hiuk
 - 2026-09-19T04:41:26Z dep_removed: was_blocked_by VK-jkkn
+- 2026-09-19T05:50:41Z dep_removed: was_blocked_by VK-0c4c
 
 ## Links
 - Parent: [[VK-rakf]]
 - Blocks: [[VK-hiuk]]
-- Blocked by: [[VK-0c4c]], [[VK-si5s]], [[VK-2e0k]], [[VK-bns7]], [[VK-52g6]], [[VK-ealt]]
-- Was blocked by: [[VK-jkkn]]
+- Blocked by: [[VK-si5s]], [[VK-2e0k]], [[VK-bns7]], [[VK-52g6]], [[VK-ealt]]
+- Was blocked by: [[VK-jkkn]], [[VK-0c4c]]
 
 ## Comments
