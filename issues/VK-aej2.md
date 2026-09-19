@@ -9,7 +9,7 @@ parent: VK-1rbc
 created_at: 2026-09-19T01:37:42Z
 created_by: speed
 updated_at: 2026-09-19T05:02:19Z
-content_hash: "sha256:f9e442e42148d5dde29e64eff70269d98d2b47679a6a75bb1466d54c5d0ad03f"
+content_hash: "sha256:e04e2a5d315d618437e9b839882105409ba0be9df3412e262d2c803b670a1e43"
 was_blocked_by: [VK-1vhm]
 assignee: dev-VK-aej2
 follows: [VK-1vhm]
@@ -94,6 +94,18 @@ status: new
 
 
 ## Notes
+
+
+## nd_contract
+status: accepted
+
+### evidence
+- PM closeout applied via pvg story accept on 2026-09-19.
+
+### proof
+- [x] Story closed after accepted label was applied.
+
+
 ## nd_contract
 status: delivered
 
