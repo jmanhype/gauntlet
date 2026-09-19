@@ -4,7 +4,7 @@ title: "Enforce walk-forward evaluation discipline"
 status: open
 priority: 1
 type: feature
-labels: [integration, phase-1, walking-skeleton, delivered]
+labels: [integration, phase-1, walking-skeleton]
 parent: VK-0auj
 created_at: 2026-09-18T23:31:22Z
 created_by: speed
