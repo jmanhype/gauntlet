@@ -1,17 +1,19 @@
 ---
 id: VK-pg9j
 title: "Capture Bitquery Solana snapshots"
-status: open
+status: in_progress
 priority: 2
 type: feature
 labels: [external-integration, integration, phase-1, walking-skeleton]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:17Z
 created_by: speed
-updated_at: 2026-09-18T23:31:17Z
-content_hash: "sha256:c76a1289f3e6c7b1771a9c4b115312fbcc3c28b399dd859c091ac907bd8b7d4d"
+updated_at: 2026-09-19T17:07:24Z
+content_hash: "sha256:3c41ddea67c70f701df78b06afe47c003b719b8966eb7c42329610368d0a51a1"
 blocks: [VK-pol1, VK-bbmn, VK-jvku, VK-si5s, VK-ldg1, VK-4qfy]
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
+assignee: dev-VK-pg9j
+follows: [VK-wa2q, VK-kmbs, VK-jkkn]
 ---
 
 ## Description
@@ -116,10 +118,16 @@ status: new
 - 2026-09-19T03:17:05Z dep_removed: was_blocked_by VK-wa2q
 - 2026-09-19T04:11:59Z dep_removed: was_blocked_by VK-kmbs
 - 2026-09-19T04:41:26Z dep_removed: was_blocked_by VK-jkkn
+- 2026-09-19T17:07:24Z status: open -> in_progress
+- 2026-09-19T17:07:24Z auto-follows: linked to predecessor VK-wa2q
+- 2026-09-19T17:07:24Z auto-follows: linked to predecessor VK-kmbs
+- 2026-09-19T17:07:24Z auto-follows: linked to predecessor VK-jkkn
+- 2026-09-19T17:07:24Z claimed by dev-VK-pg9j
 
 ## Links
 - Parent: [[VK-u40v]]
 - Blocks: [[VK-pol1]], [[VK-bbmn]], [[VK-jvku]], [[VK-si5s]], [[VK-ldg1]], [[VK-4qfy]]
 - Was blocked by: [[VK-wa2q]], [[VK-kmbs]], [[VK-jkkn]]
+- Follows: [[VK-wa2q]], [[VK-kmbs]], [[VK-jkkn]]
 
 ## Comments

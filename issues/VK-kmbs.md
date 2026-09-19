@@ -9,13 +9,13 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
 updated_at: 2026-09-19T04:12:00Z
-content_hash: "sha256:b7c7a8488f78888433ffcfde4c62f0edb58421af82aaa5219cb8fb79da80ed92"
+content_hash: "sha256:972aefc756d1238795c578935f98b57add5b40678fe06b49df6c7fed3df3ac71"
 was_blocked_by: [VK-1vhm, VK-wa2q]
 follows: [VK-1vhm, VK-wa2q]
 assignee: dev-VK-kmbs
 closed_at: 2026-09-19T04:11:59Z
 close_reason: "Accepted: deterministic DFS postorder closes recursive fail-closed propagation; full and targeted suites pass"
-led_to: [VK-jkkn, VK-0c4c, VK-mfn6]
+led_to: [VK-jkkn, VK-0c4c, VK-mfn6, VK-pg9j]
 ---
 
 ## Description
@@ -393,7 +393,7 @@ status: in_progress
 - Parent: [[VK-egll]]
 - Was blocked by: [[VK-1vhm]], [[VK-wa2q]]
 - Follows: [[VK-1vhm]], [[VK-wa2q]]
-- Led to: [[VK-jkkn]], [[VK-0c4c]], [[VK-mfn6]]
+- Led to: [[VK-jkkn]], [[VK-0c4c]], [[VK-mfn6]], [[VK-pg9j]]
 
 ## Comments
 
