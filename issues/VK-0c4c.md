@@ -8,8 +8,8 @@ labels: [integration, phase-1, walking-skeleton, rejected]
 parent: VK-0auj
 created_at: 2026-09-18T23:31:22Z
 created_by: speed
-updated_at: 2026-09-19T05:39:09Z
-content_hash: "sha256:e0ae1bacc463a6b8a1bc590a04ec8a046d06ff86ceeb4751286736cdbd67f162"
+updated_at: 2026-09-19T05:46:13Z
+content_hash: "sha256:e9ee1c880d889bd3c09f4d4abf8eef6b4ceb61f5a6442e8449d8c063e7497053"
 blocks: [VK-2g0f, VK-ddoh, VK-sbdy, VK-aumt, VK-dblr, VK-vqvy]
 was_blocked_by: [VK-pg9j, VK-kmbs, VK-jkkn]
 follows: [VK-kmbs, VK-jkkn]
@@ -117,6 +117,79 @@ CONSUMES:
 1. The P1 walking skeleton generates and registers a deterministic synthetic solana_dex bars/events population locally; it has no Bitquery dependency and makes no network call.
 2. Synthetic data is clearly labeled synthetic fixture evidence for wiring and is not promotable venue evidence.
 3. Collector-derived descriptors bind only in later integration stories after the collector epic.
+## Rework Implementation Evidence (DELIVERED)
+
+PROOF:
+
+### Rejection Resolution
+- Strict split membership now requires a bar to exist at every declared target completion timestamp and requires that timestamp to equal `signal + target_horizon * bar_interval`.
+- Walk-forward evaluation now resolves and validates the exact target bar for EVERY prediction before constructing a label, prediction, or trade; the check no longer depends on BUY versus FLAT.
+- Public evaluation converts the strict target-gap rejection into a machine-readable `BLOCKED` run with empty predictions/trades and writes the corresponding immutable blocked artifacts/event.
+- Added a real, no-mock regression that registers a malformed synthetic bars descriptor declaring `2026-01-01T00:23:30Z` between real one-minute bars, supplies only the FLAT variant, proves `build_split_manifest` rejects `TARGET_BAR_MISSING`, and proves `evaluate_walk_forward` returns `BLOCKED` with no label or prediction.
+
+### CI/Test Results
+- Commands run:
+  - `uv run pytest tests/judge/test_walk_forward.py`
+  - `uv run pytest tests/`
+  - `pvg verify src/gauntlet/judge/__init__.py src/gauntlet/judge/splits.py src/gauntlet/judge/synthetic.py src/gauntlet/judge/walk_forward.py tests/judge/test_walk_forward.py --format=text`
+- Summary: judge integration PASS (5/5); full suite PASS (48/48); pvg verify PASS (5 files, 0 issues).
+- Coverage: rejection-fix regression PASS; AC contract coverage remains 100% (10/10 original-plus-repair criteria). Line coverage is not configured in this dependency-free Phase 1 project.
+- Key output:
+  - `collected 5 items ... 5 passed in 0.22s`
+  - `collected 48 items ... 48 passed in 0.59s`
+  - `VERIFY: PASSED (5 files scanned, 0 issues)`
+
+### Commit
+- Branch: `story/VK-0c4c`
+- Fix SHA: `4242e830dcb426a07b305d200091b3a09da142ab`
+- Original rejected SHA: `7cd18956dc362f664b379555e4d76adf751693e8`
+- Final story diff versus `epic/VK-0auj`: 5 files, 747 insertions (within under-750 LOC budget).
+
+### pvg verify
+- `VERIFY: PASSED (5 files scanned, 0 issues)`
+
+### AC Verification After Rework
+| AC # | Requirement | Rework Status | Evidence |
+|---|---|---|---|
+| 1 | Complete fold temporal metadata and locks | PASS | Existing split schema test plus strict target validation |
+| 2 | Validation-only selection before untouched test | PASS | Existing real multi-fold integration test |
+| 3 | Leakage/mutation failures | PASS | Existing target-boundary, future-normalization, and mutation tests |
+| 4 | Locked provenance identities | PASS | Existing run-report assertions |
+| 5 | Row labels use real declared target evidence | PASS | New FLAT absent-target regression emits no label/prediction |
+| 6 | Exact next bar and every target gap BLOCK | PASS | Target validation is unconditional; regression returns `TARGET_BAR_MISSING` |
+| 7 | Factory ranking not judge evidence | PASS | Existing factory ranking assertions |
+| Repair 1 | Local deterministic registered synthetic population | PASS | Existing registration/determinism test |
+| Repair 2 | Synthetic evidence not promotable | PASS | Existing fixture-label assertions |
+| Repair 3 | No collector binding | PASS | Existing source/AST assertions |
+
+LEARNINGS:
+- The original implementation correctly guarded BUY outcomes but incorrectly treated FLAT labels as harmless; every emitted row must satisfy the same outcome-existence contract.
+- Checking only the declared completion boundary allowed a timestamp to masquerade as evidence; exact horizon arithmetic plus target-row existence closes that gap.
+- Turning a strict data-gap rejection into a typed BLOCKED run preserves machine-readable artifacts/events without imputing an outcome.
+- The first delivery's 47 passing tests were insufficient because they validated BUY execution gaps but omitted a FLAT target-gap adversary; the new registered-descriptor regression now pins that case.
+
+## nd_contract
+status: delivered
+
+### evidence
+- Fix commit: `4242e830dcb426a07b305d200091b3a09da142ab` on `story/VK-0c4c`.
+- `uv run pytest tests/judge/test_walk_forward.py` -> 5 passed.
+- `uv run pytest tests/` -> 48 passed.
+- `pvg verify ... --format=text` -> PASSED, 5 files, 0 issues.
+- Regression: registered absent target timestamp + FLAT variant -> `TARGET_BAR_MISSING`, run status BLOCKED, empty predictions/trades, no imputed label.
+
+### proof
+- [x] AC #1: Fold manifest temporal metadata and selection locks remain complete.
+- [x] AC #2: Validation-only selection and untouched test discipline remain verified.
+- [x] AC #3: Target-boundary, future-normalization, and mutation attacks fail.
+- [x] AC #4: Locked candidate/provenance/config/source/fold identities remain recorded.
+- [x] AC #5: Labels are emitted only from an exact existing target bar, including FLAT predictions.
+- [x] AC #6: Next-bar and target gaps return BLOCKED without imputed fills.
+- [x] AC #7: Factory ranking remains exploratory and score-free judge evidence.
+- [x] Repair AC #1: Deterministic local synthetic population remains registered without network/Bitquery.
+- [x] Repair AC #2: Synthetic fixture remains non-promotable.
+- [x] Repair AC #3: No collector-derived binding was introduced.
+
 ## nd_contract
 status: in_progress
 
