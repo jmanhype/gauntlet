@@ -9,7 +9,7 @@ parent: VK-1rbc
 created_at: 2026-09-19T01:37:42Z
 created_by: speed
 updated_at: 2026-09-19T04:45:11Z
-content_hash: "sha256:b7b582df8f20f9026b1f99d3dc7f0513a0a4ef9bbf995de0c402d4b372619b18"
+content_hash: "sha256:1d5b11c2d0818e416e04bc1e37ce8996680c99406354fbeff7b413d01111cea1"
 blocks: [VK-2e0k, VK-uyca]
 was_blocked_by: [VK-1vhm]
 assignee: dev-VK-aej2
@@ -93,7 +93,14 @@ status: new
 
 
 ## Notes
+## nd_contract
+status: in_progress
 
+### evidence
+- Claimed by developer agent for story/VK-aej2 on 2026-09-18.
+
+### proof
+- [ ] (pending)
 
 ## History
 - 2026-09-19T01:37:42Z dep_added: blocked_by VK-1vhm
