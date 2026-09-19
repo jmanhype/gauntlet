@@ -8,8 +8,8 @@ labels: [integration, phase-1, delivered]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:19Z
 created_by: speed
-updated_at: 2026-09-19T17:05:08Z
-content_hash: "sha256:e18d1d4e25cd5373ed1b5cce0d5dd7307acfd1b2337fe29744da1cc6e9655236"
+updated_at: 2026-09-19T17:05:09Z
+content_hash: "sha256:e26d06809c46ebbde5a91652bd3d5575edef44bea17ed6420af411755529e54f"
 blocks: [VK-7ubc, VK-zvia, VK-ldg1]
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-mfn6
@@ -95,6 +95,16 @@ status: new
 
 
 ## Notes
+
+
+## nd_contract
+status: delivered
+
+### evidence
+- Transitioned via pvg story deliver on 2026-09-19.
+
+### proof
+- [ ] Developer evidence block must remain authoritative above this contract.
 
 
 ## History
