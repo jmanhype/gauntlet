@@ -8,8 +8,8 @@ labels: [integration, phase-1, rejected]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T04:01:30Z
-content_hash: "sha256:8f30645d2ed13fe7fcefac2ee7a32c4de1c9fee522cc2f886493a0a035bbc8ce"
+updated_at: 2026-09-19T04:02:05Z
+content_hash: "sha256:a27bdd232cf2faefad781d255d830d3c26a9bbdc2a04c8ead2e3eceb3b09810c"
 blocks: [VK-jkkn, VK-pg9j, VK-mfn6, VK-0pfo, VK-0c4c, VK-2e0k, VK-3f9f, VK-4qfy, VK-3v14]
 was_blocked_by: [VK-1vhm, VK-wa2q]
 follows: [VK-1vhm, VK-wa2q]
@@ -286,3 +286,6 @@ status: rejected
 ### proof
 - [ ] AC #2: Recursive dependency closure is incomplete for non-chain DAG shapes.
 - [ ] AC #3: A gate-critical INCOMPLETE transitive dependency failed to mark the dependent root metric INVALID or return BLOCKED.
+
+### 2026-09-19T04:02:05Z speed
+PM CORRECTION 2026-09-18: The prior rejection header's literal $(date +%Y-%m-%d) was a shell-quoting artifact. The intended header is REJECTED [2026-09-18]. The rejection verdict, criteria, evidence, and required fix are unchanged.
