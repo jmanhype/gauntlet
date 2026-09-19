@@ -8,8 +8,8 @@ labels: [integration, phase-1, walking-skeleton, delivered]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T02:30:15Z
-content_hash: "sha256:479a9c7908400265eb450bd11be2b8cd3ee57c6746057819f77a0f491d45fff0"
+updated_at: 2026-09-19T02:30:32Z
+content_hash: "sha256:a8a8530971b3fadbec0ead420af0c6d60e8365992667066f3577464dcda1171b"
 blocks: [VK-wa2q, VK-kmbs, VK-jkkn, VK-bns7, VK-52g6, VK-3f9f, VK-aej2]
 assignee: dev-VK-1vhm
 ---
@@ -95,6 +95,15 @@ status: new
 
 
 ## Notes
+## nd_contract
+status: delivered
+
+### evidence
+- Authoritative delivery follows `pvg story deliver VK-1vhm`; commit `26f70aeffa5013c86bfb5b5400853904107351ae`.
+- `uv run pytest tests/integrity/test_contracts.py`: 6 passed. Coverage command: 81%. `pvg verify`: PASS for source and test files.
+
+### proof
+- [x] AC #1 through AC #7 verified in the AC Verification table above; all checkboxes are backed by the recorded commands and commit.
 
 
 ## nd_contract
