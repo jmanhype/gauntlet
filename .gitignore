@@ -7,7 +7,7 @@
 *.pkl
 *.parquet
 *.joblib
-data/
+/data/
 *_cleaned/
 internet_holdout/
 paper_trading/
