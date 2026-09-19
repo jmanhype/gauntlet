@@ -1,17 +1,19 @@
 ---
 id: VK-mfn6
 title: "Register Kronos model lineage"
-status: open
+status: in_progress
 priority: 2
 type: feature
 labels: [integration, phase-1]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:19Z
 created_by: speed
-updated_at: 2026-09-18T23:31:19Z
-content_hash: "sha256:d81b815f96bafa9e6f0a9b6e3faf75c64cc608298f017b606da11ff0e2b4f2a4"
+updated_at: 2026-09-19T16:35:13Z
+content_hash: "sha256:a2ea5c114183bfdd65d7dd420cc19eb88e30edf82e868e90e9de7cd73a7a6235"
 blocks: [VK-7ubc, VK-zvia, VK-ldg1]
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
+assignee: dev-VK-mfn6
+follows: [VK-wa2q, VK-kmbs, VK-jkkn]
 ---
 
 ## Description
@@ -105,10 +107,16 @@ status: new
 - 2026-09-19T03:17:05Z dep_removed: was_blocked_by VK-wa2q
 - 2026-09-19T04:11:59Z dep_removed: was_blocked_by VK-kmbs
 - 2026-09-19T04:41:26Z dep_removed: was_blocked_by VK-jkkn
+- 2026-09-19T16:35:13Z status: open -> in_progress
+- 2026-09-19T16:35:13Z auto-follows: linked to predecessor VK-wa2q
+- 2026-09-19T16:35:13Z auto-follows: linked to predecessor VK-kmbs
+- 2026-09-19T16:35:13Z auto-follows: linked to predecessor VK-jkkn
+- 2026-09-19T16:35:13Z claimed by dev-VK-mfn6
 
 ## Links
 - Parent: [[VK-u40v]]
 - Blocks: [[VK-7ubc]], [[VK-zvia]], [[VK-ldg1]]
 - Was blocked by: [[VK-wa2q]], [[VK-kmbs]], [[VK-jkkn]]
+- Follows: [[VK-wa2q]], [[VK-kmbs]], [[VK-jkkn]]
 
 ## Comments
