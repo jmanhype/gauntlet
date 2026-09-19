@@ -8,8 +8,8 @@ labels: [integration, phase-1]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T03:19:17Z
-content_hash: "sha256:3d7fa19d538205f264a85e192b77e2b9e12155c3e0f2ec37cf7ca9876224b424"
+updated_at: 2026-09-19T03:55:47Z
+content_hash: "sha256:bd317bf6c3f008e8d0811bc2c173b96dfe5360e05c048239874da23ea5d80ccf"
 blocks: [VK-jkkn, VK-pg9j, VK-mfn6, VK-0pfo, VK-0c4c, VK-2e0k, VK-3f9f, VK-4qfy, VK-3v14]
 was_blocked_by: [VK-1vhm, VK-wa2q]
 assignee: dev-VK-kmbs
@@ -106,6 +106,79 @@ NORMATIVE DESCRIPTOR ENUMERATIONS (authoritative for implementation):
 - quality.state: VALID | STALE | CORRUPT | INCOMPLETE | QUARANTINED.
 - observation_basis: OBSERVED | MODELED.
 - venue_track: solana_dex | hyperliquid | cross_venue_transfer | external.
+## Implementation Evidence (DELIVERED)
+
+PROOF:
+
+### CI/Test Results
+- Commands run:
+  - `uv run pytest tests/`
+  - `uv run --with pytest-cov pytest tests/ --cov=gauntlet --cov-report=term-missing`
+  - `pvg verify .gitignore src/gauntlet/data/__init__.py src/gauntlet/data/descriptors.py src/gauntlet/data/dependency.py src/gauntlet/data/quarantine.py tests/integrity/test_dependency_graph.py --include-tests --format=text`
+- Summary: full suite PASS — 20 tests, 20 passed, 0 failed, 0 skipped, 0 warnings.
+- Coverage: 88% total (1086 statements, 129 missed); new data modules: descriptors 89%, dependency 93%, quarantine 91%.
+- Key output:
+  - `collected 20 items`
+  - `tests/integrity/test_dependency_graph.py ......... [ 75%]`
+  - `20 passed in 0.46s`
+  - `TOTAL ... 88%`
+  - `VERIFY: PASSED (5 files scanned, 0 issues)`
+- Integration proof: temporary real storage plus verified trial ledger; no test mocks. Coverage includes multilevel closure, historical/later `as_of`, exact-hash binding, append-only quarantine, fail-closed critical gaps, noncritical degradation, MODELED rejection, and malformed graph handling.
+
+### Commit
+- Branch: `story/VK-kmbs`
+- SHA: `43dd14eeef18443f3ca5314c4c721b62496a20d6`
+- Diff budget: 6 files, 747 insertions, 1 deletion (748 changed lines).
+
+### pvg verify
+- `VERIFY: PASSED (5 files scanned, 0 issues)`
+
+### AC Verification
+| AC # | Requirement | Code Location | Test Location | Status |
+|------|-------------|---------------|---------------|--------|
+| 1 | Complete schema, canonical descriptor hash, content hash, and dependency references validated before ledger append | `src/gauntlet/data/descriptors.py` (`validate_descriptor`, `_register`) | `tests/integrity/test_dependency_graph.py::test_registration_validates_schema_hashes_dependencies_and_ledgers_once` | PASS |
+| 2 | Seven checks evaluated in declared order; graph hash, affected metrics, and coverage returned | `src/gauntlet/data/dependency.py` (`CHECK_ORDER`, `evaluate_dependencies`) | `test_real_multilevel_closure_time_travel_and_append_only_quarantine`, `test_noncritical_gap_degrades_coverage_without_invalidating_unaffected_metrics` | PASS |
+| 3 | Gate-critical missing/stale/corrupt/incomplete/replay-failed/UNKNOWN inputs mark metrics INVALID and result BLOCKED | `src/gauntlet/data/dependency.py` (`_local_findings`, dependency propagation, `evaluate_dependencies`) | parameterized `test_gate_critical_failures_block_dependent_metric`; missing and corrupt tests | PASS |
+| 4 | Noncritical gap leaves unaffected metrics valid and visibly reduces coverage | `src/gauntlet/data/dependency.py` (`evaluate_dependencies`) | `test_noncritical_gap_degrades_coverage_without_invalidating_unaffected_metrics` | PASS |
+| 5 | Active version selected by effective/superseded time; exact manifest hash retained | `src/gauntlet/data/dependency.py` (`_active_by_id`, `_materialize`) | multilevel time-travel and exact-root-hash assertions in integration test | PASS |
+| 6 | Quarantine creates immutable superseding version referencing original; original bytes/history unchanged | `src/gauntlet/data/quarantine.py`; append-only storage/ledger in `descriptors.py` | `test_real_multilevel_closure_time_travel_and_append_only_quarantine` | PASS |
+| 7 | MODELED evidence cannot satisfy observed-outcome metric rules | `src/gauntlet/data/dependency.py` (`OBSERVATION_BASIS_ELIGIBILITY`) | parameterized MODELED case | PASS |
+| 8 | Malformed or cyclic graph returns `GRAPH_MALFORMED` without crash or partial selection | `src/gauntlet/data/dependency.py` (`_materialize`, `_malformed`) | `test_corrupt_or_malformed_registry_fails_closed_without_crashing` | PASS |
+
+LEARNINGS:
+- Registering the resolved dependency hashes in the trial payload preserves derived lineage while still allowing a later active version to expose quarantine health at evaluation time.
+- The unanchored `data/` ignore pattern silently excluded the required `src/gauntlet/data/` package; anchoring it to `/data/` was necessary for the story artifacts.
+- Rebuilding the descriptor registry from the verified trial ledger avoids a second mutable index while keeping content and descriptor files independently verifiable.
+
+### OBSERVATIONS (unrelated)
+- [CONCERN] Repository has no `docs/findings/` directory at this story HEAD.
+
+### DISCOVERED_BUG
+  title: pvg notes search references unavailable Claude vault
+  context: Session-start knowledge search ran `pvg notes search "VK-kmbs descriptor dependency quarantine"` and exited 1 with `vault "Claude" not found. Available: .vault, nd-vault, Obsidian Vault, Brand OS (AI Video Factory), vault`. A direct search of the shared nd vault returned no relevant notes. This did not affect code delivery but blocks the configured knowledge-search path.
+  affected_files: project/global pvg notes adapter configuration
+  discovered_during: VK-kmbs
+
+## nd_contract
+status: delivered
+
+### evidence
+- Branch `story/VK-kmbs`, commit `43dd14eeef18443f3ca5314c4c721b62496a20d6`.
+- `uv run pytest tests/` — 20 passed, 0 failed, 0 skipped.
+- Coverage command — 88% total; new modules 89%/93%/91%.
+- `pvg verify ... --include-tests --format=text` — PASSED, 0 issues.
+- Diff budget — 747 insertions + 1 deletion, under the 750 changed-line ceiling.
+
+### proof
+- [x] AC #1: Registration validates schema, canonical hash, content hash, and dependency references before appending the trial ledger record.
+- [x] AC #2: Dependency closure returns ordered seven-check results, graph hash, affected metrics, and coverage.
+- [x] AC #3: Gate-critical failures mark dependent metrics INVALID and return BLOCKED.
+- [x] AC #4: Noncritical gaps degrade coverage without invalidating unaffected metrics.
+- [x] AC #5: Time-bound selection and exact manifest hash binding both hold across quarantine.
+- [x] AC #6: Quarantine is append-only and preserves original descriptor/content bytes and historical resolution.
+- [x] AC #7: MODELED evidence is rejected for observed-outcome metric rules.
+- [x] AC #8: Malformed graph data returns GRAPH_MALFORMED without partial selection.
+
 ## nd_contract
 status: in_progress
 
