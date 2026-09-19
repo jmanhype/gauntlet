@@ -1,17 +1,19 @@
 ---
 id: VK-wa2q
 title: "Append immutable trial ledgers with operation events"
-status: open
+status: in_progress
 priority: 0
 type: feature
 labels: [integration, phase-1]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-18T23:33:49Z
-content_hash: "sha256:e24fd61dd78afeacd0dd088171e61d3d4b128906cab08b45936070a50ad94699"
+updated_at: 2026-09-19T02:41:31Z
+content_hash: "sha256:18785d9b65afb830dee378f38aa3cce8a190ce71a650df5ef6708571fcbfa7d1"
 blocks: [VK-kmbs, VK-pg9j, VK-mfn6, VK-si5s, VK-jbae, VK-0pfo, VK-ddoh, VK-bns7, VK-52g6, VK-3f9f, VK-3v14]
 was_blocked_by: [VK-1vhm]
+assignee: dev-VK-wa2q
+follows: [VK-1vhm]
 ---
 
 ## Description
@@ -111,11 +113,15 @@ status: new
 - 2026-09-18T23:31:38Z dep_added: blocks VK-3f9f
 - 2026-09-19T01:37:42Z dep_added: blocks VK-3v14
 - 2026-09-19T02:37:33Z dep_removed: was_blocked_by VK-1vhm
+- 2026-09-19T02:41:31Z status: open -> in_progress
+- 2026-09-19T02:41:31Z auto-follows: linked to predecessor VK-1vhm
+- 2026-09-19T02:41:31Z claimed by dev-VK-wa2q
 
 ## Links
 - Parent: [[VK-egll]]
 - Blocks: [[VK-kmbs]], [[VK-pg9j]], [[VK-mfn6]], [[VK-si5s]], [[VK-jbae]], [[VK-0pfo]], [[VK-ddoh]], [[VK-bns7]], [[VK-52g6]], [[VK-3f9f]], [[VK-3v14]]
 - Was blocked by: [[VK-1vhm]]
+- Follows: [[VK-1vhm]]
 
 ## Comments
 
