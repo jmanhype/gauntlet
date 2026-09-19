@@ -9,10 +9,10 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:37Z
 created_by: speed
 updated_at: 2026-09-19T01:38:27Z
-content_hash: "sha256:e4451e11ca3425aa70086dd34f69d91c7da4ea1425be3e57c7c238e5f3562688"
-blocked_by: [VK-kmbs, VK-jkkn, VK-3v14]
+content_hash: "sha256:e33585f7bafa0f5f9b615ccf61df37221a7022e34fa99897642e00983d6b2e98"
+blocked_by: [VK-jkkn, VK-3v14]
 blocks: [VK-hiuk]
-was_blocked_by: [VK-1vhm, VK-wa2q]
+was_blocked_by: [VK-1vhm, VK-wa2q, VK-kmbs]
 ---
 
 ## Description
@@ -122,11 +122,12 @@ status: new
 - 2026-09-19T01:37:43Z dep_added: blocked_by VK-3v14
 - 2026-09-19T02:37:33Z dep_removed: was_blocked_by VK-1vhm
 - 2026-09-19T03:17:05Z dep_removed: was_blocked_by VK-wa2q
+- 2026-09-19T04:11:59Z dep_removed: was_blocked_by VK-kmbs
 
 ## Links
 - Parent: [[VK-egll]]
 - Blocks: [[VK-hiuk]]
-- Blocked by: [[VK-kmbs]], [[VK-jkkn]], [[VK-3v14]]
-- Was blocked by: [[VK-1vhm]], [[VK-wa2q]]
+- Blocked by: [[VK-jkkn]], [[VK-3v14]]
+- Was blocked by: [[VK-1vhm]], [[VK-wa2q]], [[VK-kmbs]]
 
 ## Comments

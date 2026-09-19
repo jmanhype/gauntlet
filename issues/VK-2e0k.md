@@ -9,9 +9,10 @@ parent: VK-1rbc
 created_at: 2026-09-18T23:31:29Z
 created_by: speed
 updated_at: 2026-09-19T01:38:27Z
-content_hash: "sha256:011cf1a26a2b390d4c4726699915be7dd53f6bc8ca4593c8373af6758b61c5ca"
-blocked_by: [VK-kmbs, VK-8ch2, VK-zvia, VK-aumt, VK-wrce, VK-l747, VK-0pfo, VK-rkdr, VK-aej2]
+content_hash: "sha256:2d5d27a8474b9a6fb67e37576587b27aabe8426377bf85cc16e602c40bb125ac"
+blocked_by: [VK-8ch2, VK-zvia, VK-aumt, VK-wrce, VK-l747, VK-0pfo, VK-rkdr, VK-aej2]
 blocks: [VK-bns7, VK-21gm, VK-dblr, VK-uyca]
+was_blocked_by: [VK-kmbs]
 ---
 
 ## Description
@@ -177,11 +178,13 @@ status: new
 - 2026-09-18T23:31:45Z dep_added: blocks VK-uyca
 - 2026-09-19T01:37:43Z dep_added: blocked_by VK-rkdr
 - 2026-09-19T01:37:43Z dep_added: blocked_by VK-aej2
+- 2026-09-19T04:11:59Z dep_removed: was_blocked_by VK-kmbs
 
 ## Links
 - Parent: [[VK-1rbc]]
 - Blocks: [[VK-bns7]], [[VK-21gm]], [[VK-dblr]], [[VK-uyca]]
-- Blocked by: [[VK-kmbs]], [[VK-8ch2]], [[VK-zvia]], [[VK-aumt]], [[VK-wrce]], [[VK-l747]], [[VK-0pfo]], [[VK-rkdr]], [[VK-aej2]]
+- Blocked by: [[VK-8ch2]], [[VK-zvia]], [[VK-aumt]], [[VK-wrce]], [[VK-l747]], [[VK-0pfo]], [[VK-rkdr]], [[VK-aej2]]
+- Was blocked by: [[VK-kmbs]]
 
 ## Comments
 

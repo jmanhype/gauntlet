@@ -1,7 +1,7 @@
 ---
 id: VK-kmbs
 title: "Register evidence descriptors with fail-closed dependencies"
-status: in_progress
+status: closed
 priority: 0
 type: feature
 labels: [integration, phase-1, delivered]
@@ -9,11 +9,12 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
 updated_at: 2026-09-19T04:11:59Z
-content_hash: "sha256:f8d6afe229358a2b855c4900dbc7f0f5ac91775dda0c661fe1455d3d14f4b3b9"
-blocks: [VK-jkkn, VK-pg9j, VK-mfn6, VK-0pfo, VK-0c4c, VK-2e0k, VK-3f9f, VK-4qfy, VK-3v14]
+content_hash: "sha256:262219eaac30a3eded7ac72047c27f6e9c014a989c59e049bdf8d21577fdb0f2"
 was_blocked_by: [VK-1vhm, VK-wa2q]
 follows: [VK-1vhm, VK-wa2q]
 assignee: dev-VK-kmbs
+closed_at: 2026-09-19T04:11:59Z
+close_reason: "Accepted: deterministic DFS postorder closes recursive fail-closed propagation; full and targeted suites pass"
 ---
 
 ## Description
@@ -364,10 +365,19 @@ status: in_progress
 - 2026-09-19T04:03:20Z status: open -> in_progress
 - 2026-09-19T04:03:20Z claimed by dev-VK-kmbs
 - 2026-09-19T04:08:52Z status: in_progress -> in_progress
+- 2026-09-19T04:11:59Z status: in_progress -> closed
+- 2026-09-19T04:11:59Z dep_removed: no_longer_blocks VK-jkkn
+- 2026-09-19T04:11:59Z dep_removed: no_longer_blocks VK-pg9j
+- 2026-09-19T04:11:59Z dep_removed: no_longer_blocks VK-mfn6
+- 2026-09-19T04:11:59Z dep_removed: no_longer_blocks VK-0pfo
+- 2026-09-19T04:11:59Z dep_removed: no_longer_blocks VK-0c4c
+- 2026-09-19T04:11:59Z dep_removed: no_longer_blocks VK-2e0k
+- 2026-09-19T04:11:59Z dep_removed: no_longer_blocks VK-3f9f
+- 2026-09-19T04:11:59Z dep_removed: no_longer_blocks VK-4qfy
+- 2026-09-19T04:11:59Z dep_removed: no_longer_blocks VK-3v14
 
 ## Links
 - Parent: [[VK-egll]]
-- Blocks: [[VK-jkkn]], [[VK-pg9j]], [[VK-mfn6]], [[VK-0pfo]], [[VK-0c4c]], [[VK-2e0k]], [[VK-3f9f]], [[VK-4qfy]], [[VK-3v14]]
 - Was blocked by: [[VK-1vhm]], [[VK-wa2q]]
 - Follows: [[VK-1vhm]], [[VK-wa2q]]
 

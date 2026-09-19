@@ -9,10 +9,10 @@ parent: VK-0auj
 created_at: 2026-09-18T23:31:22Z
 created_by: speed
 updated_at: 2026-09-19T01:37:43Z
-content_hash: "sha256:ac26de0ed9199647351292b7ad5d64a22e257420b90c7a8b6b58edb7946c3c99"
-blocked_by: [VK-jkkn, VK-kmbs]
+content_hash: "sha256:a9bee4a9b1c9b01430fa1f54ca36af79004b0733fc4df0f8073c34cbadffa24e"
+blocked_by: [VK-jkkn]
 blocks: [VK-2g0f, VK-ddoh, VK-sbdy, VK-aumt, VK-dblr, VK-vqvy]
-was_blocked_by: [VK-pg9j]
+was_blocked_by: [VK-pg9j, VK-kmbs]
 ---
 
 ## Description
@@ -141,11 +141,12 @@ status: new
 - 2026-09-18T23:31:36Z dep_added: blocks VK-dblr
 - 2026-09-18T23:31:42Z dep_added: blocks VK-vqvy
 - 2026-09-19T01:37:43Z dep_removed: was_blocked_by VK-pg9j
+- 2026-09-19T04:11:59Z dep_removed: was_blocked_by VK-kmbs
 
 ## Links
 - Parent: [[VK-0auj]]
 - Blocks: [[VK-2g0f]], [[VK-ddoh]], [[VK-sbdy]], [[VK-aumt]], [[VK-dblr]], [[VK-vqvy]]
-- Blocked by: [[VK-jkkn]], [[VK-kmbs]]
-- Was blocked by: [[VK-pg9j]]
+- Blocked by: [[VK-jkkn]]
+- Was blocked by: [[VK-pg9j]], [[VK-kmbs]]
 
 ## Comments

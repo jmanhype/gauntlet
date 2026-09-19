@@ -9,9 +9,10 @@ parent: VK-u40v
 created_at: 2026-09-19T01:37:42Z
 created_by: speed
 updated_at: 2026-09-19T01:39:43Z
-content_hash: "sha256:f6d1a1927f307da86e338d4a91094ad29bbf88cda9d02b807a7e5c1f5fdd45de"
-blocked_by: [VK-pg9j, VK-kmbs]
+content_hash: "sha256:d3ee1681999b9e17919f39471200b27fbdad2fe9799da216ba5fc5b1f88fec7f"
+blocked_by: [VK-pg9j]
 blocks: [VK-2g0f, VK-ldg1]
+was_blocked_by: [VK-kmbs]
 ---
 
 ## Description
@@ -101,11 +102,13 @@ status: new
 - 2026-09-19T01:37:42Z dep_added: blocked_by VK-kmbs
 - 2026-09-19T01:37:43Z dep_added: blocks VK-2g0f
 - 2026-09-19T01:37:44Z dep_added: blocks VK-ldg1
+- 2026-09-19T04:11:59Z dep_removed: was_blocked_by VK-kmbs
 
 ## Links
 - Parent: [[VK-u40v]]
 - Blocks: [[VK-2g0f]], [[VK-ldg1]]
-- Blocked by: [[VK-pg9j]], [[VK-kmbs]]
+- Blocked by: [[VK-pg9j]]
+- Was blocked by: [[VK-kmbs]]
 
 ## Comments
 
