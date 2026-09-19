@@ -8,8 +8,8 @@ labels: [integration, phase-1]
 parent: VK-egll
 created_at: 2026-09-18T23:31:16Z
 created_by: speed
-updated_at: 2026-09-19T04:15:20Z
-content_hash: "sha256:796fdfa5817b5408354da1d8ce24d045ae44957c1af1ddfc6cf46ef6f7139f88"
+updated_at: 2026-09-19T04:30:29Z
+content_hash: "sha256:4f7abb463be31027a7f5ad241130f7ab05ec723bced2b5c8eddd330756c8fa07"
 blocks: [VK-pg9j, VK-mfn6, VK-si5s, VK-0pfo, VK-0c4c, VK-ddoh, VK-dblr, VK-3f9f, VK-rkdr]
 was_blocked_by: [VK-1vhm, VK-kmbs]
 assignee: dev-VK-jkkn
@@ -95,6 +95,74 @@ status: new
 
 
 ## Notes
+## Implementation Evidence (DELIVERED)
+
+PROOF:
+
+### CI/Test Results
+- Commands run:
+  - `uv run pytest tests/integrity/test_resolved_config.py`
+  - `uv run pytest tests/`
+  - `uv run --with pytest-cov pytest tests/integrity/test_resolved_config.py --cov=gauntlet.config --cov-report=term-missing`
+  - `pvg verify src/gauntlet/config/__init__.py src/gauntlet/config/resolver.py src/gauntlet/config/diff.py tests/integrity/test_resolved_config.py --format=text`
+- Summary: targeted PASS 5/5; full suite PASS 26/26; `gauntlet.config` coverage 93% (214 statements, 14 missed); pvg verify PASS.
+- Key output:
+  - Targeted: `collected 5 items` → `5 passed in 0.05s`
+  - Full: `collected 26 items` → `26 passed in 0.38s`
+  - Coverage: `TOTAL 214 14 93%`
+  - Verify: `VERIFY: PASSED (4 files scanned, 0 issues)`
+
+### Commit
+- Branch: `story/VK-jkkn`
+- SHA: `93d54b15d532aac56b476720024d0851e2e75b7b`
+- Commit: `feat(VK-jkkn): resolve immutable run configurations`
+- Changed files: 4 files, 449 inserted lines (within the under-450 changed-LOC budget).
+
+### pvg verify
+- `VERIFY: PASSED (4 files scanned, 0 issues)`
+
+### AC Verification
+| AC # | Requirement | Code Location | Test Location | Status |
+|------|-------------|---------------|---------------|--------|
+| 1 | Profile plus explicit overrides resolves to a canonical artifact with stable SHA-256 hash. | `src/gauntlet/config/resolver.py::resolve_config` | `tests/integrity/test_resolved_config.py::test_real_profile_overrides_and_complete_canonical_hash` | PASS |
+| 2 | Defaults, overrides, provenance, policy/model/code versions, and all artifact versions are visible in the result. | `src/gauntlet/config/resolver.py::resolve_config` | `test_real_profile_overrides_and_complete_canonical_hash` | PASS |
+| 3 | Secret material is rejected; runtime path and secret-name fields use only the versioned redaction rule and never emit input values. | `resolver.py::_reject_secrets`, `_redacted`, `resolve_config` | `test_versioned_redaction_and_secret_refusal_are_fail_closed` | PASS |
+| 4 | Unknown, hidden, incomplete, malformed, or invalid version inputs return machine-readable `CONFIG_INVALID` before mutation. | `resolver.py::ConfigError`, `_invalid`, validators, `resolve_config` | `test_versioned_redaction_and_secret_refusal_are_fail_closed`; `test_missing_incomplete_and_malformed_inputs_reject_before_mutation` | PASS |
+| 5 | Diff reports added, removed, changed, redacted, and threshold-bearing leaves while retaining left/right provenance and hashes. | `src/gauntlet/config/diff.py::diff_config` | `test_diff_preserves_provenance_and_classifies_material_changes` | PASS |
+| 6 | A resolved configuration registered through the contract layer remains byte/hash immutable after later profile edits. | `resolver.py::ResolvedConfig`; real integration registration in test | `test_contract_registration_freezes_bytes_against_later_profile_edits` | PASS |
+
+LEARNINGS:
+- Real TOML plus a real immutable descriptor registration gives a compact end-to-end proof that source-profile mutation cannot rewrite a sealed config.
+- Separating the canonical artifact from its terminal hash avoids self-referential hashing while still allowing consumers to recompute the digest from exact bytes.
+- Diffing effective values plus explicit override/version provenance catches both value drift and provenance drift without duplicating every profile/default field.
+
+### OBSERVATIONS (unrelated)
+- [ISSUE] Paivot vault search: `pvg notes search` from the worktree and project root failed because it selected unavailable vault `Claude`; `pvg nd` correctly used the shared `nd-vault`. Story execution was unaffected.
+
+### DISCOVERED_BUG
+  title: pvg notes search selects an unavailable configured vault
+  context: Running `pvg notes search "VK-jkkn resolved configuration"` and `pvg notes search "resolved configuration"` returned `vlt: vault "Claude" not found. Available: vault, .vault, nd-vault, ...`. Live nd operations worked through `/Users/speed/Downloads/AI_Videos/google-usercontent/gauntlet/.git/paivot/nd-vault`.
+  affected_files: Paivot/vlt vault-selection configuration outside this repository story scope
+  discovered_during: VK-jkkn
+
+## nd_contract
+status: delivered
+
+### evidence
+- Commit `93d54b15d532aac56b476720024d0851e2e75b7b` on `story/VK-jkkn`.
+- `uv run pytest tests/integrity/test_resolved_config.py`: 5 passed.
+- `uv run pytest tests/`: 26 passed.
+- `uv run --with pytest-cov pytest tests/integrity/test_resolved_config.py --cov=gauntlet.config --cov-report=term-missing`: 5 passed, 93% coverage.
+- `pvg verify <4 changed files> --format=text`: PASSED, 0 issues.
+
+### proof
+- [x] AC #1: Stable canonical SHA-256 resolution proven by deterministic real-profile test.
+- [x] AC #2: Complete defaults, overrides, versions, provenance, and artifact versions asserted in canonical output.
+- [x] AC #3: Secret rejection and versioned redaction proven without emitting secret/path input values.
+- [x] AC #4: Invalid/hidden/incomplete configurations return `CONFIG_INVALID` without creating the data root.
+- [x] AC #5: Diff categories, provenance, hashes, threshold classification, and version drift proven.
+- [x] AC #6: Contract-registered bytes and hash remain unchanged after source profile mutation.
+
 ## nd_contract
 status: in_progress
 
