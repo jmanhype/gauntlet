@@ -9,12 +9,13 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:16Z
 created_by: speed
 updated_at: 2026-09-19T04:41:27Z
-content_hash: "sha256:e9968f0160e59f9b31202c6b045710df267a72d526dc21d1939218492bc20ed2"
+content_hash: "sha256:88741666f72f5528d10d61c213a178891d30433232a988c778d91d9af727b133"
 was_blocked_by: [VK-1vhm, VK-kmbs]
 follows: [VK-1vhm, VK-kmbs, VK-wa2q]
 assignee: dev-VK-jkkn
 closed_at: 2026-09-19T04:41:26Z
 close_reason: "Accepted: all six ACs verified at 13b6d2f5e4e5621c48b50ee7271c11ea90b1e599; prior secret-emission gap is closed, adversarial CONFIG_INVALID proof passes, full suite is 35/35, coverage is 94%, and pvg verify reports 0 issues."
+led_to: [VK-0c4c]
 ---
 
 ## Description
@@ -338,6 +339,7 @@ status: in_progress
 - Parent: [[VK-egll]]
 - Was blocked by: [[VK-1vhm]], [[VK-kmbs]]
 - Follows: [[VK-1vhm]], [[VK-kmbs]], [[VK-wa2q]]
+- Led to: [[VK-0c4c]]
 
 ## Comments
 

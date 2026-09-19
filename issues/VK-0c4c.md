@@ -1,17 +1,19 @@
 ---
 id: VK-0c4c
 title: "Enforce walk-forward evaluation discipline"
-status: open
+status: in_progress
 priority: 1
 type: feature
 labels: [integration, phase-1, walking-skeleton]
 parent: VK-0auj
 created_at: 2026-09-18T23:31:22Z
 created_by: speed
-updated_at: 2026-09-19T01:37:43Z
-content_hash: "sha256:ced226c2f6298f1a749389a62e2aa03534d625b96d4411942d4a9a9b25b6dbe5"
+updated_at: 2026-09-19T05:04:39Z
+content_hash: "sha256:314fb1d39abd92c7a461064baa3a81d61264be9716d828ff95b4c37a3de8ba13"
 blocks: [VK-2g0f, VK-ddoh, VK-sbdy, VK-aumt, VK-dblr, VK-vqvy]
 was_blocked_by: [VK-pg9j, VK-kmbs, VK-jkkn]
+assignee: dev-VK-0c4c
+follows: [VK-kmbs, VK-jkkn]
 ---
 
 ## Description
@@ -142,10 +144,15 @@ status: new
 - 2026-09-19T01:37:43Z dep_removed: was_blocked_by VK-pg9j
 - 2026-09-19T04:11:59Z dep_removed: was_blocked_by VK-kmbs
 - 2026-09-19T04:41:26Z dep_removed: was_blocked_by VK-jkkn
+- 2026-09-19T05:04:39Z status: open -> in_progress
+- 2026-09-19T05:04:39Z auto-follows: linked to predecessor VK-kmbs
+- 2026-09-19T05:04:39Z auto-follows: linked to predecessor VK-jkkn
+- 2026-09-19T05:04:39Z claimed by dev-VK-0c4c
 
 ## Links
 - Parent: [[VK-0auj]]
 - Blocks: [[VK-2g0f]], [[VK-ddoh]], [[VK-sbdy]], [[VK-aumt]], [[VK-dblr]], [[VK-vqvy]]
 - Was blocked by: [[VK-pg9j]], [[VK-kmbs]], [[VK-jkkn]]
+- Follows: [[VK-kmbs]], [[VK-jkkn]]
 
 ## Comments
