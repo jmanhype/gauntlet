@@ -8,8 +8,8 @@ labels: [integration, phase-1, walking-skeleton, delivered]
 parent: VK-0auj
 created_at: 2026-09-18T23:31:22Z
 created_by: speed
-updated_at: 2026-09-19T05:46:19Z
-content_hash: "sha256:0b9fe535e8428c1f82b406093114a699e9e7b19408abe0f230f0cde2410907a3"
+updated_at: 2026-09-19T05:47:18Z
+content_hash: "sha256:74a6fa052ea87377a7eaef7b56ee695016e1298ea7ca8c7fc8d2f8823f31e100"
 blocks: [VK-2g0f, VK-ddoh, VK-sbdy, VK-aumt, VK-dblr, VK-vqvy]
 was_blocked_by: [VK-pg9j, VK-kmbs, VK-jkkn]
 follows: [VK-kmbs, VK-jkkn]
@@ -117,7 +117,18 @@ CONSUMES:
 1. The P1 walking skeleton generates and registers a deterministic synthetic solana_dex bars/events population locally; it has no Bitquery dependency and makes no network call.
 2. Synthetic data is clearly labeled synthetic fixture evidence for wiring and is not promotable venue evidence.
 3. Collector-derived descriptors bind only in later integration stories after the collector epic.
+## nd_contract
+status: delivered
 
+### evidence
+- Fix commit: `4242e830dcb426a07b305d200091b3a09da142ab` on `story/VK-0c4c`.
+- `uv run pytest tests/judge/test_walk_forward.py` -> 5 passed.
+- `uv run pytest tests/` -> 48 passed.
+- `pvg verify src/gauntlet/judge/__init__.py src/gauntlet/judge/splits.py src/gauntlet/judge/synthetic.py src/gauntlet/judge/walk_forward.py tests/judge/test_walk_forward.py --format=text` -> PASSED, 5 files, 0 issues.
+- `pvg story deliver VK-0c4c` -> OK using shared nd vault.
+
+### proof
+- [x] PM rejection resolved: exact target bars are required for BUY and FLAT; absent target timestamps produce BLOCKED with no label.
 
 ## nd_contract
 status: delivered
