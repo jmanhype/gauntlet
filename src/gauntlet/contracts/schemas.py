@@ -23,16 +23,21 @@ TRIAL = "gauntlet.trial.v1"
 EVENT = "gauntlet.event.v1"
 POLICY = "gauntlet.policy.v1"
 MANIFEST = "gauntlet.manifest.v1"
-SCHEMA_IDS = frozenset((DESCRIPTOR, TRIAL, EVENT, POLICY, MANIFEST))
+SYNTHETIC_BUNDLE = "gauntlet.synthetic-panel-bundle.v1"
+SCHEMA_IDS = frozenset((DESCRIPTOR, TRIAL, EVENT, POLICY, MANIFEST, SYNTHETIC_BUNDLE))
 
 _venues = frozenset(("solana_dex", "hyperliquid", "external", "cross_venue_transfer"))
 _actors = frozenset(("human", "agent", "collector"))
+_observation_labels = frozenset(("OBSERVED", "MODELED"))
+_rule_states = frozenset(("PASS", "FAIL", "BLOCKED", "PENDING", "INSUFFICIENT_EVIDENCE"))
+_comparators = frozenset((">", ">=", "<", "<=", "==", "!="))
 _schemas: Mapping[str, Mapping[str, frozenset[str]]] = {
     DESCRIPTOR: {"descriptor_schema": frozenset((DESCRIPTOR,)), "kind": frozenset(("bars", "events", "reserves", "forecasts", "trades", "panel", "claim", "config", "model")), "venue_track": _venues, "observation_basis": frozenset(("OBSERVED", "MODELED")), "criticality": frozenset(("GATE_CRITICAL", "NON_CRITICAL", "UNKNOWN"))},
     TRIAL: {"schema_version": frozenset(("1",)), "entry_type": frozenset(("trial.registered", "trial.result", "trial.rejected", "trial.promoted", "family.stopped", "owner.exception")), "venue_track": _venues},
     EVENT: {"schema_version": frozenset(("1",)), "verb": frozenset(("trial.register", "dependency.evaluate", "gate.evaluate", "snapshot.write", "owner.decision", "evidence.project", "audit.export", "events.anchor")), "status": frozenset(("OK", "ERROR"))},
     POLICY: {"schema_version": frozenset(("1",)), "manifest_type": frozenset(("policy",)), "policy_type": frozenset(("evidence-policy", "gate-rules", "disposition-policy", "transitions", "effective-evidence", "alert-policy", "risk-policy")), "status": frozenset(("active", "superseded"))},
     MANIFEST: {"schema_version": frozenset(("1",)), "manifest_type": frozenset(("artifact-manifest",))},
+    SYNTHETIC_BUNDLE: {"schema_version": frozenset(("1",)), "bundle_type": frozenset(("synthetic-panel",)), "gate_state": frozenset(("PASS", "FAIL", "BLOCKED", "INSUFFICIENT_EVIDENCE"))},
 }
 _fields: Mapping[str, Mapping[str, tuple[str, ...]]] = {
     DESCRIPTOR: {"required": ("descriptor_schema", "artifact_id", "descriptor_id", "descriptor_version", "descriptor_hash", "effective_at_utc", "kind", "venue_track", "content_hash", "source", "observation_basis", "coverage", "freshness", "quality", "dependencies", "criticality", "downstream_metrics"), "strings": ("artifact_id", "descriptor_id", "effective_at_utc"), "digests": ("descriptor_hash", "content_hash"), "objects": ("source", "coverage", "freshness", "quality"), "arrays": ("dependencies", "downstream_metrics"), "positive_integers": ("descriptor_version",)},
@@ -40,7 +45,10 @@ _fields: Mapping[str, Mapping[str, tuple[str, ...]]] = {
     EVENT: {"required": ("event_id", "schema_version", "timestamp_utc", "actor", "verb", "subject", "args_hash", "output_hash", "payload_hash", "previous_head_hash", "event_hash", "status", "trace"), "strings": ("event_id", "timestamp_utc", "subject"), "digests": ("args_hash", "output_hash", "payload_hash", "previous_head_hash", "event_hash"), "objects": ("actor", "trace"), "arrays": (), "positive_integers": ()},
     POLICY: {"required": ("schema_version", "manifest_type", "policy_type", "policy_id", "version", "creator", "created_at_utc", "changelog", "status", "rules", "content_hash"), "strings": ("policy_id", "creator", "created_at_utc"), "digests": ("content_hash",), "objects": ("rules",), "arrays": ("changelog",), "positive_integers": ("version",)},
     MANIFEST: {"required": ("schema_version", "manifest_type", "artifact_id", "created_at_utc", "files", "external_artifacts", "merkle_root"), "strings": ("artifact_id", "created_at_utc"), "digests": ("merkle_root",), "objects": (), "arrays": ("files", "external_artifacts"), "positive_integers": ()},
+    SYNTHETIC_BUNDLE: {"required": ("schema_version", "bundle_type", "generator_version", "seed", "rule_results", "gate_state", "output", "content_hash", "output_hash"), "strings": ("generator_version",), "digests": ("content_hash", "output_hash"), "objects": ("output",), "arrays": ("rule_results",), "positive_integers": ()},
 }
+_synthetic_rule_fields = frozenset(("rule_id", "formula_id", "ruleset_hash", "policy_hash", "artifact_id", "artifact_hash", "observed_value", "comparator", "threshold", "observation_label", "state", "reason"))
+_synthetic_bundle_fields = frozenset(_fields[SYNTHETIC_BUNDLE]["required"])
 
 
 def _error(path: str, message: str, code: str = "TYPE_INVALID") -> ValidationError:
@@ -100,6 +108,44 @@ def _artifact_entries(value: object, path: str) -> list[ValidationError]:
     return errors
 
 
+def _synthetic_rule_entries(value: object) -> list[ValidationError]:
+    errors: list[ValidationError] = []
+    if not isinstance(value, list):
+        return [_error("$.rule_results", "must be an array")]
+    identifiers: set[str] = set()
+    for index, rule in enumerate(value):
+        path = f"$.rule_results[{index}]"
+        if not isinstance(rule, dict):
+            errors.append(_error(path, "must be an object"))
+            continue
+        for field in sorted(_synthetic_rule_fields - set(rule)):
+            errors.append(_error(f"{path}.{field}", "is required", "FIELD_REQUIRED"))
+        for field in sorted(set(rule) - _synthetic_rule_fields):
+            errors.append(_error(f"{path}.{field}", "is not registered", "FIELD_UNKNOWN"))
+        for field in ("rule_id", "formula_id", "artifact_id", "reason"):
+            item = rule.get(field)
+            if not isinstance(item, str) or not item.strip():
+                errors.append(_error(f"{path}.{field}", "must be a non-empty string"))
+        rule_id = rule.get("rule_id")
+        if isinstance(rule_id, str) and rule_id in identifiers:
+            errors.append(_error(f"{path}.rule_id", "rule IDs must be unique", "RULE_DUPLICATED"))
+        if isinstance(rule_id, str) and rule_id.strip():
+            identifiers.add(rule_id)
+        for field in ("ruleset_hash", "policy_hash", "artifact_hash"):
+            _digest(rule.get(field), f"{path}.{field}", errors)
+        for field in ("observed_value", "threshold"):
+            item = rule.get(field)
+            if isinstance(item, bool) or not isinstance(item, (int, float)) or item != item or item in (float("inf"), float("-inf")):
+                errors.append(_error(f"{path}.{field}", "must be a finite number", "NUMBER_INVALID"))
+        for field, allowed in (("comparator", _comparators), ("observation_label", _observation_labels), ("state", _rule_states)):
+            item = rule.get(field)
+            if not isinstance(item, str):
+                errors.append(_error(f"{path}.{field}", "must be a string"))
+            elif item not in allowed:
+                errors.append(_error(f"{path}.{field}", f"must be one of {sorted(allowed)}", "UNKNOWN_DISCRIMINATOR"))
+    return errors
+
+
 def validate(instance: object, schema_id: str) -> ValidationResult:
     """Validate a registered Phase 1 envelope and reject unknown schemas."""
 
@@ -109,6 +155,16 @@ def validate(instance: object, schema_id: str) -> ValidationResult:
     if schema_id == MANIFEST and isinstance(instance, dict):
         errors.extend(_artifact_entries(instance.get("files"), "$.files"))
         errors.extend(_artifact_entries(instance.get("external_artifacts"), "$.external_artifacts"))
+    if schema_id == SYNTHETIC_BUNDLE and isinstance(instance, dict):
+        seed = instance.get("seed")
+        if isinstance(seed, bool) or not isinstance(seed, int) or seed < 0:
+            errors.append(_error("$.seed", "must be a non-negative integer", "NUMBER_INVALID"))
+        generator_version = instance.get("generator_version")
+        if not isinstance(generator_version, str) or not generator_version.strip():
+            errors.append(_error("$.generator_version", "must be a non-empty string"))
+        for field in sorted(set(instance) - _synthetic_bundle_fields):
+            errors.append(_error(f"$.{field}", "is not registered", "FIELD_UNKNOWN"))
+        errors.extend(_synthetic_rule_entries(instance.get("rule_results")))
     if schema_id in (TRIAL, EVENT) and isinstance(instance, dict):
         actor = instance.get("actor")
         if not isinstance(actor, dict):
