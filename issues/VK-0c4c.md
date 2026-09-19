@@ -4,11 +4,11 @@ title: "Enforce walk-forward evaluation discipline"
 status: in_progress
 priority: 1
 type: feature
-labels: [integration, phase-1, walking-skeleton, rejected]
+labels: [integration, phase-1, walking-skeleton]
 parent: VK-0auj
 created_at: 2026-09-18T23:31:22Z
 created_by: speed
-updated_at: 2026-09-19T05:46:18Z
+updated_at: 2026-09-19T05:46:19Z
 content_hash: "sha256:475d6d3a32dee5ed2c6a48e15ac57b49f59ee7e259c30669d69497a4987f5dfe"
 blocks: [VK-2g0f, VK-ddoh, VK-sbdy, VK-aumt, VK-dblr, VK-vqvy]
 was_blocked_by: [VK-pg9j, VK-kmbs, VK-jkkn]
