@@ -8,8 +8,8 @@ labels: [integration, phase-1, delivered]
 parent: VK-egll
 created_at: 2026-09-18T23:31:16Z
 created_by: speed
-updated_at: 2026-09-19T04:30:39Z
-content_hash: "sha256:c378bbf80f66f1465cb5c2e9c20cb2dc8f3c5fbb1fc3aa21928e6ec0874f111d"
+updated_at: 2026-09-19T04:31:09Z
+content_hash: "sha256:c4c82552086edb40aaca37c2cad52725e60bf859316e9e90c5df76d62ce9add3"
 blocks: [VK-pg9j, VK-mfn6, VK-si5s, VK-0pfo, VK-0c4c, VK-ddoh, VK-dblr, VK-3f9f, VK-rkdr]
 was_blocked_by: [VK-1vhm, VK-kmbs]
 assignee: dev-VK-jkkn
@@ -95,7 +95,24 @@ status: new
 
 
 ## Notes
+## nd_contract
+status: delivered
 
+### evidence
+- Branch `story/VK-jkkn`; commit `93d54b15d532aac56b476720024d0851e2e75b7b`.
+- `uv run pytest tests/integrity/test_resolved_config.py`: 5 passed.
+- `uv run pytest tests/`: 26 passed.
+- `uv run --with pytest-cov pytest tests/integrity/test_resolved_config.py --cov=gauntlet.config --cov-report=term-missing`: 5 passed, 93% coverage.
+- `pvg verify src/gauntlet/config/__init__.py src/gauntlet/config/resolver.py src/gauntlet/config/diff.py tests/integrity/test_resolved_config.py --format=text`: PASSED.
+- Delivery label applied by `pvg story deliver VK-jkkn`.
+
+### proof
+- [x] AC #1: Stable canonical SHA-256 resolution proven by deterministic real-profile test.
+- [x] AC #2: Complete defaults, overrides, versions, provenance, and artifact versions asserted in canonical output.
+- [x] AC #3: Secret rejection and versioned redaction proven without emitting secret/path input values.
+- [x] AC #4: Invalid/hidden/incomplete configurations return `CONFIG_INVALID` without creating the data root.
+- [x] AC #5: Diff categories, provenance, hashes, threshold classification, and version drift proven.
+- [x] AC #6: Contract-registered bytes and hash remain unchanged after source profile mutation.
 
 ## nd_contract
 status: delivered
