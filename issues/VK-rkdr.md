@@ -9,9 +9,10 @@ parent: VK-0auj
 created_at: 2026-09-19T01:37:42Z
 created_by: speed
 updated_at: 2026-09-19T01:39:43Z
-content_hash: "sha256:a70bef4056e3f28861da7c99ef0478a608c4889a4ab8d6b2c1b84d326ecf00ba"
-blocked_by: [VK-2g0f, VK-8ch2, VK-jkkn]
+content_hash: "sha256:90e1e6a2c92db2393de9296da71bcde9f432c82f3e04accb1792c8514e218020"
+blocked_by: [VK-2g0f, VK-8ch2]
 blocks: [VK-2e0k, VK-1ptl, VK-21gm, VK-vqvy]
+was_blocked_by: [VK-jkkn]
 ---
 
 ## Description
@@ -105,11 +106,13 @@ status: new
 - 2026-09-19T01:37:43Z dep_added: blocks VK-1ptl
 - 2026-09-19T01:37:43Z dep_added: blocks VK-21gm
 - 2026-09-19T01:37:43Z dep_added: blocks VK-vqvy
+- 2026-09-19T04:41:27Z dep_removed: was_blocked_by VK-jkkn
 
 ## Links
 - Parent: [[VK-0auj]]
 - Blocks: [[VK-2e0k]], [[VK-1ptl]], [[VK-21gm]], [[VK-vqvy]]
-- Blocked by: [[VK-2g0f]], [[VK-8ch2]], [[VK-jkkn]]
+- Blocked by: [[VK-2g0f]], [[VK-8ch2]]
+- Was blocked by: [[VK-jkkn]]
 
 ## Comments
 

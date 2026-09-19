@@ -1,19 +1,20 @@
 ---
 id: VK-jkkn
 title: "Resolve immutable run configurations"
-status: in_progress
+status: closed
 priority: 0
 type: feature
 labels: [integration, phase-1, delivered]
 parent: VK-egll
 created_at: 2026-09-18T23:31:16Z
 created_by: speed
-updated_at: 2026-09-19T04:39:58Z
-content_hash: "sha256:89a118a22c680d24837d92689b7ba98c6955568454bd24eb1cdcb6ef817da6ae"
-blocks: [VK-pg9j, VK-mfn6, VK-si5s, VK-0pfo, VK-0c4c, VK-ddoh, VK-dblr, VK-3f9f, VK-rkdr]
+updated_at: 2026-09-19T04:41:26Z
+content_hash: "sha256:801c10dbced7c5dff93d8f9907b1d5918ac25495fe42960acf820b1336b2359b"
 was_blocked_by: [VK-1vhm, VK-kmbs]
 follows: [VK-1vhm, VK-kmbs, VK-wa2q]
 assignee: dev-VK-jkkn
+closed_at: 2026-09-19T04:41:26Z
+close_reason: "Accepted: all six ACs verified at 13b6d2f5e4e5621c48b50ee7271c11ea90b1e599; prior secret-emission gap is closed, adversarial CONFIG_INVALID proof passes, full suite is 35/35, coverage is 94%, and pvg verify reports 0 issues."
 ---
 
 ## Description
@@ -312,10 +313,19 @@ status: in_progress
 - 2026-09-19T04:36:44Z status: open -> in_progress
 - 2026-09-19T04:36:44Z claimed by dev-VK-jkkn
 - 2026-09-19T04:39:58Z status: in_progress -> in_progress
+- 2026-09-19T04:41:26Z status: in_progress -> closed
+- 2026-09-19T04:41:26Z dep_removed: no_longer_blocks VK-pg9j
+- 2026-09-19T04:41:26Z dep_removed: no_longer_blocks VK-mfn6
+- 2026-09-19T04:41:26Z dep_removed: no_longer_blocks VK-si5s
+- 2026-09-19T04:41:26Z dep_removed: no_longer_blocks VK-0pfo
+- 2026-09-19T04:41:26Z dep_removed: no_longer_blocks VK-0c4c
+- 2026-09-19T04:41:26Z dep_removed: no_longer_blocks VK-ddoh
+- 2026-09-19T04:41:26Z dep_removed: no_longer_blocks VK-dblr
+- 2026-09-19T04:41:27Z dep_removed: no_longer_blocks VK-3f9f
+- 2026-09-19T04:41:27Z dep_removed: no_longer_blocks VK-rkdr
 
 ## Links
 - Parent: [[VK-egll]]
-- Blocks: [[VK-pg9j]], [[VK-mfn6]], [[VK-si5s]], [[VK-0pfo]], [[VK-0c4c]], [[VK-ddoh]], [[VK-dblr]], [[VK-3f9f]], [[VK-rkdr]]
 - Was blocked by: [[VK-1vhm]], [[VK-kmbs]]
 - Follows: [[VK-1vhm]], [[VK-kmbs]], [[VK-wa2q]]
 
