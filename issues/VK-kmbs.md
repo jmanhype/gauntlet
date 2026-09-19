@@ -8,8 +8,8 @@ labels: [integration, phase-1, delivered]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T03:56:01Z
-content_hash: "sha256:c0d70a2bda2964acc3c43d3742acfee66c95d10fa685a57d93d152c14c1a09ae"
+updated_at: 2026-09-19T03:56:33Z
+content_hash: "sha256:abd861fbbe1b487dcff84e0a586317d6cdf34ee2d8e3ca8b85bb4026de944bd8"
 blocks: [VK-jkkn, VK-pg9j, VK-mfn6, VK-0pfo, VK-0c4c, VK-2e0k, VK-3f9f, VK-4qfy, VK-3v14]
 was_blocked_by: [VK-1vhm, VK-wa2q]
 assignee: dev-VK-kmbs
@@ -106,7 +106,26 @@ NORMATIVE DESCRIPTOR ENUMERATIONS (authoritative for implementation):
 - quality.state: VALID | STALE | CORRUPT | INCOMPLETE | QUARANTINED.
 - observation_basis: OBSERVED | MODELED.
 - venue_track: solana_dex | hyperliquid | cross_venue_transfer | external.
+## nd_contract
+status: delivered
 
+### evidence
+- Branch: `story/VK-kmbs`
+- Commit: `43dd14eeef18443f3ca5314c4c721b62496a20d6`
+- `uv run pytest tests/`: 20 passed, 0 failed, 0 skipped.
+- Coverage: 88% total; new data modules 89%/93%/91%.
+- `pvg verify ... --include-tests --format=text`: PASSED, 0 issues.
+- Full evidence and AC table are in the preceding `Implementation Evidence (DELIVERED)` block.
+
+### proof
+- [x] AC #1: Registration validates schema, canonical hash, content hash, and dependency references before ledger append.
+- [x] AC #2: Ordered seven-check closure returns graph hash, affected metrics, and coverage.
+- [x] AC #3: Gate-critical failures mark dependent metrics INVALID and return BLOCKED.
+- [x] AC #4: Noncritical gaps visibly reduce coverage without invalidating unaffected metrics.
+- [x] AC #5: Time-bound selection and exact manifest hash binding both hold.
+- [x] AC #6: Quarantine is append-only and preserves original bytes/history.
+- [x] AC #7: MODELED evidence cannot satisfy observed-outcome rules.
+- [x] AC #8: Malformed graph data returns GRAPH_MALFORMED without partial selection.
 
 ## nd_contract
 status: delivered
