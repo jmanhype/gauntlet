@@ -9,7 +9,7 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
 updated_at: 2026-09-19T02:09:40Z
-content_hash: "sha256:c4ee23891e51fca2e8a7a10d9b278e2cb79e944d4b32eb9809d00bb3f80f229b"
+content_hash: "sha256:eb0b0de49a1f4f6a7f599fa0a4130ff9187bec7d02b2265a6271067b63379eb1"
 blocks: [VK-wa2q, VK-kmbs, VK-jkkn, VK-bns7, VK-52g6, VK-3f9f, VK-aej2]
 assignee: dev-VK-1vhm
 ---
@@ -95,7 +95,14 @@ status: new
 
 
 ## Notes
+## nd_contract
+status: in_progress
 
+### evidence
+- Claimed 2026-09-19 in story worktree story/VK-1vhm.
+
+### proof
+- [ ] Pending implementation and verification.
 
 ## History
 - 2026-09-18T23:31:15Z dep_added: blocks VK-wa2q
