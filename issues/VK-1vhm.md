@@ -9,11 +9,11 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
 updated_at: 2026-09-19T02:37:56Z
-content_hash: "sha256:b5c43e71f28d15557a30b3105ed75c812b15ca36afd1082abed893ff97b854d4"
+content_hash: "sha256:dcc5855a00529f40b692f7616fe3931f5b5d1315e9b7e27a5246a70ec54328f1"
 assignee: dev-VK-1vhm
 closed_at: 2026-09-19T02:37:33Z
 close_reason: "Accepted: all seven contract acceptance criteria verified from committed code and independent tests."
-led_to: [VK-wa2q]
+led_to: [VK-wa2q, VK-kmbs]
 ---
 
 ## Description
@@ -286,7 +286,7 @@ status: delivered
 
 ## Links
 - Parent: [[VK-egll]]
-- Led to: [[VK-wa2q]]
+- Led to: [[VK-wa2q]], [[VK-kmbs]]
 
 ## Comments
 

@@ -1,17 +1,19 @@
 ---
 id: VK-kmbs
 title: "Register evidence descriptors with fail-closed dependencies"
-status: open
+status: in_progress
 priority: 0
 type: feature
 labels: [integration, phase-1]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-18T23:33:49Z
-content_hash: "sha256:1ff3e192398a2daef37af30e52d696c723de2cf797234c6581a553d80ae28cc7"
+updated_at: 2026-09-19T03:19:17Z
+content_hash: "sha256:f4915c0b4cf7fb748a5df10e8b65b9b7a53d1fbda9156ad1af58a117766077c1"
 blocks: [VK-jkkn, VK-pg9j, VK-mfn6, VK-0pfo, VK-0c4c, VK-2e0k, VK-3f9f, VK-4qfy, VK-3v14]
 was_blocked_by: [VK-1vhm, VK-wa2q]
+assignee: dev-VK-kmbs
+follows: [VK-1vhm, VK-wa2q]
 ---
 
 ## Description
@@ -119,11 +121,16 @@ NORMATIVE DESCRIPTOR ENUMERATIONS (authoritative for implementation):
 - 2026-09-19T01:37:42Z dep_added: blocks VK-3v14
 - 2026-09-19T02:37:33Z dep_removed: was_blocked_by VK-1vhm
 - 2026-09-19T03:17:05Z dep_removed: was_blocked_by VK-wa2q
+- 2026-09-19T03:19:17Z status: open -> in_progress
+- 2026-09-19T03:19:17Z auto-follows: linked to predecessor VK-1vhm
+- 2026-09-19T03:19:17Z auto-follows: linked to predecessor VK-wa2q
+- 2026-09-19T03:19:17Z claimed by dev-VK-kmbs
 
 ## Links
 - Parent: [[VK-egll]]
 - Blocks: [[VK-jkkn]], [[VK-pg9j]], [[VK-mfn6]], [[VK-0pfo]], [[VK-0c4c]], [[VK-2e0k]], [[VK-3f9f]], [[VK-4qfy]], [[VK-3v14]]
 - Was blocked by: [[VK-1vhm]], [[VK-wa2q]]
+- Follows: [[VK-1vhm]], [[VK-wa2q]]
 
 ## Comments
 
