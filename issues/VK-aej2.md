@@ -4,7 +4,7 @@ title: "Establish synthetic deterministic gate precedence"
 status: closed
 priority: 0
 type: feature
-labels: [integration, phase-1, walking-skeleton, delivered]
+labels: [integration, phase-1, walking-skeleton, delivered, accepted]
 parent: VK-1rbc
 created_at: 2026-09-19T01:37:42Z
 created_by: speed
