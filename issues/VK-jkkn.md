@@ -8,8 +8,8 @@ labels: [integration, phase-1, rejected]
 parent: VK-egll
 created_at: 2026-09-18T23:31:16Z
 created_by: speed
-updated_at: 2026-09-19T04:36:44Z
-content_hash: "sha256:6d22b94bd12b434c0b54a9292efe33097c7d06aa875f5b40975fc25f630994d3"
+updated_at: 2026-09-19T04:39:49Z
+content_hash: "sha256:56a7eb0d25feb94f3df6a3346f8e45913af9f1c4f5f51ecece636b2a0c836c8d"
 blocks: [VK-pg9j, VK-mfn6, VK-si5s, VK-0pfo, VK-0c4c, VK-ddoh, VK-dblr, VK-3f9f, VK-rkdr]
 was_blocked_by: [VK-1vhm, VK-kmbs]
 follows: [VK-1vhm, VK-kmbs, VK-wa2q]
@@ -95,7 +95,67 @@ status: new
 
 
 ## Notes
+## Rework Evidence (DELIVERED)
 
+PROOF:
+
+### Rejection Fix
+- Rejection: secret-shaped `profile_id` and `artifact_versions.model_version` were accepted and emitted.
+- Fix: `_reject_secrets` now runs over raw explicit overrides, every `ArtifactVersions` field, and the complete parsed profile document before validation, artifact construction, or hashing.
+- The exact `runtime_secret_name` exception remains intentional: an ordinary secret-bearing field name is accepted only to produce the versioned redaction marker; its input value is never emitted.
+- Adversarial coverage now rejects secret-shaped values in all eight `ArtifactVersions` fields (`schema_version`, `policy_version`, `evidence_version`, `data_version`, `model_version`, `code_version`, `dependency_lock_hash`, and `environment_hash`) plus `profile_id` and an explicit override value.
+
+### CI/Test Results
+- Commands run at fix commit:
+  - `uv run pytest tests/integrity/test_resolved_config.py`
+  - `uv run pytest tests/`
+  - `uv run --with pytest-cov pytest tests/integrity/test_resolved_config.py --cov=gauntlet.config --cov-report=term-missing`
+  - `pvg verify src/gauntlet/config/__init__.py src/gauntlet/config/resolver.py src/gauntlet/config/diff.py tests/integrity/test_resolved_config.py --format=text`
+- Summary: targeted PASS 14/14; full suite PASS 35/35; `gauntlet.config` coverage 94% (215 statements, 13 missed); pvg verify PASS.
+- Key output:
+  - Targeted: `collected 14 items` → `14 passed in 0.10s`
+  - Full: `collected 35 items` → `35 passed in 0.57s`
+  - Coverage: `TOTAL 215 13 94%`
+  - Verify: `VERIFY: PASSED (4 files scanned, 0 issues)`
+
+### Commit
+- Branch: `story/VK-jkkn`
+- Fix SHA: `13b6d2f5e4e5621c48b50ee7271c11ea90b1e599`
+- Fix commit: `fix(VK-jkkn): reject secrets in all config inputs`
+- Cumulative story diff versus `epic/VK-egll`: 4 files, 449 inserted lines, within budget.
+
+### AC Verification After Rework
+| AC # | Requirement | Rework Status | Evidence |
+|------|-------------|---------------|----------|
+| 1 | Stable canonical SHA-256 resolution. | PASS | Existing deterministic/hash tests remain green. |
+| 2 | Complete visible defaults, overrides, provenance, and versions. | PASS | Existing visibility assertions remain green. |
+| 3 | Secret values never accepted or emitted; only versioned redaction names a secret-bearing field. | PASS | Secret-shaped profile metadata, every artifact-version field, and override values return `CONFIG_INVALID` before emission; runtime redaction exception still hides its value. |
+| 4 | Hidden/incomplete values fail closed before mutation. | PASS | Existing no-data-root test and new pre-emission refusals remain green. |
+| 5 | Provenance-preserving diff with all required classifications. | PASS | Existing diff test remains green. |
+| 6 | Registered configuration remains immutable after profile edits. | PASS | Existing real descriptor-registration test remains green. |
+
+LEARNINGS:
+- The original scanner boundary was correct for research values but incorrectly treated metadata/version strings as trusted prose; all emitted user-supplied strings must cross the same fail-closed boundary.
+- Scanning raw inputs before semantic validation ensures malformed secret-shaped digest/version values fail as secrets rather than leaking through another validation error path.
+- Parametrizing over `ArtifactVersions.__dataclass_fields__` keeps future version fields inside the exhaustive secret-refusal contract automatically.
+
+## nd_contract
+status: delivered
+
+### evidence
+- Fix commit `13b6d2f5e4e5621c48b50ee7271c11ea90b1e599` on `story/VK-jkkn`.
+- `uv run pytest tests/integrity/test_resolved_config.py`: 14 passed.
+- `uv run pytest tests/`: 35 passed.
+- `uv run --with pytest-cov pytest tests/integrity/test_resolved_config.py --cov=gauntlet.config --cov-report=term-missing`: 14 passed, 94% coverage.
+- `pvg verify src/gauntlet/config/__init__.py src/gauntlet/config/resolver.py src/gauntlet/config/diff.py tests/integrity/test_resolved_config.py --format=text`: PASSED, 0 issues.
+
+### proof
+- [x] AC #1: Stable canonical SHA-256 resolution remains proven.
+- [x] AC #2: Complete visible defaults, overrides, provenance, and versions remain proven.
+- [x] AC #3: Secret-shaped profile metadata, every artifact-version field, and override inputs are rejected with `CONFIG_INVALID`; only the versioned runtime-secret-name redaction exception remains.
+- [x] AC #4: Hidden/incomplete/invalid values fail closed before mutation.
+- [x] AC #5: Complete provenance-preserving diff behavior remains proven.
+- [x] AC #6: Contract-registered bytes and hash remain unchanged after profile mutation.
 
 ## nd_contract
 status: rejected
