@@ -9,7 +9,7 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:16Z
 created_by: speed
 updated_at: 2026-09-19T04:35:18Z
-content_hash: "sha256:c7064baf68c175239158639cc552fb98b56370cac62f66f6526c44bc14b15003"
+content_hash: "sha256:99b8fbefca4fe03331120c892461f7d8639d3bfea23005157bd6b7863a8aaa4e"
 blocks: [VK-pg9j, VK-mfn6, VK-si5s, VK-0pfo, VK-0c4c, VK-ddoh, VK-dblr, VK-3f9f, VK-rkdr]
 was_blocked_by: [VK-1vhm, VK-kmbs]
 follows: [VK-1vhm, VK-kmbs, VK-wa2q]
@@ -232,3 +232,29 @@ status: in_progress
 - Follows: [[VK-1vhm]], [[VK-kmbs]], [[VK-wa2q]]
 
 ## Comments
+
+### 2026-09-19T04:35:18Z speed
+## PM Decision
+REJECTED [2026-09-19]:
+EXPECTED: AC #3 — secret values are never accepted or emitted; only a versioned redaction rule may name a secret-bearing field without exposing its value.
+DELIVERED: `_reject_secrets` is applied only to profile `values` and resolved explicit overrides. `_profile` permits an arbitrary non-empty `profile_id`, and `_validate_versions` permits arbitrary non-empty version strings; both are copied into the canonical artifact.
+GAP: An independent adversarial run at commit 93d54b15d532aac56b476720024d0851e2e75b7b resolved successfully with a secret-shaped `profile_id` and `artifact_versions.model_version`; both appeared in `resolved.artifact`, and `canonical_bytes_contains_secret=True`. Thus the resolver does not fail closed for secret material outside the research-value mapping.
+FIX: Before constructing or hashing the artifact, run the existing secret-value rejection over every user-supplied string-bearing input that will be emitted (full profile document, explicit overrides, and all ArtifactVersions fields), while preserving the explicit `runtime_secret_name` redaction exception. Add integration assertions that each such field returns machine-readable `CONFIG_INVALID` and that no input value appears in canonical bytes. Do not broaden redaction silently; reject these inputs.
+
+## nd_contract
+status: rejected
+
+### evidence
+- Reviewed delivered commit `93d54b15d532aac56b476720024d0851e2e75b7b` on `story/VK-jkkn`.
+- Independent `uv run pytest tests/ -vv`: 26 passed in 0.35s.
+- Independent `pvg verify` over all four changed files: PASSED, 0 issues.
+- Static diff audit: 4 files, 449 insertions, within budget; no incomplete markers.
+- Adversarial resolver run: secret-shaped fields emitted in `profile.id` and `artifact_versions.model_version`; canonical bytes contained them.
+
+### proof
+- [x] AC #1: Verified by deterministic real-profile/hash tests and source audit.
+- [x] AC #2: Defaults, overrides, profile provenance, and all artifact versions are visible in the artifact.
+- [ ] AC #3: Secret-shaped metadata/version values are accepted and emitted in canonical JSON.
+- [x] AC #4: Invalid/missing/malformed inputs return `CONFIG_INVALID` before creating the data root.
+- [x] AC #5: Added/removed/changed/redacted/threshold-bearing differences and version drift retain provenance and hashes.
+- [x] AC #6: Registered canonical bytes/hash remain unchanged after later source-profile edits.
