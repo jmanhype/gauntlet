@@ -8,8 +8,8 @@ labels: [integration, phase-1, delivered]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T03:13:39Z
-content_hash: "sha256:0d9b785cf26e49cfea5456802a62c601be89a794c2f50a446ae8bcc25b44bede"
+updated_at: 2026-09-19T03:17:04Z
+content_hash: "sha256:2d721d6c6759895a9de6f3654e360987e981d61b83c2b324c7d4b41425512a57"
 blocks: [VK-kmbs, VK-pg9j, VK-mfn6, VK-si5s, VK-jbae, VK-0pfo, VK-ddoh, VK-bns7, VK-52g6, VK-3f9f, VK-3v14]
 was_blocked_by: [VK-1vhm]
 assignee: dev-VK-wa2q
@@ -97,6 +97,29 @@ status: new
 
 
 ## Notes
+## PM Decision
+ACCEPTED [2026-09-19]: Evidence reviewed and independently verified at story commit 824b1e668bb8261e92599db6260b263692e15fb3.
+
+## nd_contract
+status: accepted
+
+### evidence
+- Ran `uv run pytest tests/`: 11 passed in 0.22s.
+- Ran `uv run pytest tests/integrity/test_ledger.py`: 5 passed in 0.19s.
+- Ran `pvg verify` over all 7 delivered files: PASSED, 0 issues.
+- Inspected commit 824b1e6: 7 files changed, 690 insertions; clean scope and no stub/TODO markers.
+- Verified canonical hashing and write-once primitives are reused from gauntlet.contracts rather than reimplemented.
+- Confirmed verify-delivery failures are the already recorded note-ordering false negative, not missing story evidence.
+
+### proof
+- [x] AC #1: typed trial payload and exact envelope verified.
+- [x] AC #2: OK/ERROR canonical event contracts verified.
+- [x] AC #3: payload/event/terminal hashes and tamper rejection verified.
+- [x] AC #4: error events do not fabricate output or advance the trial head.
+- [x] AC #5: locked append and stale-head rejection preserve immutable bytes.
+- [x] AC #6: sensitive/unredacted material is rejected before writes.
+- [x] AC #7: heads deterministically regenerate with byte ranges.
+
 ## nd_contract
 status: delivered
 
