@@ -9,12 +9,13 @@ parent: VK-0auj
 created_at: 2026-09-18T23:31:22Z
 created_by: speed
 updated_at: 2026-09-19T05:51:26Z
-content_hash: "sha256:5789def94f670df434459f3f37eff42a5317c0a6fb6f86dce5f6943124d55a25"
+content_hash: "sha256:a4c4f8d21ebff83926f3fa87da1cdad5ad41b575532d72dd73b482393e7b3554"
 was_blocked_by: [VK-pg9j, VK-kmbs, VK-jkkn]
 follows: [VK-kmbs, VK-jkkn]
 assignee: dev-VK-0c4c
 closed_at: 2026-09-19T05:50:41Z
 close_reason: "Accepted: strict target-horizon and target-bar validation now applies to every BUY and FLAT prediction; the prior absent-target adversary returns BLOCKED with no imputed label."
+led_to: [VK-ddoh]
 ---
 
 ## Description
@@ -432,6 +433,7 @@ status: new
 - Parent: [[VK-0auj]]
 - Was blocked by: [[VK-pg9j]], [[VK-kmbs]], [[VK-jkkn]]
 - Follows: [[VK-kmbs]], [[VK-jkkn]]
+- Led to: [[VK-ddoh]]
 
 ## Comments
 

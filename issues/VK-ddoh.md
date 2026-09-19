@@ -1,17 +1,19 @@
 ---
 id: VK-ddoh
 title: "Record untouched prospective signals"
-status: open
+status: in_progress
 priority: 1
 type: feature
 labels: [integration, phase-1]
 parent: VK-0auj
 created_at: 2026-09-18T23:31:23Z
 created_by: speed
-updated_at: 2026-09-18T23:31:23Z
-content_hash: "sha256:5da61b1b807c312afd2fa0c4341ef031b861be29abbdd494b6cfdc82fb74380a"
+updated_at: 2026-09-19T13:04:44Z
+content_hash: "sha256:70b25c6a5d650b2b5ca93617d711db205862a193bc650d59f5e8e5d4bac6edfb"
 blocks: [VK-zvia, VK-vqvy]
 was_blocked_by: [VK-wa2q, VK-jkkn, VK-0c4c]
+assignee: dev-VK-ddoh
+follows: [VK-wa2q, VK-jkkn, VK-0c4c]
 ---
 
 ## Description
@@ -106,10 +108,16 @@ status: new
 - 2026-09-19T03:17:05Z dep_removed: was_blocked_by VK-wa2q
 - 2026-09-19T04:41:26Z dep_removed: was_blocked_by VK-jkkn
 - 2026-09-19T05:50:41Z dep_removed: was_blocked_by VK-0c4c
+- 2026-09-19T13:04:44Z status: open -> in_progress
+- 2026-09-19T13:04:44Z auto-follows: linked to predecessor VK-wa2q
+- 2026-09-19T13:04:44Z auto-follows: linked to predecessor VK-jkkn
+- 2026-09-19T13:04:44Z auto-follows: linked to predecessor VK-0c4c
+- 2026-09-19T13:04:44Z claimed by dev-VK-ddoh
 
 ## Links
 - Parent: [[VK-0auj]]
 - Blocks: [[VK-zvia]], [[VK-vqvy]]
 - Was blocked by: [[VK-wa2q]], [[VK-jkkn]], [[VK-0c4c]]
+- Follows: [[VK-wa2q]], [[VK-jkkn]], [[VK-0c4c]]
 
 ## Comments
