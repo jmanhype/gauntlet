@@ -8,8 +8,8 @@ labels: [integration, phase-1]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T02:41:37Z
-content_hash: "sha256:1930831014aa502dee79c6a6c41c2b6a8d46e75b4a399ab3f191aa67c9365231"
+updated_at: 2026-09-19T03:11:26Z
+content_hash: "sha256:d23fceda67e14c1f66be26d8ff7833cf1dcce07e16ab6fd9361327169ca1e54f"
 blocks: [VK-kmbs, VK-pg9j, VK-mfn6, VK-si5s, VK-jbae, VK-0pfo, VK-ddoh, VK-bns7, VK-52g6, VK-3f9f, VK-3v14]
 was_blocked_by: [VK-1vhm]
 assignee: dev-VK-wa2q
@@ -97,6 +97,68 @@ status: new
 
 
 ## Notes
+## Implementation Evidence (DELIVERED)
+
+PROOF:
+
+### CI/Test Results
+- Commands run:
+  - `uv run --with coverage coverage run -m pytest tests/`
+  - `uv run --with coverage coverage report --include='src/gauntlet/ledger/*' --precision=2`
+  - `uv run pytest tests/integrity/test_ledger.py`
+  - `pvg verify src/gauntlet/ledger/__init__.py src/gauntlet/ledger/_common.py src/gauntlet/ledger/events.py src/gauntlet/ledger/heads.py src/gauntlet/ledger/trials.py src/gauntlet/ledger/verify.py tests/integrity/test_ledger.py --format=text`
+- Summary: full suite PASS (11/11); required ledger integration suite PASS (5/5); ledger coverage 85.61%; stub scan PASS.
+- Key output:
+  - Full suite: `collected 11 items ... 11 passed in 0.20s`
+  - Targeted suite: `collected 5 items ... 5 passed in 0.22s`
+  - Coverage total: `TOTAL 417 60 85.61%`
+  - Verify: `VERIFY: PASSED (7 files scanned, 0 issues)`
+
+### Commit
+- Branch: `story/VK-wa2q`
+- SHA: `824b1e668bb8261e92599db6260b263692e15fb3`
+- Diff budget: 7 files changed, 690 insertions (story limit ~8 files / under 700 LOC)
+
+### pvg verify
+- `VERIFY: PASSED (7 files scanned, 0 issues)`
+
+### AC Verification
+| AC # | Requirement | Code Location | Test Location | Status |
+|------|-------------|---------------|---------------|--------|
+| 1 | Complete `trial.registered` payload appends once with exact envelope fields | `src/gauntlet/ledger/trials.py:15`, `src/gauntlet/ledger/trials.py:29` | `tests/integrity/test_ledger.py:40` | PASS |
+| 2 | OK/ERROR canonical events carry actor, verb, subject, hashes, error class, and trace | `src/gauntlet/ledger/events.py:13`, `src/gauntlet/ledger/events.py:21` | `tests/integrity/test_ledger.py:40` | PASS |
+| 3 | Both chains recompute payload/body and terminal hashes and reject edits, deletion, and reorder | `src/gauntlet/ledger/verify.py:20`, `src/gauntlet/ledger/_common.py:202` | `tests/integrity/test_ledger.py:113` | PASS |
+| 4 | ERROR events use zero output hash, preserve the trial ledger/head, and extend only the event chain | `src/gauntlet/ledger/events.py:21`, `src/gauntlet/ledger/_common.py:150` | `tests/integrity/test_ledger.py:40` | PASS |
+| 5 | Appends are lock-serialized, reject stale prior heads, and never truncate existing bytes | `src/gauntlet/ledger/_common.py:261` | `tests/integrity/test_ledger.py:66`, `tests/integrity/test_ledger.py:100` | PASS |
+| 6 | Credential/private-key/signature/unredacted payload keys and obvious secret values fail closed | `src/gauntlet/ledger/_common.py:181` | `tests/integrity/test_ledger.py:78` | PASS |
+| 7 | Heads regenerate deterministically from verified ledger bytes and report head plus byte range | `src/gauntlet/ledger/heads.py:10`, `src/gauntlet/ledger/_common.py:306` | `tests/integrity/test_ledger.py:40` | PASS |
+
+LEARNINGS:
+- Reusing `canonical_json`, registered schemas, and `create_exclusive` kept hash and write-once semantics aligned with the upstream contract story.
+- Passing the expected prior head explicitly makes restart and conflict behavior observable: the append re-verifies bytes under the local lock and rejects a stale head without touching the ledger.
+- Event payload integrity is most robust when `payload_hash` covers the canonical non-integrity event body; verification can then recompute it without storing an unredacted external payload.
+- Real-file copies proved all six chain/tamper combinations while retaining a valid original control tree.
+
+## nd_contract
+status: delivered
+
+### evidence
+- Commit: `824b1e668bb8261e92599db6260b263692e15fb3` on `story/VK-wa2q`.
+- Full suite: `uv run --with coverage coverage run -m pytest tests/` -> 11 passed.
+- Required suite: `uv run pytest tests/integrity/test_ledger.py` -> 5 passed.
+- Coverage: 85.61% for `src/gauntlet/ledger/*`.
+- Stub scan: `pvg verify ... --format=text` -> `VERIFY: PASSED (7 files scanned, 0 issues)`.
+- Diff budget: 7 files, 690 inserted lines.
+
+### proof
+- [x] AC #1: Complete typed trial registration and exact envelope are appended once and verified.
+- [x] AC #2: Successful and failed canonical operation events include all required metadata and hashes.
+- [x] AC #3: Both chains detect byte edits, deletion, and reorder while the original remains valid.
+- [x] AC #4: Failed events record errors without claiming an artifact or mutating the successful trial head.
+- [x] AC #5: Lock serialization and prior-head verification reject stale/conflicting appends without overwrite.
+- [x] AC #6: Sensitive keys, authorization material, and obvious private/API-key values are rejected before writes.
+- [x] AC #7: Head projections deterministically regenerate from verified ledger bytes with current head and byte range.
+
 ## nd_contract
 status: in_progress
 
