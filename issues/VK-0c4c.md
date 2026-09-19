@@ -9,7 +9,7 @@ parent: VK-0auj
 created_at: 2026-09-18T23:31:22Z
 created_by: speed
 updated_at: 2026-09-19T05:37:41Z
-content_hash: "sha256:bcc36eb120f76b657c3425af7d8b7907ca91be07b34c0e5eab213d740d8f29cd"
+content_hash: "sha256:8b5fd11e13456f0caa9a1abcbd3bc9f8b3c23ac37a27946cfe55892ae9d5bc92"
 blocks: [VK-2g0f, VK-ddoh, VK-sbdy, VK-aumt, VK-dblr, VK-vqvy]
 was_blocked_by: [VK-pg9j, VK-kmbs, VK-jkkn]
 follows: [VK-kmbs, VK-jkkn]
@@ -271,3 +271,37 @@ status: new
 - Follows: [[VK-kmbs]], [[VK-jkkn]]
 
 ## Comments
+
+### 2026-09-19T05:37:41Z speed
+## PM Decision
+REJECTED [2026-09-19]:
+
+EXPECTED: AC #6 requires that entering at the next bar is enforced and that “any gap or missing dependency yields BLOCKED, not an imputed fill.” The strict split must also preserve the declared target window for every row.
+
+DELIVERED: At commit 7cd18956dc362f664b379555e4d76adf751693e8, `src/gauntlet/judge/walk_forward.py:212-215` validates the target bar only when `intended != "FLAT"`; it then unconditionally reads `rows[exit_index]` as the outcome. `src/gauntlet/judge/splits.py:_membership` checks only that the declared completion precedes the segment boundary and does not require a bar at `signal + target_horizon * bar_interval`.
+
+GAP: A registered synthetic-style bars descriptor can declare a target completion timestamp at which no bar exists (for example `bar-000023` at `2026-01-01T00:23:30Z` between one-minute bars). With the selected variant FLAT, public `evaluate_walk_forward` returns status `OK`, emits a prediction whose `label_completed_at_utc` names the absent timestamp, and computes its label from `2026-01-01T00:25:00Z` instead. This is an accepted target gap/imputed outcome and violates AC #6 (and undermines the row-label evidence required by AC #5). My adversarial public-API reproduction ended with: `FAIL accepted absent target timestamp 2026-01-01T00:23:30Z`; `FAIL label sourced from 2026-01-01T00:25:00Z not declared target`.
+
+FIX: In the strict split contract, reject a row unless feature observation is available at/before signal, the target completion is exactly the declared UTC target horizon, and a bar exists at that completion timestamp. In evaluation, require the exact target bar for every prediction regardless of BUY/FLAT; return the existing machine-readable BLOCKED path before constructing a label, prediction, or trade. Add a no-mock regression test using a registered malformed synthetic-style population with an absent target timestamp and a FLAT selected variant.
+
+Independent verification also passed: targeted judge suite 4/4, full suite 47/47, `pvg verify` 5 files/0 issues, diff 5 files/749 insertions, no collector/network wiring, and adversarial checks for `TARGET_CROSSES_BOUNDARY`, `FUTURE_FEATURE_REJECTED`, `POPULATION_MUTATED`, `SPLIT_MUTATED`, and `FUTURE_NORMALIZATION_REJECTED`.
+
+DISCOVERED_BUG:
+  title: Walk-forward accepts absent target timestamps for FLAT predictions
+  context: A registered bars population can declare an impossible target completion timestamp between bars. `build_split_manifest` accepts it because it only checks the segment boundary, and `_evaluate_fold` skips exact target-bar validation when intended action is FLAT. Public evaluation returns OK and computes the label from the policy-horizon bar even though no row exists at the declared completion timestamp.
+  affected_files: src/gauntlet/judge/splits.py; src/gauntlet/judge/walk_forward.py; tests/judge/test_walk_forward.py
+  discovered_during: VK-0c4c
+
+## nd_contract
+status: rejected
+
+### evidence
+- Reviewed commit 7cd18956dc362f664b379555e4d76adf751693e8 and delivered proof.
+- Re-ran `uv run pytest tests/judge/test_walk_forward.py -vv` -> 4 passed.
+- Re-ran `uv run pytest tests/ -vv` -> 47 passed.
+- Re-ran `pvg verify ... --format=text` -> PASSED, 5 files, 0 issues.
+- Adversarial public API reproduction accepted an absent target timestamp and returned OK with an imputed outcome basis.
+
+### proof
+- [ ] AC #5: Row label evidence can name a target timestamp at which no bar exists.
+- [ ] AC #6: A target gap is not BLOCKED when the selected action is FLAT.
