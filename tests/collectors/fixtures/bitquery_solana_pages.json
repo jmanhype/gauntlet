@@ -1,0 +1,19 @@
+{
+  "pages": [
+    {
+      "row_count": 2,
+      "rows": [
+        {"time_utc":"2026-01-01T00:00:00Z","pair":"SOL/USDC","event_type":"SWAP","base_amount":1.5,"quote_amount":300.0,"price":200.0,"tx_hash":"tx-a","log_index":0},
+        {"time_utc":"2026-01-01T00:00:40Z","pair":"SOL/USDC","event_type":"SWAP","base_amount":0.5,"quote_amount":90.0,"price":180.0,"tx_hash":"tx-b","log_index":1}
+      ],
+      "schema_version":"bitquery.solana-snapshot.v1"
+    },
+    {
+      "row_count": 1,
+      "rows": [
+        {"time_utc":"2026-01-01T00:01:10Z","pair":"SOL/USDC","event_type":"SWAP","base_amount":2.0,"quote_amount":420.0,"price":210.0,"tx_hash":"tx-c","log_index":0}
+      ],
+      "schema_version":"bitquery.solana-snapshot.v1"
+    }
+  ]
+}
