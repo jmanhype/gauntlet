@@ -8,8 +8,8 @@ labels: [integration, phase-1, delivered]
 parent: VK-egll
 created_at: 2026-09-18T23:31:16Z
 created_by: speed
-updated_at: 2026-09-19T04:30:38Z
-content_hash: "sha256:7322450ec2d497469854396a4fd087f1aa3ebd666da7ec37a806e494ea3b1b08"
+updated_at: 2026-09-19T04:30:39Z
+content_hash: "sha256:c378bbf80f66f1465cb5c2e9c20cb2dc8f3c5fbb1fc3aa21928e6ec0874f111d"
 blocks: [VK-pg9j, VK-mfn6, VK-si5s, VK-0pfo, VK-0c4c, VK-ddoh, VK-dblr, VK-3f9f, VK-rkdr]
 was_blocked_by: [VK-1vhm, VK-kmbs]
 assignee: dev-VK-jkkn
@@ -95,6 +95,18 @@ status: new
 
 
 ## Notes
+
+
+## nd_contract
+status: delivered
+
+### evidence
+- Transitioned via pvg story deliver on 2026-09-18.
+
+### proof
+- [ ] Developer evidence block must remain authoritative above this contract.
+
+
 ## Implementation Evidence (DELIVERED)
 
 PROOF:
