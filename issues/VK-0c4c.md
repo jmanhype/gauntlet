@@ -8,8 +8,8 @@ labels: [integration, phase-1, walking-skeleton, delivered]
 parent: VK-0auj
 created_at: 2026-09-18T23:31:22Z
 created_by: speed
-updated_at: 2026-09-19T05:29:35Z
-content_hash: "sha256:000942cc20b4a86951f8464af626af6bb9f2788b0635433773520f110facb66a"
+updated_at: 2026-09-19T05:30:02Z
+content_hash: "sha256:7cebac4a00f1a41c7a563e053e13ba2f626fa50449b5a8eb9414e63f67477fc7"
 blocks: [VK-2g0f, VK-ddoh, VK-sbdy, VK-aumt, VK-dblr, VK-vqvy]
 was_blocked_by: [VK-pg9j, VK-kmbs, VK-jkkn]
 assignee: dev-VK-0c4c
@@ -117,7 +117,27 @@ CONSUMES:
 1. The P1 walking skeleton generates and registers a deterministic synthetic solana_dex bars/events population locally; it has no Bitquery dependency and makes no network call.
 2. Synthetic data is clearly labeled synthetic fixture evidence for wiring and is not promotable venue evidence.
 3. Collector-derived descriptors bind only in later integration stories after the collector epic.
+## nd_contract
+status: delivered
 
+### evidence
+- Commit: `7cd18956dc362f664b379555e4d76adf751693e8` (`story/VK-0c4c`).
+- `uv run pytest tests/judge/test_walk_forward.py` -> 4 passed.
+- `uv run pytest tests/` -> 47 passed.
+- `pvg verify src/gauntlet/judge/__init__.py src/gauntlet/judge/splits.py src/gauntlet/judge/synthetic.py src/gauntlet/judge/walk_forward.py tests/judge/test_walk_forward.py --format=text` -> PASSED, 5 files, 0 issues.
+- `pvg story deliver VK-0c4c` -> OK using shared nd vault.
+
+### proof
+- [x] AC #1: Complete fold manifest temporal metadata and selection locks verified.
+- [x] AC #2: Validation-only selection and untouched following test membership verified.
+- [x] AC #3: Boundary-crossing target, future normalization, and mutation rejections verified.
+- [x] AC #4: Candidate/provenance/config/source/fold identity recorded.
+- [x] AC #5: Row-level prediction/trade labels, timestamps, venue/token/action, and basis verified.
+- [x] AC #6: Exact next-bar entry and BLOCKED gap/dependency policy verified.
+- [x] AC #7: Factory race remains exploratory until fingerprint lock; ranking score excluded.
+- [x] Repair AC #1: Deterministic registered local synthetic population with no network/Bitquery verified.
+- [x] Repair AC #2: Synthetic fixture remains non-promotable venue evidence.
+- [x] Repair AC #3: No collector-derived descriptor binding introduced.
 
 ## nd_contract
 status: delivered
