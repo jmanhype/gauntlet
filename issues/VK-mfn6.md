@@ -4,11 +4,11 @@ title: "Register Kronos model lineage"
 status: closed
 priority: 2
 type: feature
-labels: [integration, phase-1, delivered]
+labels: [integration, phase-1, delivered, accepted]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:19Z
 created_by: speed
-updated_at: 2026-09-19T17:06:07Z
+updated_at: 2026-09-19T17:06:08Z
 content_hash: "sha256:680874107e67551146c87d6e3e60f68b014e80110e0d2ee3e37790476d88d17c"
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-mfn6
