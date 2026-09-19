@@ -9,7 +9,7 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
 updated_at: 2026-09-19T04:12:00Z
-content_hash: "sha256:262219eaac30a3eded7ac72047c27f6e9c014a989c59e049bdf8d21577fdb0f2"
+content_hash: "sha256:007b3aff6cc3cdc71084011faa9e9ab409382a48fbb6eebbfa7d6824199e0468"
 was_blocked_by: [VK-1vhm, VK-wa2q]
 follows: [VK-1vhm, VK-wa2q]
 assignee: dev-VK-kmbs
@@ -107,6 +107,18 @@ NORMATIVE DESCRIPTOR ENUMERATIONS (authoritative for implementation):
 - quality.state: VALID | STALE | CORRUPT | INCOMPLETE | QUARANTINED.
 - observation_basis: OBSERVED | MODELED.
 - venue_track: solana_dex | hyperliquid | cross_venue_transfer | external.
+
+
+## nd_contract
+status: accepted
+
+### evidence
+- PM closeout applied via pvg story accept on 2026-09-18.
+
+### proof
+- [x] Story closed after accepted label was applied.
+
+
 ## PM Decision
 ACCEPTED [2026-09-18]: Rework reviewed at amended commit 046ad04ec031f5a8846d3a728ce37b2f6fa1e711 and all acceptance criteria meet the bar.
 
