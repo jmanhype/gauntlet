@@ -9,7 +9,7 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
 updated_at: 2026-09-19T04:01:30Z
-content_hash: "sha256:4058cf26e12922ecfe7e857501405f990ed75d724c1934ed6dfe85225f2106fe"
+content_hash: "sha256:eabe13077e102b7f1099b42f2f3904a7246babb0b8337f03d8a1c7f2300243a4"
 blocks: [VK-jkkn, VK-pg9j, VK-mfn6, VK-0pfo, VK-0c4c, VK-2e0k, VK-3f9f, VK-4qfy, VK-3v14]
 was_blocked_by: [VK-1vhm, VK-wa2q]
 follows: [VK-1vhm, VK-wa2q]
@@ -254,3 +254,23 @@ RECOMMEND hard-tdd: time-bound descriptor selection and recursive fail-closed be
 
 ### 2026-09-18T23:33:49Z speed
 RECOMMEND hard-tdd: time-bound descriptor selection and recursive fail-closed behavior are state-machine/security-critical. Adds RED/GREEN phases: roughly double the agent passes, tokens, and wall-clock time for this story.
+
+### 2026-09-19T04:01:30Z speed
+## PM Decision
+REJECTED [$(date +%Y-%m-%d)]:
+EXPECTED: AC #2 requires complete recursive dependency closure, and AC #3 requires a gate-critical incomplete input to mark every dependent metric INVALID and return BLOCKED.
+DELIVERED: At commit 43dd14eeef18443f3ca5314c4c721b62496a20d6, src/gauntlet/data/dependency.py builds parent-to-child adjacency then processes nodes with `sorted(selected, key=lambda item: len(reverse.get(item, [])))`; child-edge count is not a topological order. A real temporary-storage probe registered root -> wide -> incomplete-deep plus healthy fillers and evaluated the root: `status=OK`, `metric_states={'core.metric': 'VALID'}`, and findings stopped at wide (`QUALITY_INCOMPLETE` propagated only from deep to wide), never reaching root.
+GAP: Gate-critical recursive health is shape-dependent and can silently allow a transitive dependent to pass. This violates AC #2 (complete recursive closure) and AC #3 (critical incomplete input must block dependent metrics). The existing integration test only covers a narrow three-node chain and misses this case.
+FIX: Materialize the DAG and perform deterministic postorder/topological recursive-health propagation (or iterate to a fixpoint). Add a no-mock wide/multi-level graph test that makes a deep gate-critical descriptor INCOMPLETE and asserts every transitive dependent metric is INVALID, root status is BLOCKED, affected metrics and coverage expose the failure, and ordered findings remain stable.
+## nd_contract
+status: rejected
+
+### evidence
+- PM full suite at delivered commit: `uv run pytest tests/` -> 20 passed in 0.30s.
+- PM static verification: `pvg verify ... --include-tests --format=text` -> PASSED, 5 files, 0 issues.
+- PM targeted no-mock temporary-storage graph probe reproduced failure: root status OK / core.metric VALID despite a transitive gate-critical INCOMPLETE dependency.
+- Diff inspected at 43dd14eeef18443f3ca5314c4c721b62496a20d6: 6 files, 747 insertions, 1 deletion, within budget.
+
+### proof
+- [ ] AC #2: Recursive dependency closure is incomplete for non-chain DAG shapes.
+- [ ] AC #3: A gate-critical INCOMPLETE transitive dependency failed to mark the dependent root metric INVALID or return BLOCKED.
