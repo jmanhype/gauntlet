@@ -1,17 +1,19 @@
 ---
 id: VK-aej2
 title: "Establish synthetic deterministic gate precedence"
-status: open
+status: in_progress
 priority: 0
 type: feature
 labels: [integration, phase-1, walking-skeleton]
 parent: VK-1rbc
 created_at: 2026-09-19T01:37:42Z
 created_by: speed
-updated_at: 2026-09-19T01:39:43Z
-content_hash: "sha256:21cf589f111babf60fe7c42c838ce6c49a04d85884cf78bb7113628785955d17"
+updated_at: 2026-09-19T04:45:11Z
+content_hash: "sha256:b7b582df8f20f9026b1f99d3dc7f0513a0a4ef9bbf995de0c402d4b372619b18"
 blocks: [VK-2e0k, VK-uyca]
 was_blocked_by: [VK-1vhm]
+assignee: dev-VK-aej2
+follows: [VK-1vhm]
 ---
 
 ## Description
@@ -98,11 +100,15 @@ status: new
 - 2026-09-19T01:37:43Z dep_added: blocks VK-2e0k
 - 2026-09-19T01:37:44Z dep_added: blocks VK-uyca
 - 2026-09-19T02:37:33Z dep_removed: was_blocked_by VK-1vhm
+- 2026-09-19T04:45:11Z status: open -> in_progress
+- 2026-09-19T04:45:11Z auto-follows: linked to predecessor VK-1vhm
+- 2026-09-19T04:45:11Z claimed by dev-VK-aej2
 
 ## Links
 - Parent: [[VK-1rbc]]
 - Blocks: [[VK-2e0k]], [[VK-uyca]]
 - Was blocked by: [[VK-1vhm]]
+- Follows: [[VK-1vhm]]
 
 ## Comments
 
