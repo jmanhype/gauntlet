@@ -1,16 +1,17 @@
 ---
 id: VK-1vhm
 title: "Establish canonical artifact contracts"
-status: open
+status: in_progress
 priority: 0
 type: feature
 labels: [integration, phase-1, walking-skeleton]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-18T23:33:49Z
-content_hash: "sha256:911977bf9eceab48e06e8fedc6d8e023049913d68d9b753d1793d9b70626f6e9"
+updated_at: 2026-09-19T02:09:40Z
+content_hash: "sha256:c4ee23891e51fca2e8a7a10d9b278e2cb79e944d4b32eb9809d00bb3f80f229b"
 blocks: [VK-wa2q, VK-kmbs, VK-jkkn, VK-bns7, VK-52g6, VK-3f9f, VK-aej2]
+assignee: dev-VK-1vhm
 ---
 
 ## Description
@@ -104,6 +105,8 @@ status: new
 - 2026-09-18T23:31:32Z dep_added: blocks VK-52g6
 - 2026-09-18T23:31:38Z dep_added: blocks VK-3f9f
 - 2026-09-19T01:37:42Z dep_added: blocks VK-aej2
+- 2026-09-19T02:09:40Z status: open -> in_progress
+- 2026-09-19T02:09:40Z claimed by dev-VK-1vhm
 
 ## Links
 - Parent: [[VK-egll]]
