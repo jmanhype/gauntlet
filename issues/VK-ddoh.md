@@ -1,19 +1,20 @@
 ---
 id: VK-ddoh
 title: "Record untouched prospective signals"
-status: in_progress
+status: closed
 priority: 1
 type: feature
 labels: [integration, phase-1, delivered]
 parent: VK-0auj
 created_at: 2026-09-18T23:31:23Z
 created_by: speed
-updated_at: 2026-09-19T16:27:50Z
-content_hash: "sha256:569b3e7e8f0ca587b80db7b8097198eb54d7978228b4f849da36ef5a5f23d5e2"
-blocks: [VK-zvia, VK-vqvy]
+updated_at: 2026-09-19T16:28:10Z
+content_hash: "sha256:f2322de3ada3c436a3472aa8ed795fa56d12a0ea169f04a54ef80aa7fb4b1fb4"
 was_blocked_by: [VK-wa2q, VK-jkkn, VK-0c4c]
 assignee: dev-VK-ddoh
 follows: [VK-wa2q, VK-jkkn, VK-0c4c]
+closed_at: 2026-09-19T16:28:10Z
+close_reason: "Accepted: independently reran story tests (4/4), full suite (52/52), pvg verify (3 files, 0 issues), git diff check, and diff-budget/hash inspection. Signals and outcomes are append-only/hash-chained, late signals are historical, transitions and dependency provenance are preserved, and tampering is detected."
 ---
 
 ## Description
@@ -167,10 +168,12 @@ status: delivered
 - 2026-09-19T13:04:44Z auto-follows: linked to predecessor VK-0c4c
 - 2026-09-19T13:04:44Z claimed by dev-VK-ddoh
 - 2026-09-19T16:27:04Z status: in_progress -> in_progress
+- 2026-09-19T16:28:10Z status: in_progress -> closed
+- 2026-09-19T16:28:10Z dep_removed: no_longer_blocks VK-zvia
+- 2026-09-19T16:28:10Z dep_removed: no_longer_blocks VK-vqvy
 
 ## Links
 - Parent: [[VK-0auj]]
-- Blocks: [[VK-zvia]], [[VK-vqvy]]
 - Was blocked by: [[VK-wa2q]], [[VK-jkkn]], [[VK-0c4c]]
 - Follows: [[VK-wa2q]], [[VK-jkkn]], [[VK-0c4c]]
 
