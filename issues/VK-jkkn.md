@@ -4,11 +4,11 @@ title: "Resolve immutable run configurations"
 status: closed
 priority: 0
 type: feature
-labels: [integration, phase-1, delivered]
+labels: [integration, phase-1, delivered, accepted]
 parent: VK-egll
 created_at: 2026-09-18T23:31:16Z
 created_by: speed
-updated_at: 2026-09-19T04:41:26Z
+updated_at: 2026-09-19T04:41:27Z
 content_hash: "sha256:801c10dbced7c5dff93d8f9907b1d5918ac25495fe42960acf820b1336b2359b"
 was_blocked_by: [VK-1vhm, VK-kmbs]
 follows: [VK-1vhm, VK-kmbs, VK-wa2q]
