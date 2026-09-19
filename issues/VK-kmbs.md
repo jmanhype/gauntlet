@@ -4,7 +4,7 @@ title: "Register evidence descriptors with fail-closed dependencies"
 status: open
 priority: 0
 type: feature
-labels: [integration, phase-1]
+labels: [integration, phase-1, rejected]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
