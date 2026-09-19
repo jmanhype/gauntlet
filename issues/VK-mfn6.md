@@ -8,8 +8,8 @@ labels: [integration, phase-1, delivered]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:19Z
 created_by: speed
-updated_at: 2026-09-19T17:05:09Z
-content_hash: "sha256:e26d06809c46ebbde5a91652bd3d5575edef44bea17ed6420af411755529e54f"
+updated_at: 2026-09-19T17:05:55Z
+content_hash: "sha256:bd3ce7acd6483785c998c384105ccc0ad3d01c3ac9da80d8fd079180c263167e"
 blocks: [VK-7ubc, VK-zvia, VK-ldg1]
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-mfn6
@@ -95,6 +95,54 @@ status: new
 
 
 ## Notes
+## Implementation Evidence
+
+Commands run:
+
+```bash
+cd /Users/speed/Downloads/AI_Videos/google-usercontent/gauntlet/.claude/worktrees/dev-VK-mfn6
+git diff --check
+uv run pytest tests/model/test_registry_inference.py
+uv run pytest tests/
+pvg verify src/gauntlet/model/__init__.py src/gauntlet/model/inference.py src/gauntlet/model/registry.py tests/model/test_registry_inference.py --format=text
+```
+
+Independent coordinator results:
+
+- `git diff --check`: exit 0.
+- Story tests: 7/7 passed.
+- Full suite: 59/59 passed.
+- `pvg verify`: passed with 4 files scanned and zero issues.
+- Diff budget: 647 changed LOC, below the 650 LOC ceiling.
+- Static source scan found no database engine, network client, subprocess, credential, or secret-bearing implementation.
+- Deterministic replay hashes reported by the real tiny model integration remain stable:
+  - model fingerprint `ba152251750337b9ef2dabbd965e9a37bcd8d6f1cf7f2d2e38889bbbbf91c8e7`
+  - descriptor `bf5efb9f49d527438f74d1877f335fb4503088a6b84c9698b1564a83db9bc077`
+  - context `7f6949c0671bb99ca6761f107b8fd7ad00d01f12f8594d9e5aad746c2408895f`
+  - artifact `9a5a8c6bec0226977ea102318a09eeb81b7c3a7258947a325a9b0ab5d6bd22da`
+
+### CI/Test Results
+
+```text
+tests/model/test_registry_inference.py: 7 passed
+full suite: 59 passed
+pvg verify: PASSED (4 files scanned, 0 issues)
+```
+
+Summary: implemented fail-closed Kronos model lineage registration, immutable checkpoint/descriptor/event evidence, exact model fingerprints, point-in-time context enforcement, lookback-only normalization, deterministic local inference, MODELED output semantics, replayable checkpoint/preprocessing evidence, and BLOCKED behavior when exact bytes are missing.
+
+Commit SHA: 63d302a
+
+### AC Verification
+
+| AC | Result | Evidence |
+|---|---|---|
+| 1. Registry rejects incomplete lineage | PASS | Validation tests. |
+| 2. Inference binds model/context/sampling/semantics | PASS | Integration tests and stable hashes. |
+| 3. Future features/targets rejected | PASS | Point-in-time parameterized tests. |
+| 4. Paths/probabilities/shares remain MODELED with calibration metadata | PASS | Inference artifact assertions. |
+| 5. Missing bytes create non-replayable BLOCKED output | PASS | Missing-checkpoint test. |
+| 6. Duplicate checkpoint observations preserved | PASS | Duplicate-lineage test. |
 
 
 ## nd_contract
