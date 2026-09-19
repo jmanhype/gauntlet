@@ -8,8 +8,8 @@ labels: [integration, phase-1, delivered]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T03:11:59Z
-content_hash: "sha256:29e68dc7487112f7c0ab9eff3e644a71b7419ae3ed08859d03264f106c96f11d"
+updated_at: 2026-09-19T03:13:39Z
+content_hash: "sha256:0d9b785cf26e49cfea5456802a62c601be89a794c2f50a446ae8bcc25b44bede"
 blocks: [VK-kmbs, VK-pg9j, VK-mfn6, VK-si5s, VK-jbae, VK-0pfo, VK-ddoh, VK-bns7, VK-52g6, VK-3f9f, VK-3v14]
 was_blocked_by: [VK-1vhm]
 assignee: dev-VK-wa2q
@@ -229,3 +229,10 @@ RECOMMEND hard-tdd: concurrent append and tamper-chain semantics are subtle and 
 
 ### 2026-09-18T23:33:49Z speed
 RECOMMEND hard-tdd: concurrent append and tamper-chain semantics are subtle and costly to detect later. Adds RED/GREEN phases: roughly double the agent passes, tokens, and wall-clock time for this story.
+
+### 2026-09-19T03:13:39Z speed
+DISCOVERED_BUG:
+  title: pvg verify-delivery misreads newest-first nd contract notes
+  context: VK-wa2q has label delivered and multiple delivered nd_contract notes, including the newest authoritative note with commit SHA, commands, summary, and checked ACs. pvg story verify-delivery reports authoritative contract not delivered and says implementation evidence is missing while pvg nd show displays that evidence. The oldest in_progress claim note remains physically last in the rendered Notes section because nd update --append-notes inserts newer notes first.
+  affected_files: pvg story verify-delivery / nd note ordering
+  discovered_during: VK-wa2q
