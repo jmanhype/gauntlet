@@ -4,7 +4,7 @@ title: "Establish canonical artifact contracts"
 status: closed
 priority: 0
 type: feature
-labels: [integration, phase-1, walking-skeleton, delivered]
+labels: [integration, phase-1, walking-skeleton, delivered, accepted]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
