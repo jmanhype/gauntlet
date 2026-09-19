@@ -8,12 +8,12 @@ labels: [integration, phase-1]
 parent: VK-egll
 created_at: 2026-09-18T23:31:16Z
 created_by: speed
-updated_at: 2026-09-19T04:30:29Z
-content_hash: "sha256:4f7abb463be31027a7f5ad241130f7ab05ec723bced2b5c8eddd330756c8fa07"
+updated_at: 2026-09-19T04:30:38Z
+content_hash: "sha256:7322450ec2d497469854396a4fd087f1aa3ebd666da7ec37a806e494ea3b1b08"
 blocks: [VK-pg9j, VK-mfn6, VK-si5s, VK-0pfo, VK-0c4c, VK-ddoh, VK-dblr, VK-3f9f, VK-rkdr]
 was_blocked_by: [VK-1vhm, VK-kmbs]
 assignee: dev-VK-jkkn
-follows: [VK-1vhm, VK-kmbs]
+follows: [VK-1vhm, VK-kmbs, VK-wa2q]
 ---
 
 ## Description
@@ -192,11 +192,13 @@ status: in_progress
 - 2026-09-19T04:15:20Z auto-follows: linked to predecessor VK-1vhm
 - 2026-09-19T04:15:20Z auto-follows: linked to predecessor VK-kmbs
 - 2026-09-19T04:15:20Z claimed by dev-VK-jkkn
+- 2026-09-19T04:30:38Z status: in_progress -> in_progress
+- 2026-09-19T04:30:38Z auto-follows: linked to predecessor VK-wa2q
 
 ## Links
 - Parent: [[VK-egll]]
 - Blocks: [[VK-pg9j]], [[VK-mfn6]], [[VK-si5s]], [[VK-0pfo]], [[VK-0c4c]], [[VK-ddoh]], [[VK-dblr]], [[VK-3f9f]], [[VK-rkdr]]
 - Was blocked by: [[VK-1vhm]], [[VK-kmbs]]
-- Follows: [[VK-1vhm]], [[VK-kmbs]]
+- Follows: [[VK-1vhm]], [[VK-kmbs]], [[VK-wa2q]]
 
 ## Comments
