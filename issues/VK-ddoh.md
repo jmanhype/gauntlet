@@ -8,8 +8,8 @@ labels: [integration, phase-1, delivered]
 parent: VK-0auj
 created_at: 2026-09-18T23:31:23Z
 created_by: speed
-updated_at: 2026-09-19T16:27:04Z
-content_hash: "sha256:a7c99e4746ddd0b861394d7ca7535a30aeab92e43e76699301460d18afea8917"
+updated_at: 2026-09-19T16:27:50Z
+content_hash: "sha256:569b3e7e8f0ca587b80db7b8097198eb54d7978228b4f849da36ef5a5f23d5e2"
 blocks: [VK-zvia, VK-vqvy]
 was_blocked_by: [VK-wa2q, VK-jkkn, VK-0c4c]
 assignee: dev-VK-ddoh
@@ -97,6 +97,49 @@ status: new
 
 
 ## Notes
+## Implementation Evidence
+
+Commands run:
+
+```bash
+cd /Users/speed/Downloads/AI_Videos/google-usercontent/gauntlet/.claude/worktrees/dev-VK-ddoh
+git diff --check
+uv run pytest tests/judge/test_prospective.py
+uv run pytest
+pvg verify src/gauntlet/judge/prospective.py src/gauntlet/judge/__init__.py tests/judge/test_prospective.py --include-tests --format=text
+```
+
+Independent coordinator results:
+
+- `git diff --check`: exit 0.
+- Story tests: 4/4 passed.
+- Full suite: 52/52 passed.
+- `pvg verify`: passed for all 3 scanned files with zero issues.
+- Diff budget: 598 insertions and 1 deletion, 599 changed LOC total, below the story’s 600 changed-LOC ceiling.
+- The full suite’s policy fixture intentionally prints `AGGREGATE: BLOCKED` and two synthetic-rule diagnostics, but pytest completes with 52/52 passed. This is existing expected policy-test output, not a runtime failure.
+
+### CI/Test Results
+
+```text
+tests/judge/test_prospective.py: 4 passed
+full suite: 52 passed
+pvg verify: PASSED (3 files scanned, 0 issues)
+```
+
+Summary: implemented append-only, hash-chained prospective signal records with complete fingerprints/action/assumptions/confidence semantics/dependency snapshots; immutable later outcomes and status transitions; historical classification for late signals; durable actor/reason/timestamp transitions; OBSERVED versus MODELED dependency provenance; tamper detection; and machine-readable fail-closed errors. No database engine, public API, daemon, trading, or order placement was added.
+
+Commit SHA: a154005
+
+### AC Verification
+
+| AC | Result | Evidence |
+|---|---|---|
+| 1. Pre-outcome records append-only/hash-chained with all declared evidence | PASS | `append_signal`, integration test, and chain verification. |
+| 2. Outcome append never mutates signal bytes/status history | PASS | Signal bytes compared before/after resolution in integration test. |
+| 3. Late signal labeled historical and ineligible for prospective credit | PASS | Late-signal test. |
+| 4. Open/skipped/execution-failure/resolved transitions preserve actor/reason/timestamp | PASS | Transition tests. |
+| 5. Dependency snapshot distinguishes OBSERVED/MODELED and exact descriptor hashes | PASS | Registry validation and snapshot mapping test. |
+| 6. Signal/outcome tampering detected | PASS | Byte-tamper test returns invalid chain. |
 
 
 ## nd_contract
