@@ -8,8 +8,8 @@ labels: [integration, phase-1, delivered]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T04:08:53Z
-content_hash: "sha256:b1fedf31c47ccfac8a317d028632980b10164c8a7de23bc11410e18230f3bd00"
+updated_at: 2026-09-19T04:11:59Z
+content_hash: "sha256:f8d6afe229358a2b855c4900dbc7f0f5ac91775dda0c661fe1455d3d14f4b3b9"
 blocks: [VK-jkkn, VK-pg9j, VK-mfn6, VK-0pfo, VK-0c4c, VK-2e0k, VK-3f9f, VK-4qfy, VK-3v14]
 was_blocked_by: [VK-1vhm, VK-wa2q]
 follows: [VK-1vhm, VK-wa2q]
@@ -106,7 +106,29 @@ NORMATIVE DESCRIPTOR ENUMERATIONS (authoritative for implementation):
 - quality.state: VALID | STALE | CORRUPT | INCOMPLETE | QUARANTINED.
 - observation_basis: OBSERVED | MODELED.
 - venue_track: solana_dex | hyperliquid | cross_venue_transfer | external.
+## PM Decision
+ACCEPTED [2026-09-18]: Rework reviewed at amended commit 046ad04ec031f5a8846d3a728ce37b2f6fa1e711 and all acceptance criteria meet the bar.
 
+## nd_contract
+status: accepted
+
+### evidence
+- Full PM suite: `uv run pytest tests/` -> 21 passed in 0.33s, 0 failed, 0 skipped, no warnings.
+- Targeted PM regression: `uv run pytest tests/integrity/test_dependency_graph.py::test_wide_graph_propagates_deep_gate_critical_failure_to_root -q` -> 1 passed in 0.09s.
+- PM static verification: `pvg verify ... --include-tests --format=text` -> PASSED, 5 files, 0 issues.
+- Inspected `_materialize`: deterministic DFS postorder appends every descriptor only after all resolved dependencies; `evaluate_dependencies` propagates in that order.
+- Inspected real wide-graph regression: root -> wide -> INCOMPLETE deep + four healthy fillers; asserts BLOCKED, core INVALID, filler VALID, affected metrics, coverage 0.5, seven selected nodes, and ordered propagated findings.
+- Cumulative diff: 6 files, 737 insertions, 1 deletion, within budget; rework-only files are dependency.py and the regression test.
+
+### proof
+- [x] AC #1: Registration validation and ledger behavior verified.
+- [x] AC #2: Ordered complete recursive closure now uses deterministic dependency-before-dependent postorder.
+- [x] AC #3: Deep gate-critical INCOMPLETE failure reaches every transitive dependent and blocks root.
+- [x] AC #4: Noncritical degradation remains visible without invalidating unaffected metrics.
+- [x] AC #5: Time-bound selection and exact-hash binding remain intact.
+- [x] AC #6: Quarantine remains append-only with original bytes/history preserved.
+- [x] AC #7: MODELED evidence remains ineligible for observed-outcome rules.
+- [x] AC #8: Malformed/cyclic graphs remain fail-closed without partial selection.
 
 ## nd_contract
 status: delivered
