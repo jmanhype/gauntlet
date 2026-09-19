@@ -8,8 +8,8 @@ labels: [integration, phase-1, walking-skeleton, delivered]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T02:33:13Z
-content_hash: "sha256:ed4d8d9c43ce9da2b9b60ed2d9bac5f7da6f7ba7f6bc45ccaa128460fdbad3ff"
+updated_at: 2026-09-19T02:37:32Z
+content_hash: "sha256:da4e8989a9eb81cdf36c4876f36d5e73295b022f42a94e420084e2f6db7b715c"
 blocks: [VK-wa2q, VK-kmbs, VK-jkkn, VK-bns7, VK-52g6, VK-3f9f, VK-aej2]
 assignee: dev-VK-1vhm
 ---
@@ -95,6 +95,30 @@ status: new
 
 
 ## Notes
+## PM Decision
+ACCEPTED [$(date +%Y-%m-%d)]: Evidence reviewed against every acceptance criterion and independently verified.
+
+## nd_contract
+status: accepted
+
+### evidence
+- Reviewed story proof and committed diff at 26f70aeffa5013c86bfb5b5400853904107351ae on story/VK-1vhm.
+- Independently ran `uv run pytest tests/integrity/test_contracts.py`: 6 passed in 0.02s, with no skips, xfails, warnings, or failures.
+- Independently measured `gauntlet.contracts` coverage: 232 statements, 44 missed, 81% total.
+- Ran `python -m compileall -q src tests`, committed-range `git diff --check`, and `pvg verify` source/test scans: all PASS.
+- Ran `pvg story verify-delivery VK-1vhm`: 9 checks passed, 0 failed.
+- Confirmed exact scope/budget: 7 files, 499 insertions; no ledger, pagination, collector, API, or order-placement changes.
+- Confirmed the integration test uses a real embedded/external artifact tree and byte mutation, rejects `ARTIFACT_HASH_MISMATCH`, and proves original bytes remain unchanged.
+
+### proof
+- [x] AC #1: Canonical JSON is deterministic and rejects NaN/infinity and non-string object keys.
+- [x] AC #2: SHA-256 output is exact-byte `sha256:<64 lowercase hex>`.
+- [x] AC #3: All five registered envelopes validate and unknown discriminators fail closed.
+- [x] AC #4: Manifest verification covers embedded/external hashes, relative paths, regular-file checks, duplicates, and Merkle root.
+- [x] AC #5: Exclusive creation refuses non-empty directories and existing immutable files without overwrite.
+- [x] AC #6: Integrity failures expose machine-readable codes/paths and perform no writes.
+- [x] AC #7: Public functions are fully typed and tested for deterministic outputs.
+
 ## nd_contract
 status: delivered
 
