@@ -8,8 +8,8 @@ labels: [integration, phase-1, rejected]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T04:03:20Z
-content_hash: "sha256:9065f27ac27be6123c03f42f8c3e73505f62a9fee323caad6ebd9f5eecfb8a68"
+updated_at: 2026-09-19T04:08:40Z
+content_hash: "sha256:7fb25a2d7bacae4c83f48b68785a6490da5c1a33cd52b01c49d316b4aa157afb"
 blocks: [VK-jkkn, VK-pg9j, VK-mfn6, VK-0pfo, VK-0c4c, VK-2e0k, VK-3f9f, VK-4qfy, VK-3v14]
 was_blocked_by: [VK-1vhm, VK-wa2q]
 follows: [VK-1vhm, VK-wa2q]
@@ -106,6 +106,72 @@ NORMATIVE DESCRIPTOR ENUMERATIONS (authoritative for implementation):
 - quality.state: VALID | STALE | CORRUPT | INCOMPLETE | QUARANTINED.
 - observation_basis: OBSERVED | MODELED.
 - venue_track: solana_dex | hyperliquid | cross_venue_transfer | external.
+## Implementation Evidence (REWORK DELIVERED)
+
+PROOF:
+
+### Rework Fix
+- Rejection cause: recursive propagation used child-edge count as an ordering heuristic, which is not topological for wide/multi-level DAGs.
+- Fix: `_materialize` now emits the deterministic DFS postorder after all dependencies of a node have been visited; `evaluate_dependencies` propagates recursive health in that order. Cyclic returns remain `GRAPH_MALFORMED`.
+- Regression: `test_wide_graph_propagates_deep_gate_critical_failure_to_root` registers a real root -> wide -> [INCOMPLETE deep + four healthy fillers] graph in temporary storage with no mocks. It asserts root `BLOCKED`, `core.metric=INVALID`, `filler.metric=VALID`, affected metric exposure, coverage 0.5, all seven selected descriptors, and propagated findings at deep/wide/root.
+
+### CI/Test Results
+- Commands run:
+  - `uv run pytest tests/`
+  - `uv run --with pytest-cov pytest tests/ --cov=gauntlet --cov-report=term-missing`
+  - `pvg verify .gitignore src/gauntlet/data/__init__.py src/gauntlet/data/descriptors.py src/gauntlet/data/dependency.py src/gauntlet/data/quarantine.py tests/integrity/test_dependency_graph.py --include-tests --format=text`
+- Summary: full suite PASS — 21 tests, 21 passed, 0 failed, 0 skipped, 0 warnings.
+- Coverage: 88% total (1088 statements, 129 missed); dependency module 93%.
+- Key output:
+  - `collected 21 items`
+  - `tests/integrity/test_dependency_graph.py .......... [ 76%]`
+  - `21 passed in 0.37s`
+  - `TOTAL ... 88%`
+  - `VERIFY: PASSED (5 files scanned, 0 issues)`
+
+### Commit
+- Branch: `story/VK-kmbs`
+- Amended delivery SHA: `046ad04ec031f5a8846d3a728ce37b2f6fa1e711`
+- Rejected predecessor: `43dd14eeef18443f3ca5314c4c721b62496a20d6`
+- Cumulative diff budget versus `epic/VK-egll`: 737 insertions, 1 deletion.
+
+### AC Verification
+| AC # | Requirement | Rework Status | Evidence |
+|------|-------------|---------------|----------|
+| 1 | Registration validates schema, hashes, content, and dependencies before ledger append | PASS | Existing registration test remains green |
+| 2 | Complete ordered recursive closure returns graph hash, metrics, and coverage | PASS | DFS postorder propagation plus wide real-graph regression |
+| 3 | Gate-critical INCOMPLETE transitive dependency invalidates dependent metrics and blocks root | PASS | `core.metric=INVALID`, root `BLOCKED`, coverage 0.5 |
+| 4 | Noncritical gaps degrade coverage without invalidating unaffected metrics | PASS | Existing noncritical test remains green |
+| 5 | Time travel and exact-hash binding remain intact | PASS | Existing quarantine/time-travel test remains green |
+| 6 | Quarantine remains append-only with immutable originals | PASS | Existing original-byte/history assertions remain green |
+| 7 | MODELED evidence remains ineligible for observed rules | PASS | Existing MODELED case remains green |
+| 8 | Malformed/cyclic graph returns GRAPH_MALFORMED without partial selection | PASS | Existing malformed test; cycle path preserved by postorder materializer |
+
+LEARNINGS:
+- Child-count sorting is not a topological sort: in wide DAGs, a parent can be processed before all descendants have propagated failure.
+- Deterministic DFS postorder is produced from sorted roots and registered dependency order, preserving reproducible graph evaluation while guaranteeing dependencies precede dependents.
+- The rework regression keeps a healthy parallel metric valid, exposing both propagation and coverage semantics rather than only a global blocked flag.
+
+## nd_contract
+status: delivered
+
+### evidence
+- Branch `story/VK-kmbs`, amended commit `046ad04ec031f5a8846d3a728ce37b2f6fa1e711`.
+- `uv run pytest tests/`: 21 passed, 0 failed, 0 skipped.
+- Coverage: 88% total; dependency module 93%.
+- `pvg verify ... --include-tests --format=text`: PASSED, 0 issues.
+- Cumulative diff: 737 insertions + 1 deletion.
+
+### proof
+- [x] AC #1: Registration validation and ledger behavior remain correct.
+- [x] AC #2: Recursive closure now uses deterministic postorder and handles the rejected wide shape.
+- [x] AC #3: Deep gate-critical INCOMPLETE failure propagates through wide to root and marks `core.metric` INVALID/BLOCKED.
+- [x] AC #4: Noncritical degradation remains visible without invalidating unaffected metrics.
+- [x] AC #5: Time travel and exact hash binding remain correct.
+- [x] AC #6: Append-only quarantine behavior remains correct.
+- [x] AC #7: MODELED evidence remains fail-closed for observed rules.
+- [x] AC #8: Malformed/cyclic graph handling remains fail-closed.
+
 ## nd_contract
 status: in_progress
 
