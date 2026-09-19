@@ -9,9 +9,9 @@ parent: VK-1rbc
 created_at: 2026-09-19T01:37:42Z
 created_by: speed
 updated_at: 2026-09-19T01:39:43Z
-content_hash: "sha256:1372d88d81c4b53d5dbafa0d10e0eb9ac924ef0bcd082e4277cfec208cd5593b"
-blocked_by: [VK-1vhm]
+content_hash: "sha256:21cf589f111babf60fe7c42c838ce6c49a04d85884cf78bb7113628785955d17"
 blocks: [VK-2e0k, VK-uyca]
+was_blocked_by: [VK-1vhm]
 ---
 
 ## Description
@@ -97,11 +97,12 @@ status: new
 - 2026-09-19T01:37:42Z dep_added: blocked_by VK-1vhm
 - 2026-09-19T01:37:43Z dep_added: blocks VK-2e0k
 - 2026-09-19T01:37:44Z dep_added: blocks VK-uyca
+- 2026-09-19T02:37:33Z dep_removed: was_blocked_by VK-1vhm
 
 ## Links
 - Parent: [[VK-1rbc]]
 - Blocks: [[VK-2e0k]], [[VK-uyca]]
-- Blocked by: [[VK-1vhm]]
+- Was blocked by: [[VK-1vhm]]
 
 ## Comments
 
