@@ -4,7 +4,7 @@ title: "Enforce walk-forward evaluation discipline"
 status: in_progress
 priority: 1
 type: feature
-labels: [integration, phase-1, walking-skeleton]
+labels: [integration, phase-1, walking-skeleton, delivered]
 parent: VK-0auj
 created_at: 2026-09-18T23:31:22Z
 created_by: speed
