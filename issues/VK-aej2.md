@@ -8,8 +8,8 @@ labels: [integration, phase-1, walking-skeleton, delivered]
 parent: VK-1rbc
 created_at: 2026-09-19T01:37:42Z
 created_by: speed
-updated_at: 2026-09-19T04:57:31Z
-content_hash: "sha256:9a2c987c5fb50c1afee20686a0affc89c7cb4d6debe4e99bccaf92f6cd0b99b4"
+updated_at: 2026-09-19T04:58:07Z
+content_hash: "sha256:fb4db343e7c9bdd8db7f03b88270939fde1839bd6454a32cfe6fe35134e5dc6d"
 blocks: [VK-2e0k, VK-uyca]
 was_blocked_by: [VK-1vhm]
 assignee: dev-VK-aej2
@@ -93,7 +93,25 @@ status: new
 
 
 ## Notes
+## nd_contract
+status: delivered
 
+### evidence
+- Branch: story/VK-aej2
+- Commit: db2c5b8ee16511557064530c6429142df8da1e60
+- Required test: uv run pytest tests/policy/test_precedence_skeleton.py -> 8 passed in 0.02s
+- Full suite: uv run pytest tests/ -> 43 passed in 0.43s
+- Scoped coverage: uv run --with pytest-cov pytest tests/ --cov=gauntlet.policy --cov=gauntlet.contracts.schemas --cov-report=term -> TOTAL 89% (228 statements, 25 missed)
+- Delivery gate: pvg verify <5 changed files> --include-tests --format=text -> VERIFY: PASSED (5 files scanned, 0 issues)
+- Delivery label: pvg story deliver VK-aej2 -> OK
+
+### proof
+- [x] AC #1: Exhaustive combinations and order permutations prove BLOCKED > FAIL > INSUFFICIENT_EVIDENCE > PASS.
+- [x] AC #2: Synthetic panel bundle is content-hashed and exposes every declared inspectable field.
+- [x] AC #3: Unknown or malformed rule output becomes BLOCKED.
+- [x] AC #4: Kernel performs no external I/O, current-data query, LLM call, or threshold inference.
+- [x] AC #5: Same seed reproduces canonical bundle/output hashes; different seed changes content.
+- [x] AC #6: User-facing real integration output shows selected branch and every failed/blocked synthetic rule.
 
 ## nd_contract
 status: delivered
