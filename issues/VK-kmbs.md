@@ -9,7 +9,7 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
 updated_at: 2026-09-19T03:19:17Z
-content_hash: "sha256:f4915c0b4cf7fb748a5df10e8b65b9b7a53d1fbda9156ad1af58a117766077c1"
+content_hash: "sha256:3d7fa19d538205f264a85e192b77e2b9e12155c3e0f2ec37cf7ca9876224b424"
 blocks: [VK-jkkn, VK-pg9j, VK-mfn6, VK-0pfo, VK-0c4c, VK-2e0k, VK-3f9f, VK-4qfy, VK-3v14]
 was_blocked_by: [VK-1vhm, VK-wa2q]
 assignee: dev-VK-kmbs
@@ -106,6 +106,15 @@ NORMATIVE DESCRIPTOR ENUMERATIONS (authoritative for implementation):
 - quality.state: VALID | STALE | CORRUPT | INCOMPLETE | QUARANTINED.
 - observation_basis: OBSERVED | MODELED.
 - venue_track: solana_dex | hyperliquid | cross_venue_transfer | external.
+## nd_contract
+status: in_progress
+
+### evidence
+- Claimed: 2026-09-18
+- Worktree: story/VK-kmbs at 66555f6061d9aa371b9a4ba45d946498e83e37a0
+
+### proof
+- [ ] (pending)
 
 ## History
 - 2026-09-18T23:31:16Z dep_added: blocked_by VK-1vhm
