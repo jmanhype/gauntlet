@@ -8,8 +8,8 @@ labels: [external-integration, integration, phase-1, walking-skeleton]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:17Z
 created_by: speed
-updated_at: 2026-09-19T17:07:24Z
-content_hash: "sha256:3c41ddea67c70f701df78b06afe47c003b719b8966eb7c42329610368d0a51a1"
+updated_at: 2026-09-19T17:38:23Z
+content_hash: "sha256:4439af082ae3a1ddcf1fb1378eeb7a391694fadebc181388cc87a2c805912808"
 blocks: [VK-pol1, VK-bbmn, VK-jvku, VK-si5s, VK-ldg1, VK-4qfy]
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-pg9j
@@ -101,6 +101,45 @@ status: new
 
 
 ## Notes
+## Implementation Evidence
+
+Commands run:
+
+```bash
+cd /Users/speed/Downloads/AI_Videos/google-usercontent/gauntlet/.claude/worktrees/dev-VK-pg9j
+git diff --check
+uv run pytest tests/collectors/test_bitquery.py
+uv run pytest
+pvg verify src/gauntlet/audit/collectors/bitquery.py src/gauntlet/audit/collectors/parquet.py tests/collectors/test_bitquery.py --format=text
+```
+
+Offline progress results:
+
+- Story tests: 8/8 passed.
+- Full suite: 67/67 passed.
+- Substantive changed-file verify: passed with zero issues.
+- Offline collector commit: `33774bb`.
+
+### Remaining blocker
+
+AC #2 requires one owner-approved minimum-cost real Bitquery endpoint capture. This pass intentionally performed no network access and did not read, print, accept, or store `BITQUERY_API_KEY`. Calling the collector without an injected transport fails closed with `LIVE_ENDPOINT_BLOCKED` before budget spend or transport invocation. The story must remain open until the real-endpoint evidence is completed.
+
+## nd_contract
+status: in_progress
+
+### evidence
+- Offline/model-free collector implementation committed at `33774bb`.
+- Independent story/full tests and substantive pvg verification passed.
+
+### proof
+- [ ] AC #1: Credential configuration behavior remains to be exercised against the real endpoint process.
+- [ ] AC #2: Real-endpoint minimum-cost capture not yet run.
+- [x] AC #3: Offline page/cursor/watermark/retry/terminal metadata implemented and tested.
+- [x] AC #4: Offline pre/post budget behavior implemented and tested.
+- [x] AC #5: Offline malformed/truncation/checksum/regression/partial quarantine implemented and tested.
+- [x] AC #6: Immutable duplicate retention implemented and tested.
+- [x] AC #7: Atomic bars/events descriptor provenance implemented and tested.
+- [x] AC #8: Sanitized events/secret rejection implemented and tested.
 
 
 ## History
