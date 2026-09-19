@@ -4,11 +4,11 @@ title: "Register evidence descriptors with fail-closed dependencies"
 status: in_progress
 priority: 0
 type: feature
-labels: [integration, phase-1]
+labels: [integration, phase-1, delivered]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T03:56:00Z
+updated_at: 2026-09-19T03:56:01Z
 content_hash: "sha256:2023cc2a70d95131e09355dec3b73642320c2b46c16105e8279be6450cbc02de"
 blocks: [VK-jkkn, VK-pg9j, VK-mfn6, VK-0pfo, VK-0c4c, VK-2e0k, VK-3f9f, VK-4qfy, VK-3v14]
 was_blocked_by: [VK-1vhm, VK-wa2q]
