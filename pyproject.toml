@@ -1,0 +1,16 @@
+[project]
+name = "gauntlet"
+version = "0.1.0"
+description = "Local-first deterministic research integrity contracts"
+requires-python = ">=3.11"
+dependencies = []
+[dependency-groups]
+dev = ["pytest>=8.0"]
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+[tool.setuptools.packages.find]
+where = ["src"]
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
