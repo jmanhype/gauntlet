@@ -9,7 +9,7 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
 updated_at: 2026-09-19T04:01:30Z
-content_hash: "sha256:eabe13077e102b7f1099b42f2f3904a7246babb0b8337f03d8a1c7f2300243a4"
+content_hash: "sha256:8f30645d2ed13fe7fcefac2ee7a32c4de1c9fee522cc2f886493a0a035bbc8ce"
 blocks: [VK-jkkn, VK-pg9j, VK-mfn6, VK-0pfo, VK-0c4c, VK-2e0k, VK-3f9f, VK-4qfy, VK-3v14]
 was_blocked_by: [VK-1vhm, VK-wa2q]
 follows: [VK-1vhm, VK-wa2q]
@@ -105,6 +105,18 @@ NORMATIVE DESCRIPTOR ENUMERATIONS (authoritative for implementation):
 - quality.state: VALID | STALE | CORRUPT | INCOMPLETE | QUARANTINED.
 - observation_basis: OBSERVED | MODELED.
 - venue_track: solana_dex | hyperliquid | cross_venue_transfer | external.
+
+
+## nd_contract
+status: rejected
+
+### evidence
+- PM rejection applied via pvg story reject on 2026-09-18.
+
+### proof
+- [ ] Story requires another developer delivery before it can be accepted.
+
+
 ## nd_contract
 status: delivered
 
