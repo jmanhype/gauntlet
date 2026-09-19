@@ -8,8 +8,8 @@ labels: [integration, phase-1, walking-skeleton, accepted]
 parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
-updated_at: 2026-09-19T02:37:33Z
-content_hash: "sha256:0bb0500fc19b482cfe140973735fd7a05bb1be5e3b0ba0554d5708e2ee78edd2"
+updated_at: 2026-09-19T02:37:56Z
+content_hash: "sha256:9cf2b6142d2c45dc929960e989b68ae6fcdd639146651a7573b5b82140c87a01"
 assignee: dev-VK-1vhm
 closed_at: 2026-09-19T02:37:33Z
 close_reason: "Accepted: all seven contract acceptance criteria verified from committed code and independent tests."
@@ -96,7 +96,17 @@ status: new
 
 
 ## Notes
+## PM Decision Correction
+ACCEPTED [2026-09-18]: The prior PM heading retained a literal command-substitution placeholder. This correction records the actual review date; the acceptance verdict and all evidence are unchanged.
 
+## nd_contract
+status: accepted
+
+### evidence
+- Final verification after canonical accept transition: VK-1vhm is closed with the accepted label; close reason records all seven criteria as verified.
+
+### proof
+- [x] AC #1 through AC #7 verified from commit 26f70aeffa5013c86bfb5b5400853904107351ae and independent test output.
 
 ## nd_contract
 status: accepted
