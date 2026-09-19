@@ -4,7 +4,7 @@ title: "Record untouched prospective signals"
 status: in_progress
 priority: 1
 type: feature
-labels: [integration, phase-1]
+labels: [integration, phase-1, delivered]
 parent: VK-0auj
 created_at: 2026-09-18T23:31:23Z
 created_by: speed
