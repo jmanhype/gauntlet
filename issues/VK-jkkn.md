@@ -9,7 +9,7 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:16Z
 created_by: speed
 updated_at: 2026-09-19T04:39:58Z
-content_hash: "sha256:dda5c9e84137ee6bb292197feb5d783799f23ff84a8944330d6169adae72f5af"
+content_hash: "sha256:89a118a22c680d24837d92689b7ba98c6955568454bd24eb1cdcb6ef817da6ae"
 blocks: [VK-pg9j, VK-mfn6, VK-si5s, VK-0pfo, VK-0c4c, VK-ddoh, VK-dblr, VK-3f9f, VK-rkdr]
 was_blocked_by: [VK-1vhm, VK-kmbs]
 follows: [VK-1vhm, VK-kmbs, VK-wa2q]
@@ -95,6 +95,18 @@ status: new
 
 
 ## Notes
+
+
+## nd_contract
+status: delivered
+
+### evidence
+- Transitioned via pvg story deliver on 2026-09-18.
+
+### proof
+- [ ] Developer evidence block must remain authoritative above this contract.
+
+
 ## Rework Evidence (DELIVERED)
 
 PROOF:
