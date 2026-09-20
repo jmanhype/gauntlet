@@ -24,6 +24,7 @@ claude-code-plugin-marketplace/
 __pycache__/
 *.py[cod]
 .venv/
+src/gauntlet.egg-info/
 
 # OS
 .DS_Store
