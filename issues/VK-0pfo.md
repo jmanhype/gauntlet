@@ -4,7 +4,7 @@ title: "Separate portfolio risk from evidence gates"
 status: closed
 priority: 2
 type: feature
-labels: [integration, phase-1, delivered, accepted]
+labels: [integration, phase-1, accepted]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:21Z
 created_by: speed
