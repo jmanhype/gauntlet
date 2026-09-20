@@ -8,8 +8,8 @@ labels: [external-integration, integration, phase-1, walking-skeleton]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:17Z
 created_by: speed
-updated_at: 2026-09-20T02:38:57Z
-content_hash: "sha256:ce2c7e37373804c510d369a74f45775ca210ee2fbfda7c479e10321cbbbab384"
+updated_at: 2026-09-20T04:18:55Z
+content_hash: "sha256:4d89347db82edeaaef8448e77878331fc75cefaff8222e4e3c7d06bb706d6d03"
 blocks: [VK-pol1, VK-bbmn, VK-jvku, VK-si5s, VK-ldg1, VK-4qfy]
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-pg9j
@@ -174,3 +174,6 @@ status: in_progress
 
 ### 2026-09-20T02:38:57Z speed
 loop: reset orphaned in_progress to open (no developer worktree found; prior session presumed dead)
+
+### 2026-09-20T04:18:55Z speed
+Current dispatcher check: BITQUERY_API_KEY is absent from the coordinator environment (presence tested without reading or printing the value). No network request, credential lookup, or spend was attempted. VK-pg9j remains blocked for its owner-approved minimum-cost live capture until the operator injects the key only into the collector process.
