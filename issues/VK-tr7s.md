@@ -8,7 +8,7 @@ parent: VK-1rbc
 created_at: 2026-09-20T17:12:45Z
 created_by: speed
 updated_at: 2026-09-20T19:06:12Z
-content_hash: "sha256:7edd32658850746dc70fcb85897cb73b644c06af15e2bd16926737239ff4414d"
+content_hash: "sha256:aad230cef4951555169c0354b1cd90035d625c78b649a511d6be75ddf36d7b8d"
 labels: [e2e, capstone, walking-skeleton, accepted]
 assignee: dev-VK-tr7s
 follows: [VK-aej2]
@@ -94,6 +94,18 @@ status: new
 
 
 ## Notes
+
+
+## nd_contract
+status: accepted
+
+### evidence
+- PM closeout applied via pvg story accept on 2026-09-20.
+
+### proof
+- [x] Story closed after accepted label was applied.
+
+
 ## PM Decision
 ACCEPTED [2026-09-20]: Independently reviewed the story-specific 1,092-line implementation and dependency boundary, reran 24 targeted tests, the full 74-test suite, scoped verifier, whitespace checks, canonical report regeneration, and parent-root risk I/O containment. The benchmark consumes the tracked VK-0pfo RiskPolicyVersion/RiskRequest/PaperPortfolio through evaluate_risk and preserves non-CONTINUE => HOLD/zero-size semantics. GitHub PR 1 CI passed at head 6e9688206963fa06f59eacccab07666c8439d8db with CLEAN merge state; story implementation commit remains 7da5aa47d9436a3a47a0143af629afcf30c97c59.
 
