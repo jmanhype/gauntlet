@@ -9,7 +9,7 @@ parent: VK-u40v
 created_at: 2026-09-18T23:31:21Z
 created_by: speed
 updated_at: 2026-09-20T14:53:41Z
-content_hash: "sha256:8d42f2e617e81d2ffa28076feaa5db0a420ea77cca5be390aa862d7cd3c60c22"
+content_hash: "sha256:1003ff23362b5e512f809d5ef8ce7c26e6ce4fc0403442f07665230024c42b9a"
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-0pfo
 follows: [VK-wa2q, VK-kmbs, VK-jkkn, VK-7ubc, VK-mfn6]
@@ -109,6 +109,16 @@ Final delivery commit correction: 28ea5312d3fe797f55291856ffa61b5adaa936ea
 Commit SHA: 28ea5312d3fe797f55291856ffa61b5adaa936ea
 
 Final validation after the PM hardening changes: targeted 7/7 passed; full suite 66/66 passed; py_compile PASS; scoped pvg verify 3 files, 0 issues; diff 649 insertions.
+
+
+## nd_contract
+status: accepted
+
+### evidence
+- PM closeout applied via pvg story accept on 2026-09-20.
+
+### proof
+- [x] Story closed after accepted label was applied.
 
 
 ## nd_contract
