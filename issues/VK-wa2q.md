@@ -9,13 +9,13 @@ parent: VK-egll
 created_at: 2026-09-18T23:31:15Z
 created_by: speed
 updated_at: 2026-09-19T03:17:06Z
-content_hash: "sha256:f0b4db1952dd84977e9566b31d318fd98fa58b5e4ab3f9852e3dba43c0255721"
+content_hash: "sha256:cb938fb2dbcba5d342ae2230d2aa2dcff3c3b7e2b13a93a7b0a69b07d41a76fb"
 was_blocked_by: [VK-1vhm]
 assignee: dev-VK-wa2q
 follows: [VK-1vhm]
 closed_at: 2026-09-19T03:17:05Z
 close_reason: "Accepted: independently tested and code-reviewed immutable trial/event chains at 824b1e6."
-led_to: [VK-kmbs, VK-jkkn, VK-ddoh, VK-mfn6, VK-pg9j]
+led_to: [VK-kmbs, VK-jkkn, VK-ddoh, VK-mfn6, VK-pg9j, VK-0pfo]
 ---
 
 ## Description
@@ -269,7 +269,7 @@ status: in_progress
 - Parent: [[VK-egll]]
 - Was blocked by: [[VK-1vhm]]
 - Follows: [[VK-1vhm]]
-- Led to: [[VK-kmbs]], [[VK-jkkn]], [[VK-ddoh]], [[VK-mfn6]], [[VK-pg9j]]
+- Led to: [[VK-kmbs]], [[VK-jkkn]], [[VK-ddoh]], [[VK-mfn6]], [[VK-pg9j]], [[VK-0pfo]]
 
 ## Comments
 

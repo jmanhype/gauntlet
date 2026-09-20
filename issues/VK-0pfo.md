@@ -1,17 +1,19 @@
 ---
 id: VK-0pfo
 title: "Separate portfolio risk from evidence gates"
-status: open
+status: in_progress
 priority: 2
 type: feature
 labels: [integration, phase-1]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:21Z
 created_by: speed
-updated_at: 2026-09-18T23:31:21Z
-content_hash: "sha256:98cb521e74ad7c5e84a27540a3183ef55f688953e5bb040f8abd2943cd59f461"
+updated_at: 2026-09-20T04:02:58Z
+content_hash: "sha256:27938f66ea317e1b510f9365795f3f10aa1def651e41bf69124bc51e0ae91b64"
 blocks: [VK-2e0k, VK-1ptl, VK-ldg1]
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
+assignee: dev-VK-0pfo
+follows: [VK-wa2q, VK-kmbs, VK-jkkn]
 ---
 
 ## Description
@@ -110,10 +112,16 @@ status: new
 - 2026-09-19T03:17:05Z dep_removed: was_blocked_by VK-wa2q
 - 2026-09-19T04:11:59Z dep_removed: was_blocked_by VK-kmbs
 - 2026-09-19T04:41:26Z dep_removed: was_blocked_by VK-jkkn
+- 2026-09-20T04:02:58Z status: open -> in_progress
+- 2026-09-20T04:02:58Z auto-follows: linked to predecessor VK-wa2q
+- 2026-09-20T04:02:58Z auto-follows: linked to predecessor VK-kmbs
+- 2026-09-20T04:02:58Z auto-follows: linked to predecessor VK-jkkn
+- 2026-09-20T04:02:58Z claimed by dev-VK-0pfo
 
 ## Links
 - Parent: [[VK-u40v]]
 - Blocks: [[VK-2e0k]], [[VK-1ptl]], [[VK-ldg1]]
 - Was blocked by: [[VK-wa2q]], [[VK-kmbs]], [[VK-jkkn]]
+- Follows: [[VK-wa2q]], [[VK-kmbs]], [[VK-jkkn]]
 
 ## Comments
