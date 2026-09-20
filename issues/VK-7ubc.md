@@ -9,7 +9,7 @@ parent: VK-u40v
 created_at: 2026-09-18T23:31:20Z
 created_by: speed
 updated_at: 2026-09-20T04:09:17Z
-content_hash: "sha256:1c0854b3bf89dc09df04c809d18aedd7512b0eb3e5aa795af2763a7927702b8f"
+content_hash: "sha256:ff5f1066a327996d9b62970066f981e301b725add8fbd96c4b2d2b6405ebc31a"
 blocks: [VK-ldg1]
 was_blocked_by: [VK-mfn6]
 assignee: dev-VK-7ubc
@@ -154,6 +154,7 @@ LEARNINGS: Reusing the registered model/descriptor/ledger primitives kept adapta
 - 2026-09-20T03:45:51Z status: open -> in_progress
 - 2026-09-20T03:45:51Z auto-follows: linked to predecessor VK-mfn6
 - 2026-09-20T03:45:51Z claimed by dev-VK-7ubc
+- 2026-09-20T04:09:17Z status: in_progress -> in_progress
 
 ## Links
 - Parent: [[VK-u40v]]
