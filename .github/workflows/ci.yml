@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, "epic/**"]
   pull_request:
-    branches: [main]
+    branches: [main, "epic/**"]
 
 permissions:
   contents: read
@@ -14,11 +14,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
+  ci:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
+      - name: Validate repository contracts
+        run: |
+          test -s README.md
+          test -s docs/BUSINESS.md
+          test -s docs/DESIGN.md
+          test -s docs/ARCHITECTURE.md
+          git diff --check
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -26,4 +33,5 @@ jobs:
         with:
           enable-cache: true
       - name: Run test suite
-        run: uv run --frozen pytest -q
+        if: hashFiles('pyproject.toml') != ''
+        run: uv run --frozen --group dev pytest -q
