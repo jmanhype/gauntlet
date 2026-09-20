@@ -1,19 +1,20 @@
 ---
 id: VK-7ubc
 title: "Adapt Kronos with frozen temporal splits"
-status: in_progress
+status: closed
 priority: 2
 type: feature
 labels: [integration, phase-1, delivered]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:20Z
 created_by: speed
-updated_at: 2026-09-20T04:15:26Z
-content_hash: "sha256:b360aec76dcdf555e87d48d1ace29988e237ce4eb140fb22370ac27a34803c5e"
-blocks: [VK-ldg1]
+updated_at: 2026-09-20T04:15:27Z
+content_hash: "sha256:ca51d5fc8dbb8aa8d60af8e6a36c92be7d6130949fb801cf936261b5b3181696"
 was_blocked_by: [VK-mfn6]
 assignee: dev-VK-7ubc
 follows: [VK-mfn6]
+closed_at: 2026-09-20T04:15:27Z
+close_reason: "Accepted: independently reran targeted/full tests, compile, scoped verify, static/secret checks, reviewed all six AC and immutable trial/replay evidence. Structural verify-delivery EOF warning is a recorded note-ordering false negative; substantive proof is complete."
 ---
 
 ## Description
@@ -258,10 +259,11 @@ LEARNINGS: Reusing the registered model/descriptor/ledger primitives kept adapta
 - 2026-09-20T04:09:17Z status: in_progress -> in_progress
 - 2026-09-20T04:09:49Z status: in_progress -> in_progress
 - 2026-09-20T04:10:20Z status: in_progress -> in_progress
+- 2026-09-20T04:15:27Z status: in_progress -> closed
+- 2026-09-20T04:15:27Z dep_removed: no_longer_blocks VK-ldg1
 
 ## Links
 - Parent: [[VK-u40v]]
-- Blocks: [[VK-ldg1]]
 - Was blocked by: [[VK-mfn6]]
 - Follows: [[VK-mfn6]]
 
