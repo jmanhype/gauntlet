@@ -8,8 +8,8 @@ labels: [integration, phase-1]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:21Z
 created_by: speed
-updated_at: 2026-09-20T14:50:45Z
-content_hash: "sha256:9da97583a974ede6261fb6595aba585095498116b8a5aeb9bee997830d0449a0"
+updated_at: 2026-09-20T14:50:46Z
+content_hash: "sha256:eb6d31009ee4414cdc424bb0ff324adcd42776f2d63a45a530133cf9a1d0d63b"
 blocks: [VK-2e0k, VK-1ptl, VK-ldg1]
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-0pfo
@@ -196,6 +196,7 @@ status: delivered
 - 2026-09-20T14:49:30Z claimed by dev-VK-0pfo
 - 2026-09-20T14:50:22Z status: in_progress -> in_progress
 - 2026-09-20T14:50:22Z auto-follows: linked to predecessor VK-mfn6
+- 2026-09-20T14:50:46Z status: in_progress -> in_progress
 
 ## Links
 - Parent: [[VK-u40v]]
