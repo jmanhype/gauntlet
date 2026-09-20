@@ -9,7 +9,7 @@ parent: VK-u40v
 created_at: 2026-09-18T23:31:20Z
 created_by: speed
 updated_at: 2026-09-20T04:15:27Z
-content_hash: "sha256:ca51d5fc8dbb8aa8d60af8e6a36c92be7d6130949fb801cf936261b5b3181696"
+content_hash: "sha256:f42ba53596bd0a9bd1a5d346b4cb758d7929b1dc9788e9db3635de2cd99a0f8c"
 was_blocked_by: [VK-mfn6]
 assignee: dev-VK-7ubc
 follows: [VK-mfn6]
@@ -96,6 +96,18 @@ status: new
 Summary: frozen-split Kronos adaptation delivered and independently verified.
 
 Commit SHA: 05e06326e02d0e3fd9b19c5e9b21be672f941413
+
+
+## nd_contract
+status: accepted
+
+### evidence
+- PM closeout applied via pvg story accept on 2026-09-19.
+
+### proof
+- [x] Story closed after accepted label was applied.
+
+
 ## PM Decision
 ACCEPTED [2026-09-20]: Independently reviewed the three-file diff, reran targeted/full suites, py_compile, scoped pvg verify, whitespace/static/secret checks, and confirmed the 546-insertion budget and all six AC. The remaining verify-delivery EOF item is a note-ordering false negative after multiple note appends; the required implementation, CI, summary, commit, proof, and AC fields are present.
 
