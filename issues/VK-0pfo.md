@@ -9,7 +9,7 @@ parent: VK-u40v
 created_at: 2026-09-18T23:31:21Z
 created_by: speed
 updated_at: 2026-09-20T14:53:22Z
-content_hash: "sha256:13b60e0eb5c3bc9306cd859f2c9db705113819a95218ec54f8c85eaa9582e70e"
+content_hash: "sha256:97b9d8a7ec5d0f2a677aebe823bfb4c58f8e49fc034f28dba6b3657648e143c2"
 blocks: [VK-2e0k, VK-1ptl, VK-ldg1]
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-0pfo
@@ -108,6 +108,17 @@ Final delivery commit correction: 28ea5312d3fe797f55291856ffa61b5adaa936ea
 Commit SHA: 28ea5312d3fe797f55291856ffa61b5adaa936ea
 
 Final validation after the PM hardening changes: targeted 7/7 passed; full suite 66/66 passed; py_compile PASS; scoped pvg verify 3 files, 0 issues; diff 649 insertions.
+
+
+## nd_contract
+status: delivered
+
+### evidence
+- Transitioned via pvg story deliver on 2026-09-20.
+
+### proof
+- [ ] Developer evidence block must remain authoritative above this contract.
+
 
 ## nd_contract
 status: delivered
