@@ -1,5 +1,6 @@
 """Kronos lineage, inference, and adaptation contracts."""
 
+from .adaptation import ADAPTATION_SCHEMA, AdaptationManifest, AdaptationRun, run_adaptation
 from .inference import INFERENCE_SCHEMA, ContextObservation, FrozenContext, InferenceArtifact, ModelError, ModelProfile, run_inference
 from .registry import MODEL_SCHEMA, ModelRegistration, ModelRegistryEntry, register_model
 
@@ -11,4 +12,4 @@ MODEL_OUTPUT_BASIS = "MODELED"
 MODEL_REPLAY_READY = "READY"
 MODEL_REPLAY_BLOCKED = "BLOCKED"
 MODEL_CALIBRATION_STATUS = "PENDING"
-__all__ = ["ContextObservation", "FrozenContext", "InferenceArtifact", "ModelError", "ModelProfile", "ModelRegistration", "ModelRegistryEntry", "register_model", "run_inference"]
+__all__ = ["ADAPTATION_SCHEMA", "AdaptationManifest", "AdaptationRun", "ContextObservation", "FrozenContext", "InferenceArtifact", "ModelError", "ModelProfile", "ModelRegistration", "ModelRegistryEntry", "register_model", "run_adaptation", "run_inference"]
