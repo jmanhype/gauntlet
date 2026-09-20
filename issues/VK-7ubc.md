@@ -4,7 +4,7 @@ title: "Adapt Kronos with frozen temporal splits"
 status: in_progress
 priority: 2
 type: feature
-labels: [integration, phase-1]
+labels: [integration, phase-1, delivered]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:20Z
 created_by: speed
