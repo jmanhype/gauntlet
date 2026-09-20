@@ -8,8 +8,8 @@ labels: [integration, phase-1]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:21Z
 created_by: speed
-updated_at: 2026-09-20T14:49:30Z
-content_hash: "sha256:d952333eb04a58b5333350b88bac4de52c5cffa50030303ff8ccb735c55ff4c9"
+updated_at: 2026-09-20T14:50:22Z
+content_hash: "sha256:4aaa78a091936a376c58c3ab90d55b39f6c104b19562eea864f0ac2a81828ec6"
 blocks: [VK-2e0k, VK-1ptl, VK-ldg1]
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-0pfo
@@ -100,7 +100,66 @@ status: new
 
 
 ## Notes
+## Implementation Evidence
 
+Commands run:
+
+```bash
+cd /Users/speed/Documents/Codex/2026-09-18/yes-paivot-pvg-is-designed-for/work/gauntlet-vk0pfo-writable
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/src" /Users/Shared/HermesWorkspace/gauntlet/.venv/bin/python -m pytest -q tests/risk/test_policy_kernel.py
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/src" /Users/Shared/HermesWorkspace/gauntlet/.venv/bin/python -m pytest -q
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/src" /Users/Shared/HermesWorkspace/gauntlet/.venv/bin/python -m py_compile src/gauntlet/risk/__init__.py src/gauntlet/risk/import_qts.py src/gauntlet/risk/kernel.py tests/risk/test_policy_kernel.py
+pvg verify src/gauntlet/risk/import_qts.py src/gauntlet/risk/kernel.py src/gauntlet/risk/__init__.py --format=text
+git diff --check
+git diff --cached --check
+```
+
+### CI/Test Results
+
+```text
+tests/risk/test_policy_kernel.py: 7 passed, 0 failed, 0 skipped
+full suite: 66 passed, 0 failed, 0 skipped
+py_compile: PASS
+pvg verify: PASSED, 3 files scanned, 0 issues
+git diff checks: PASS
+story diff: 5 files, 649 insertions, within 650 ceiling
+```
+
+The full suite retains the repository’s intentional synthetic projection (`AGGREGATE: BLOCKED` with two disclosed rules) while pytest exits 0.
+
+### AC Verification
+
+| AC | Result | Evidence |
+|---|---|---|
+| 1. Canonical, immutable, lineage-complete policy | PASS | `qts.risk@v1` validates under `gauntlet.policy.v1`; every QTS leaf has unit, scope, semantic, and original-to-GAUNTLET mapping; exact source and owner authorization hashes are checked. |
+| 2. Requested/approved size, checks, warnings, version, venue | PASS | `RiskCheckResult` records requested/approved size, 15 checks, warnings, policy identity/hash, and venue applicability. |
+| 3. Boundary events | PASS | HOLD/QUARANTINE/STOP events append actor, timestamp, state, duration, reason, affected track, and chain hashes. |
+| 4. Sizing/stop/exposure changes create trial input | PASS | `trial_history_input` binds policy hash and enumerates sizing, stop, and exposure fields requiring a new trial. |
+| 5. MODELED domain separation | PASS | Risk output is MODELED and copies evidence state unchanged; risk arithmetic never reads it. |
+| 6. Risk boundary beats evidence PASS | PASS | Parameterized tests prove STOP, HOLD, and QUARANTINE with evidence PASS and approved size zero. |
+| 7. No order or real-money interface | PASS | No order API exists; AST test rejects order/real-money activation calls. |
+
+Summary: implemented and independently tested the canonical QTS policy import plus paper-portfolio risk kernel with requested/adjusted sizing, fifteen fail-closed checks, immutable boundary events, MODELED domain separation, and no order-placement surface.
+
+Commit SHA: `eda2e1e010edb9cdec7465af667c28e8d28f5851`
+
+## nd_contract
+status: delivered
+
+### evidence
+- Targeted suite: 7/7 passed.
+- Full suite: 66/66 passed.
+- Scoped verifier: 3 files, 0 issues.
+- Story commit: `eda2e1e010edb9cdec7465af667c28e8d28f5851`.
+
+### proof
+- [x] AC #1: Canonical QTS policy lineage and authorization verified.
+- [x] AC #2: Complete sizing/check output verified.
+- [x] AC #3: Boundary-event append verified.
+- [x] AC #4: Trial-history input verified.
+- [x] AC #5: MODELED domain separation verified.
+- [x] AC #6: Risk boundary precedence over evidence PASS verified.
+- [x] AC #7: No order or real-money interface verified.
 
 ## History
 - 2026-09-18T23:31:21Z dep_added: blocked_by VK-jkkn
