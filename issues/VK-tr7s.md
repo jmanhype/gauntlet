@@ -9,7 +9,7 @@ created_at: 2026-09-20T17:12:45Z
 created_by: speed
 updated_at: 2026-09-20T17:12:45Z
 content_hash: "sha256:caeb7b4dabeadad0cb41d0c6f3ede8203fceb766aa3c2da3ce4565bf92c33ac8"
-labels: [e2e, capstone]
+labels: [e2e, capstone, walking-skeleton]
 ---
 
 ## Description
