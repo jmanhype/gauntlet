@@ -1,15 +1,15 @@
 ---
 id: VK-pg9j
 title: "Capture Bitquery Solana snapshots"
-status: in_progress
+status: open
 priority: 2
 type: feature
 labels: [external-integration, integration, phase-1, walking-skeleton]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:17Z
 created_by: speed
-updated_at: 2026-09-19T17:38:23Z
-content_hash: "sha256:4439af082ae3a1ddcf1fb1378eeb7a391694fadebc181388cc87a2c805912808"
+updated_at: 2026-09-20T02:38:57Z
+content_hash: "sha256:fdb4fb91204e9e1efe6383f9e20b57066aaeee526d687d1fa4bcaa3409bb1b1a"
 blocks: [VK-pol1, VK-bbmn, VK-jvku, VK-si5s, VK-ldg1, VK-4qfy]
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-pg9j
@@ -162,6 +162,7 @@ status: in_progress
 - 2026-09-19T17:07:24Z auto-follows: linked to predecessor VK-kmbs
 - 2026-09-19T17:07:24Z auto-follows: linked to predecessor VK-jkkn
 - 2026-09-19T17:07:24Z claimed by dev-VK-pg9j
+- 2026-09-20T02:38:57Z status: in_progress -> open
 
 ## Links
 - Parent: [[VK-u40v]]
