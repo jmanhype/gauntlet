@@ -9,7 +9,7 @@ parent: VK-u40v
 created_at: 2026-09-18T23:31:20Z
 created_by: speed
 updated_at: 2026-09-20T04:09:17Z
-content_hash: "sha256:ff5f1066a327996d9b62970066f981e301b725add8fbd96c4b2d2b6405ebc31a"
+content_hash: "sha256:e063a8e9c0ba917792c7094b3db1b51c6ed9d0b96a81fffda9865f637b3b5d62"
 blocks: [VK-ldg1]
 was_blocked_by: [VK-mfn6]
 assignee: dev-VK-7ubc
@@ -92,6 +92,18 @@ status: new
 
 
 ## Notes
+
+
+## nd_contract
+status: delivered
+
+### evidence
+- Transitioned via pvg story deliver on 2026-09-19.
+
+### proof
+- [ ] Developer evidence block must remain authoritative above this contract.
+
+
 ## Implementation Evidence
 
 Commands run in the assigned story worktree:
