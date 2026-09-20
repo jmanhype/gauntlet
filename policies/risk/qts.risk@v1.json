@@ -1,0 +1,143 @@
+{
+  "schema_version": "1",
+  "manifest_type": "policy",
+  "policy_type": "risk-policy",
+  "policy_id": "qts.risk",
+  "version": 1,
+  "creator": "owner",
+  "created_at_utc": "2026-09-18T23:00:00Z",
+  "changelog": ["Import the owner-confirmed QTS battle-tested portfolio limits without changing their numeric semantics.", "Label all portfolio inputs and outputs MODELED and prohibit real-money activation in Phase 1."],
+  "status": "active",
+  "rules": {
+    "source": {
+      "max_position_size": 62.5,
+      "max_daily_loss_usd": 100,
+      "max_drawdown_percent": 5.0,
+      "max_consecutive_losses": 3,
+      "per_trade_risk_percent": 2.0,
+      "max_leverage": 3.0,
+      "symbol_whitelist": ["BTC/USDT", "ETH/USDT"],
+      "correlation_settings": {
+        "max_correlation": 0.7,
+        "correlation_window_days": 30,
+        "min_correlation_observations": 20
+      },
+      "position_sizing": {
+        "kelly_fraction_safety": 0.25,
+        "volatility_adjustment": true,
+        "target_volatility": 0.15,
+        "concentration_limit_percent": 25.0,
+        "atr_multiplier": 2.0
+      },
+      "circuit_breakers": {
+        "daily_loss_usd": -100,
+        "drawdown_percent": 10.0,
+        "latency_ms": 1000,
+        "error_rate_percent": 5.0,
+        "consecutive_errors": 3,
+        "rapid_loss_velocity_factor": 0.5
+      },
+      "trading_hours": {
+        "restricted_hours_utc": [3, 4, 5, 6],
+        "low_liquidity_multiplier": 0.5
+      },
+      "emergency_procedures": {
+        "auto_liquidate_on_critical": false,
+        "position_reduction_factor": 0.5,
+        "recovery_wait_minutes": 15
+      },
+      "performance_targets": {
+        "min_sharpe_ratio": 1.0,
+        "max_acceptable_drawdown": 0.15,
+        "target_win_rate": 0.55,
+        "min_profit_factor": 1.2
+      }
+    },
+    "units": {
+      "max_position_size": "USD notional", "max_daily_loss_usd": "USD loss", "max_drawdown_percent": "percent",
+      "max_consecutive_losses": "count", "per_trade_risk_percent": "percent of equity", "max_leverage": "ratio",
+      "symbol_whitelist": "symbol list", "correlation_settings.max_correlation": "Pearson correlation", "correlation_settings.correlation_window_days": "days",
+      "correlation_settings.min_correlation_observations": "count", "position_sizing.kelly_fraction_safety": "fraction", "position_sizing.volatility_adjustment": "boolean",
+      "position_sizing.target_volatility": "annualized fraction", "position_sizing.concentration_limit_percent": "percent of portfolio", "position_sizing.atr_multiplier": "multiple of ATR",
+      "circuit_breakers.daily_loss_usd": "USD loss", "circuit_breakers.drawdown_percent": "percent", "circuit_breakers.latency_ms": "milliseconds",
+      "circuit_breakers.error_rate_percent": "percent", "circuit_breakers.consecutive_errors": "count", "circuit_breakers.rapid_loss_velocity_factor": "ratio",
+      "trading_hours.restricted_hours_utc": "UTC hours", "trading_hours.low_liquidity_multiplier": "multiplier", "emergency_procedures.auto_liquidate_on_critical": "boolean",
+      "emergency_procedures.position_reduction_factor": "fraction", "emergency_procedures.recovery_wait_minutes": "minutes", "performance_targets.min_sharpe_ratio": "ratio",
+      "performance_targets.max_acceptable_drawdown": "fraction", "performance_targets.target_win_rate": "fraction", "performance_targets.min_profit_factor": "ratio"
+    },
+    "scopes": {
+      "max_position_size": "position", "max_daily_loss_usd": "portfolio-day", "max_drawdown_percent": "portfolio",
+      "max_consecutive_losses": "portfolio", "per_trade_risk_percent": "position", "max_leverage": "portfolio",
+      "symbol_whitelist": "venue", "correlation_settings.max_correlation": "portfolio-correlation", "correlation_settings.correlation_window_days": "portfolio-correlation",
+      "correlation_settings.min_correlation_observations": "portfolio-correlation", "position_sizing.kelly_fraction_safety": "position-sizing", "position_sizing.volatility_adjustment": "position-sizing",
+      "position_sizing.target_volatility": "position-sizing", "position_sizing.concentration_limit_percent": "position-sizing", "position_sizing.atr_multiplier": "position-sizing",
+      "circuit_breakers.daily_loss_usd": "operating-boundary", "circuit_breakers.drawdown_percent": "operating-boundary", "circuit_breakers.latency_ms": "operating-boundary",
+      "circuit_breakers.error_rate_percent": "operating-boundary", "circuit_breakers.consecutive_errors": "operating-boundary", "circuit_breakers.rapid_loss_velocity_factor": "operating-boundary",
+      "trading_hours.restricted_hours_utc": "timing", "trading_hours.low_liquidity_multiplier": "timing", "emergency_procedures.auto_liquidate_on_critical": "recovery",
+      "emergency_procedures.position_reduction_factor": "recovery", "emergency_procedures.recovery_wait_minutes": "recovery", "performance_targets.min_sharpe_ratio": "evaluation-only",
+      "performance_targets.max_acceptable_drawdown": "evaluation-only", "performance_targets.target_win_rate": "evaluation-only", "performance_targets.min_profit_factor": "evaluation-only"
+    },
+    "semantics": {
+      "max_position_size": "Hard paper-notional cap before liquidity adjustment.", "max_daily_loss_usd": "Stop paper research after this realized daily loss.",
+      "max_drawdown_percent": "Hold or quarantine paper research above this drawdown.", "max_consecutive_losses": "Quarantine candidate family after this loss streak.",
+      "per_trade_risk_percent": "Maximum modeled loss from one paper request.", "max_leverage": "Maximum gross paper exposure divided by equity.",
+      "symbol_whitelist": "Only these paper symbols are accepted without adaptation.", "correlation_settings.max_correlation": "Reject a highly correlated new paper position.",
+      "correlation_settings.correlation_window_days": "Lookback used to estimate correlation.", "correlation_settings.min_correlation_observations": "Minimum observations before correlation is trusted.",
+      "position_sizing.kelly_fraction_safety": "Fraction applied to modeled edge for sizing.", "position_sizing.volatility_adjustment": "Whether volatility scaling is enabled.",
+      "position_sizing.target_volatility": "Target for volatility scaling.", "position_sizing.concentration_limit_percent": "Maximum share in one paper symbol.",
+      "position_sizing.atr_multiplier": "Stop-distance multiple retained as sizing lineage.", "circuit_breakers.daily_loss_usd": "Hard breaker for daily loss.",
+      "circuit_breakers.drawdown_percent": "Hard breaker for drawdown.", "circuit_breakers.latency_ms": "Hold boundary for stale operation.",
+      "circuit_breakers.error_rate_percent": "Hold boundary for error rate.", "circuit_breakers.consecutive_errors": "Stop boundary for repeated errors.",
+      "circuit_breakers.rapid_loss_velocity_factor": "Quarantine boundary for rapid loss velocity.", "trading_hours.restricted_hours_utc": "Hours requiring reduced paper size.",
+      "trading_hours.low_liquidity_multiplier": "Multiplier applied in restricted hours.", "emergency_procedures.auto_liquidate_on_critical": "Historical QTS value; GAUNTLET never liquidates or executes.",
+      "emergency_procedures.position_reduction_factor": "Reduction retained for policy lineage only.", "emergency_procedures.recovery_wait_minutes": "Modeled recovery duration recorded in boundary events.",
+      "performance_targets.min_sharpe_ratio": "Evaluation target, never a risk override.", "performance_targets.max_acceptable_drawdown": "Evaluation target, never a risk override.",
+      "performance_targets.target_win_rate": "Evaluation target, never a risk override.", "performance_targets.min_profit_factor": "Evaluation target, never a risk override."
+    },
+    "venue_applicability": {
+      "solana_dex": "ACTIVE after symbol and venue adaptation",
+      "hyperliquid": "REQUIRES_NEW_POLICY_VERSION",
+      "external": "REQUIRES_NEW_POLICY_VERSION",
+      "cross_venue_transfer": "REQUIRES_NEW_POLICY_VERSION"
+    },
+    "domain_separation": {
+      "risk_changes_disposition_only": true,
+      "evidence_pass_cannot_authorize_exposure": true,
+      "evidence_fail_cannot_be_cured": true,
+      "real_money_authorized": false
+    }
+  },
+  "lineage": {
+    "source": {
+      "repository": "solana-dex-forecasting/multi-agent-system",
+      "file": "config/risk.json",
+      "content_hash": "sha256:b891175f07b0d38cba21f2c75ab159f5daafad2d9da991dcddc52f5df4cad6e6"
+    },
+    "imported_at_utc": "2026-09-18T23:00:00Z",
+    "normalization": "Canonical JSON; original numeric values and nested fields are retained verbatim and mapped by dotted path.",
+    "authorization": {
+      "kind": "human",
+      "identity": "owner",
+      "authorization_id": "qts-risk-owner-2026-09-18",
+      "authorization_hash": "sha256:9a1f6e69228b536b2c732f99d5de52a6d82bed1c1a18dd38db649ae2e3d81303",
+      "authorized_at_utc": "2026-09-18T23:00:00Z"
+    },
+    "original_to_gauntlet": {
+      "max_position_size": "rules.source.max_position_size", "max_daily_loss_usd": "rules.source.max_daily_loss_usd", "max_drawdown_percent": "rules.source.max_drawdown_percent",
+      "max_consecutive_losses": "rules.source.max_consecutive_losses", "per_trade_risk_percent": "rules.source.per_trade_risk_percent", "max_leverage": "rules.source.max_leverage",
+      "symbol_whitelist": "rules.source.symbol_whitelist", "correlation_settings.max_correlation": "rules.source.correlation_settings.max_correlation",
+      "correlation_settings.correlation_window_days": "rules.source.correlation_settings.correlation_window_days", "correlation_settings.min_correlation_observations": "rules.source.correlation_settings.min_correlation_observations",
+      "position_sizing.kelly_fraction_safety": "rules.source.position_sizing.kelly_fraction_safety", "position_sizing.volatility_adjustment": "rules.source.position_sizing.volatility_adjustment",
+      "position_sizing.target_volatility": "rules.source.position_sizing.target_volatility", "position_sizing.concentration_limit_percent": "rules.source.position_sizing.concentration_limit_percent",
+      "position_sizing.atr_multiplier": "rules.source.position_sizing.atr_multiplier", "circuit_breakers.daily_loss_usd": "rules.source.circuit_breakers.daily_loss_usd",
+      "circuit_breakers.drawdown_percent": "rules.source.circuit_breakers.drawdown_percent", "circuit_breakers.latency_ms": "rules.source.circuit_breakers.latency_ms",
+      "circuit_breakers.error_rate_percent": "rules.source.circuit_breakers.error_rate_percent", "circuit_breakers.consecutive_errors": "rules.source.circuit_breakers.consecutive_errors",
+      "circuit_breakers.rapid_loss_velocity_factor": "rules.source.circuit_breakers.rapid_loss_velocity_factor", "trading_hours.restricted_hours_utc": "rules.source.trading_hours.restricted_hours_utc",
+      "trading_hours.low_liquidity_multiplier": "rules.source.trading_hours.low_liquidity_multiplier", "emergency_procedures.auto_liquidate_on_critical": "rules.source.emergency_procedures.auto_liquidate_on_critical",
+      "emergency_procedures.position_reduction_factor": "rules.source.emergency_procedures.position_reduction_factor", "emergency_procedures.recovery_wait_minutes": "rules.source.emergency_procedures.recovery_wait_minutes",
+      "performance_targets.min_sharpe_ratio": "rules.source.performance_targets.min_sharpe_ratio", "performance_targets.max_acceptable_drawdown": "rules.source.performance_targets.max_acceptable_drawdown",
+      "performance_targets.target_win_rate": "rules.source.performance_targets.target_win_rate", "performance_targets.min_profit_factor": "rules.source.performance_targets.min_profit_factor"
+    }
+  },
+  "content_hash": "sha256:49a3e8c69933fa064e798e7901bd4ab4728dc363bdc0da67ed8a8cd1c05d457d"
+}
