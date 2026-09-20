@@ -9,11 +9,11 @@ parent: VK-u40v
 created_at: 2026-09-18T23:31:21Z
 created_by: speed
 updated_at: 2026-09-20T14:50:22Z
-content_hash: "sha256:4aaa78a091936a376c58c3ab90d55b39f6c104b19562eea864f0ac2a81828ec6"
+content_hash: "sha256:a5d36471527b142c8a80c8527e0aed58d2996a1f44126ec6521e2e5f4f85bc3a"
 blocks: [VK-2e0k, VK-1ptl, VK-ldg1]
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-0pfo
-follows: [VK-wa2q, VK-kmbs, VK-jkkn, VK-7ubc]
+follows: [VK-wa2q, VK-kmbs, VK-jkkn, VK-7ubc, VK-mfn6]
 ---
 
 ## Description
@@ -180,12 +180,14 @@ status: delivered
 - 2026-09-20T14:49:30Z status: open -> in_progress
 - 2026-09-20T14:49:30Z auto-follows: linked to predecessor VK-7ubc
 - 2026-09-20T14:49:30Z claimed by dev-VK-0pfo
+- 2026-09-20T14:50:22Z status: in_progress -> in_progress
+- 2026-09-20T14:50:22Z auto-follows: linked to predecessor VK-mfn6
 
 ## Links
 - Parent: [[VK-u40v]]
 - Blocks: [[VK-2e0k]], [[VK-1ptl]], [[VK-ldg1]]
 - Was blocked by: [[VK-wa2q]], [[VK-kmbs]], [[VK-jkkn]]
-- Follows: [[VK-wa2q]], [[VK-kmbs]], [[VK-jkkn]], [[VK-7ubc]]
+- Follows: [[VK-wa2q]], [[VK-kmbs]], [[VK-jkkn]], [[VK-7ubc]], [[VK-mfn6]]
 
 ## Comments
 
