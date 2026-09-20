@@ -9,7 +9,7 @@ created_at: 2026-09-20T17:12:45Z
 created_by: speed
 updated_at: 2026-09-20T19:06:11Z
 content_hash: "sha256:7edd32658850746dc70fcb85897cb73b644c06af15e2bd16926737239ff4414d"
-labels: [e2e, capstone, walking-skeleton, delivered]
+labels: [e2e, capstone, walking-skeleton, delivered, accepted]
 assignee: dev-VK-tr7s
 follows: [VK-aej2]
 closed_at: 2026-09-20T19:06:11Z
