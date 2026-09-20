@@ -9,7 +9,7 @@ parent: VK-u40v
 created_at: 2026-09-18T23:31:17Z
 created_by: speed
 updated_at: 2026-09-20T02:38:57Z
-content_hash: "sha256:fdb4fb91204e9e1efe6383f9e20b57066aaeee526d687d1fa4bcaa3409bb1b1a"
+content_hash: "sha256:ce2c7e37373804c510d369a74f45775ca210ee2fbfda7c479e10321cbbbab384"
 blocks: [VK-pol1, VK-bbmn, VK-jvku, VK-si5s, VK-ldg1, VK-4qfy]
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-pg9j
@@ -171,3 +171,6 @@ status: in_progress
 - Follows: [[VK-wa2q]], [[VK-kmbs]], [[VK-jkkn]]
 
 ## Comments
+
+### 2026-09-20T02:38:57Z speed
+loop: reset orphaned in_progress to open (no developer worktree found; prior session presumed dead)
