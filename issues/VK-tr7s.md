@@ -7,8 +7,8 @@ type: task
 parent: VK-1rbc
 created_at: 2026-09-20T17:12:45Z
 created_by: speed
-updated_at: 2026-09-20T17:13:08Z
-content_hash: "sha256:f404b101fa9f302a8268b5978b0ac3ff03ca4d8f4f15d538f34df5676ec85d0e"
+updated_at: 2026-09-20T19:03:42Z
+content_hash: "sha256:92ed068a2e70e198cc391492dd18395285e7331a4d13cc61c939be66a5853c67"
 labels: [e2e, capstone, walking-skeleton]
 assignee: dev-VK-tr7s
 follows: [VK-aej2]
@@ -92,7 +92,68 @@ status: new
 
 
 ## Notes
+## Implementation Evidence
 
+Commands run:
+
+- `uv run --frozen --group dev pytest -q tests/policy/test_policy_benchmark.py` — 24 passed.
+- `uv run --frozen --group dev pytest -q` — 74 passed; printed BLOCKED lines are the existing intentional synthetic-policy fixture output.
+- `pvg verify src/gauntlet/policy/benchmark.py --format=text` — PASSED, 1 file, 0 issues.
+- `git diff --check` and `git diff --cached --check` — pass.
+
+### CI/Test Results
+
+- Targeted policy benchmark: 24/24 passed.
+- Full suite: 74/74 passed.
+- Scoped verifier: 0 issues.
+- Whitespace checks: pass.
+- Risk containment: four deliberate arm-level vetoes evaluated; parent GAUNTLET_DATA_ROOT file count 0.
+- Canonical evidence: stored bytes exactly equal regenerated canonical bytes plus newline.
+
+### AC Verification
+
+| AC | Result | Evidence |
+|---|---|---|
+| 1. Four arms, exact same rows/hash | PASS | all arms share frozen snapshot hash `sha256:7c625211fd3adb6543c1d892910d9529393990e15481cf7202ff6037c03e76d0`. |
+| 2. Identical shared inputs | PASS | common feature fields, configuration, combined cost hash, and tracked risk hash. |
+| 3. Required metrics | PASS | coverage, abstention, gross/net return, slippage, decision and total cost, hit rate, Sharpe, Sortino, drawdown, incorrect accepts, vetoes, fallback. |
+| 4. Empty/zero-variance nulls | PASS | explicit null risk-adjusted values; no infinities. |
+| 5. UNGATED coverage semantics | PASS | 100% model decisions; deterministic eligibility/risk still change accepted coverage. |
+| 6. GATED abstention/fallback | PASS | threshold behavior and one fallback covered. |
+| 7. Hard risk veto | PASS | real tracked RiskPolicyVersion/RiskRequest/PaperPortfolio through evaluate_risk; non-CONTINUE => HOLD/size 0 and raw evidence preserved. |
+| 8. Input/policy/cost/risk/basis hashes | PASS | top-level and per-arm identities include MODELED basis and required hashes. |
+| 9. Deterministic canonical report | PASS | rerun byte/hash tests and checked-in artifact equality. |
+| 10. Material mutations change identity | PASS | arm/cost/slippage/threshold/fallback/config/row mutations covered. |
+| 11. No order/real-money interface | PASS | AST regression and implementation contain no order-placement API. |
+
+Summary: added a deterministic four-arm calibrated-policy benchmark over frozen MODELED evidence, integrated the tracked paper-risk kernel without uncontrolled ledger writes, and emitted canonical auditable evidence.
+
+Commit SHA: 7da5aa47d9436a3a47a0143af629afcf30c97c59
+
+Dependency base: dispatcher cherry-picked accepted VK-0pfo commit 28ea5312d3fe797f55291856ffa61b5adaa936ea as 3769f6c before story implementation because VK-tr7s declares the risk kernel as a consumed dependency.
+
+Story-specific changed-line budget: 1,092 intended lines (814 source + 276 tests + 1 fixture + 1 evidence), under the 1,100-line budget.
+
+## nd_contract
+status: delivered
+
+### evidence
+- Required targeted/full/verifier/whitespace outputs above.
+- Commit `7da5aa47d9436a3a47a0143af629afcf30c97c59`.
+- Dependency base `3769f6c`.
+
+### proof
+- [x] AC #1: Four required arms consume the same frozen list and snapshot hash.
+- [x] AC #2: Features, costs, slippage, risk, and fallback are shared identically.
+- [x] AC #3: All required policy-level metrics are reported.
+- [x] AC #4: Empty/zero-variance risk-adjusted metrics use explicit nulls.
+- [x] AC #5: Ungated model coverage and deterministic accepted coverage are separated.
+- [x] AC #6: Gated Jev abstains/falls back below threshold.
+- [x] AC #7: Real risk-kernel boundary forces zero exposure without changing raw evidence.
+- [x] AC #8: Snapshot/policy/cost/risk hashes and MODELED basis are recorded.
+- [x] AC #9: Same inputs/seed produce byte-identical canonical JSON.
+- [x] AC #10: Material mutations change report identity.
+- [x] AC #11: No order-placement or real-money activation interface is added.
 
 ## History
 - 2026-09-20T17:13:08Z status: open -> in_progress
