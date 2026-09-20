@@ -8,8 +8,8 @@ labels: [integration, phase-1]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:20Z
 created_by: speed
-updated_at: 2026-09-20T03:45:51Z
-content_hash: "sha256:1e023e3e4d1491d754a2ca470819a8e82c46ec27d744c291070b95cf41cb1910"
+updated_at: 2026-09-20T04:09:17Z
+content_hash: "sha256:1c0854b3bf89dc09df04c809d18aedd7512b0eb3e5aa795af2763a7927702b8f"
 blocks: [VK-ldg1]
 was_blocked_by: [VK-mfn6]
 assignee: dev-VK-7ubc
@@ -92,7 +92,60 @@ status: new
 
 
 ## Notes
+## Implementation Evidence
 
+Commands run in the assigned story worktree:
+
+```bash
+uv run --frozen --group dev pytest -q tests/model/test_adaptation.py
+uv run --frozen --group dev pytest -q
+python3 -m py_compile src/gauntlet/model/adaptation.py src/gauntlet/model/__init__.py tests/model/test_adaptation.py
+pvg verify src/gauntlet/model/adaptation.py src/gauntlet/model/__init__.py --format=text
+git diff --check
+```
+
+Results:
+
+- Targeted adaptation suite: 7 passed, 0 failed, 0 skipped.
+- Full suite: 66 passed, 0 failed, 0 skipped. The output intentionally prints the existing synthetic gate projection `AGGREGATE: BLOCKED` with the two disclosed synthetic rules; pytest exits 0.
+- Python compile: PASS.
+- Scoped pvg verify: PASSED, 2 files scanned, 0 issues.
+- git diff --check: PASS.
+- Story commit: `05e06326e02d0e3fd9b19c5e9b21be672f941413`.
+
+Source SHA-256:
+
+```text
+3b17f3fbb2fa68d11743f408bc80643fbe7a14c3fd1e64457d971a477a82f05e  src/gauntlet/model/adaptation.py
+587c092de3e4e685ae6df86a26b00a95a84afa869c1de0ff9e6b2f2750b17b0e  tests/model/test_adaptation.py
+adfd7f325a8e92924b3dc80b11dda36813f556d468ead15480601d6c80f1867a  src/gauntlet/model/__init__.py
+```
+
+Deterministic integration evidence:
+
+```text
+model_fingerprint=sha256:ba152251750337b9ef2dabbd965e9a37bcd8d6f1cf7f2d2e38889bbbbf91c8e7
+source_descriptor_hash=sha256:718606e0ee65325354dc9ecfb77b1042ed4b9ce42ec30bf89f645c98e3ad58dc
+trial_id=adaptation-sha256:f0495a4710d87d70eea6e909d4972432ead0599ec75379070764bf7ca1363836
+run_hash=sha256:7301c11e0d8df6b65e78f350a6d61319bbe5f683abbf98562bc5faead37fdfa8
+artifact_hash=sha256:cd224ce727948cd19640368aefb5be5e079c676c485e22113ef2a0efa308ba8d
+checkpoint_hash=sha256:85bbd8dfe4849e23e23b35086f2375a9d07d1daea37554c36dd819ad316c1312
+event_head_hash=sha256:ebb2d2d85d638f4016e0f0e0125c2f80a6fb719d99e6721dd9bc8dca69c5a9eb
+chains_valid=True
+```
+
+### AC Verification
+
+| AC | Result | Evidence |
+|---|---|---|
+| 1. Prior trial registration and exact hashes | PASS | Trial is appended before training; report/trial bind manifest, population, split, model, feature, source, policy, and config hashes. |
+| 2. Boundary-crossing target rejected | PASS | Parameterized integration test expects `FOLD_BOUNDARY_LEAK` before trial/artifact creation. |
+| 3. No future normalization/checkpoint selection | PASS | Normalization uses train-complete rows only; selection is validation-only with test/prospective targets unread. |
+| 4. Fold/checkpoint audit logs | PASS | Every log records actor, UTC timestamp, hashed metric inputs, and reason. |
+| 5. Frozen population mutation | PASS | Registered v2 source creates a child trial; original descriptor/content/run bytes stay unchanged. |
+| 6. Replay resolution | PASS | Replay records code, dependency lock, environment, sources, checkpoint, seeds, sampler, and normalization identity; gaps fail closed. |
+
+LEARNINGS: Reusing the registered model/descriptor/ledger primitives kept adaptation replay immutable without introducing a database or external runtime. The strict 550-LOC budget was met at 546 insertions, but future sibling stories should split public dataclasses from execution logic if they approach the ceiling.
 
 ## History
 - 2026-09-18T23:31:20Z dep_added: blocked_by VK-mfn6
