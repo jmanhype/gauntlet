@@ -1,19 +1,20 @@
 ---
 id: VK-0pfo
 title: "Separate portfolio risk from evidence gates"
-status: in_progress
+status: closed
 priority: 2
 type: feature
 labels: [integration, phase-1, delivered]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:21Z
 created_by: speed
-updated_at: 2026-09-20T14:53:22Z
-content_hash: "sha256:97b9d8a7ec5d0f2a677aebe823bfb4c58f8e49fc034f28dba6b3657648e143c2"
-blocks: [VK-2e0k, VK-1ptl, VK-ldg1]
+updated_at: 2026-09-20T14:53:40Z
+content_hash: "sha256:8d42f2e617e81d2ffa28076feaa5db0a420ea77cca5be390aa862d7cd3c60c22"
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-0pfo
 follows: [VK-wa2q, VK-kmbs, VK-jkkn, VK-7ubc, VK-mfn6]
+closed_at: 2026-09-20T14:53:40Z
+close_reason: "Accepted: independently reviewed the five-file 649-line diff; verified complete QTS lineage mapping and owner authorization, fifteen paper-risk checks, requested/adjusted sizing, immutable HOLD/QUARANTINE/STOP events, MODELED evidence-domain separation, trial-history input, and absence of order/real-money interfaces. Reran targeted suite 7/7, full suite 66/66, py_compile, scoped pvg verify 3/0, static/secret scans, and whitespace checks."
 ---
 
 ## Description
@@ -224,10 +225,13 @@ status: delivered
 - 2026-09-20T14:50:22Z auto-follows: linked to predecessor VK-mfn6
 - 2026-09-20T14:50:46Z status: in_progress -> in_progress
 - 2026-09-20T14:53:22Z status: in_progress -> in_progress
+- 2026-09-20T14:53:40Z status: in_progress -> closed
+- 2026-09-20T14:53:40Z dep_removed: no_longer_blocks VK-2e0k
+- 2026-09-20T14:53:40Z dep_removed: no_longer_blocks VK-1ptl
+- 2026-09-20T14:53:41Z dep_removed: no_longer_blocks VK-ldg1
 
 ## Links
 - Parent: [[VK-u40v]]
-- Blocks: [[VK-2e0k]], [[VK-1ptl]], [[VK-ldg1]]
 - Was blocked by: [[VK-wa2q]], [[VK-kmbs]], [[VK-jkkn]]
 - Follows: [[VK-wa2q]], [[VK-kmbs]], [[VK-jkkn]], [[VK-7ubc]], [[VK-mfn6]]
 
