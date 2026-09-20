@@ -1,17 +1,19 @@
 ---
 id: VK-7ubc
 title: "Adapt Kronos with frozen temporal splits"
-status: open
+status: in_progress
 priority: 2
 type: feature
 labels: [integration, phase-1]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:20Z
 created_by: speed
-updated_at: 2026-09-18T23:31:20Z
-content_hash: "sha256:a994d2156f7bd20e7852df7e68b35342b5256ea9a1488665bd73b57f3a6fff7f"
+updated_at: 2026-09-20T03:45:51Z
+content_hash: "sha256:1e023e3e4d1491d754a2ca470819a8e82c46ec27d744c291070b95cf41cb1910"
 blocks: [VK-ldg1]
 was_blocked_by: [VK-mfn6]
+assignee: dev-VK-7ubc
+follows: [VK-mfn6]
 ---
 
 ## Description
@@ -96,10 +98,14 @@ status: new
 - 2026-09-18T23:31:20Z dep_added: blocked_by VK-mfn6
 - 2026-09-18T23:31:40Z dep_added: blocks VK-ldg1
 - 2026-09-19T17:06:08Z dep_removed: was_blocked_by VK-mfn6
+- 2026-09-20T03:45:51Z status: open -> in_progress
+- 2026-09-20T03:45:51Z auto-follows: linked to predecessor VK-mfn6
+- 2026-09-20T03:45:51Z claimed by dev-VK-7ubc
 
 ## Links
 - Parent: [[VK-u40v]]
 - Blocks: [[VK-ldg1]]
 - Was blocked by: [[VK-mfn6]]
+- Follows: [[VK-mfn6]]
 
 ## Comments
