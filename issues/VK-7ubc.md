@@ -8,8 +8,8 @@ labels: [integration, phase-1, accepted]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:20Z
 created_by: speed
-updated_at: 2026-09-20T04:15:27Z
-content_hash: "sha256:f42ba53596bd0a9bd1a5d346b4cb758d7929b1dc9788e9db3635de2cd99a0f8c"
+updated_at: 2026-09-20T04:16:35Z
+content_hash: "sha256:82724269b5171a116c3ab04b7c32d1f7f57ac9e21d54a3df3d1b713386b31162"
 was_blocked_by: [VK-mfn6]
 assignee: dev-VK-7ubc
 follows: [VK-mfn6]
@@ -280,3 +280,10 @@ LEARNINGS: Reusing the registered model/descriptor/ledger primitives kept adapta
 - Follows: [[VK-mfn6]]
 
 ## Comments
+
+### 2026-09-20T04:16:35Z speed
+Integration record: accepted implementation commit 05e06326e02d0e3fd9b19c5e9b21be672f941413 was merged into epic/VK-u40v at e531567; epic full suite passed 66/66.
+
+Merge incident: `pvg story merge VK-7ubc` unexpectedly targeted main and pushed incomplete-epic merge 131910f. It was immediately reverted by linear commit 4a57c47; main is not claimed as a release and the accepted work remains contained in epic/VK-u40v. The push bypass message and required-check gap are disclosed rather than hidden.
+
+The note fragment `ACCEPTD_MARKER` is an accidental non-authoritative typo. The authoritative PM accepted decision is the preceding accepted contract. The earlier verify-delivery EOF failure was a note-ordering false negative; all substantive delivery fields and proof were independently verified.
