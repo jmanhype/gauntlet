@@ -8,8 +8,8 @@ labels: [integration, phase-1, delivered]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:20Z
 created_by: speed
-updated_at: 2026-09-20T04:12:41Z
-content_hash: "sha256:0775c5d656f7d18f7de1650bb226c45d7c1529e30082632a57ce7bae2161d369"
+updated_at: 2026-09-20T04:15:13Z
+content_hash: "sha256:aa09bb228f256cee8fa7dea3b91c6fb06802fe0c2cd2458d3cb7237363f74d90"
 blocks: [VK-ldg1]
 was_blocked_by: [VK-mfn6]
 assignee: dev-VK-7ubc
@@ -95,6 +95,9 @@ status: new
 Summary: frozen-split Kronos adaptation delivered and independently verified.
 
 Commit SHA: 05e06326e02d0e3fd9b19c5e9b21be672f941413
+## PM Decision
+
+ACCEPTD_MARKER
 
 ## nd_contract
 status: delivered
