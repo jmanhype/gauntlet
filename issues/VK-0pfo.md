@@ -8,8 +8,8 @@ labels: [integration, phase-1, delivered]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:21Z
 created_by: speed
-updated_at: 2026-09-20T14:50:46Z
-content_hash: "sha256:e21c521a2a36b3753834497b53fa4eb4c9e5658d5a0246a6424b1fc9bd959daa"
+updated_at: 2026-09-20T14:53:22Z
+content_hash: "sha256:d7b36234e6d7657b802c25b0dcf229d1f1385f0cac3bdeb90af14bb02a32ffa4"
 blocks: [VK-2e0k, VK-1ptl, VK-ldg1]
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-0pfo
@@ -103,7 +103,11 @@ status: new
 Delivery commit addendum: eda2e1e357e8dcadaf89039d1e076c9bf0267c28
 
 Commit SHA: eda2e1e357e8dcadaf89039d1e076c9bf0267c28
+Final delivery commit correction: 28ea5312d3fe797f55291856ffa61b5adaa936ea
 
+Commit SHA: 28ea5312d3fe797f55291856ffa61b5adaa936ea
+
+Final validation after the PM hardening changes: targeted 7/7 passed; full suite 66/66 passed; py_compile PASS; scoped pvg verify 3 files, 0 issues; diff 649 insertions.
 
 ## nd_contract
 status: delivered
