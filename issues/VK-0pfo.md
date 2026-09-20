@@ -8,8 +8,8 @@ labels: [integration, phase-1, delivered]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:21Z
 created_by: speed
-updated_at: 2026-09-20T14:50:22Z
-content_hash: "sha256:950cc20c0679794b20fb38bcb063986bae040c0c111f935f84127e5733a81153"
+updated_at: 2026-09-20T14:50:45Z
+content_hash: "sha256:9da97583a974ede6261fb6595aba585095498116b8a5aeb9bee997830d0449a0"
 blocks: [VK-2e0k, VK-1ptl, VK-ldg1]
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-0pfo
@@ -100,7 +100,9 @@ status: new
 
 
 ## Notes
+Delivery commit addendum: eda2e1e357e8dcadaf89039d1e076c9bf0267c28
 
+Commit SHA: eda2e1e357e8dcadaf89039d1e076c9bf0267c28
 
 ## nd_contract
 status: delivered
