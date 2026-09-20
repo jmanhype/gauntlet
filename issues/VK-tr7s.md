@@ -8,7 +8,7 @@ parent: VK-1rbc
 created_at: 2026-09-20T17:12:45Z
 created_by: speed
 updated_at: 2026-09-20T19:03:42Z
-content_hash: "sha256:54c0eff5f078f5c4718686f49005be200f080e54f3eac6c857e7cb9c79d2894c"
+content_hash: "sha256:450e2c8192a1e47c25a52b37185faee0944d0818c4704c9975e4e8aa753fc2c4"
 labels: [e2e, capstone, walking-skeleton, delivered]
 assignee: dev-VK-tr7s
 follows: [VK-aej2]
@@ -92,6 +92,18 @@ status: new
 
 
 ## Notes
+
+
+## nd_contract
+status: delivered
+
+### evidence
+- Transitioned via pvg story deliver on 2026-09-20.
+
+### proof
+- [ ] Developer evidence block must remain authoritative above this contract.
+
+
 ## Implementation Evidence
 
 Commands run:
