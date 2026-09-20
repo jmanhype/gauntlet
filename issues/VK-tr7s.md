@@ -1,15 +1,17 @@
 ---
 id: VK-tr7s
 title: "E2e: compare four policy baselines on frozen evidence"
-status: open
+status: in_progress
 priority: 1
 type: task
 parent: VK-1rbc
 created_at: 2026-09-20T17:12:45Z
 created_by: speed
-updated_at: 2026-09-20T17:12:45Z
-content_hash: "sha256:caeb7b4dabeadad0cb41d0c6f3ede8203fceb766aa3c2da3ce4565bf92c33ac8"
+updated_at: 2026-09-20T17:13:08Z
+content_hash: "sha256:f404b101fa9f302a8268b5978b0ac3ff03ca4d8f4f15d538f34df5676ec85d0e"
 labels: [e2e, capstone, walking-skeleton]
+assignee: dev-VK-tr7s
+follows: [VK-aej2]
 ---
 
 ## Description
@@ -93,9 +95,12 @@ status: new
 
 
 ## History
-
+- 2026-09-20T17:13:08Z status: open -> in_progress
+- 2026-09-20T17:13:08Z auto-follows: linked to predecessor VK-aej2
+- 2026-09-20T17:13:08Z claimed by dev-VK-tr7s
 
 ## Links
 - Parent: [[VK-1rbc]]
+- Follows: [[VK-aej2]]
 
 ## Comments
