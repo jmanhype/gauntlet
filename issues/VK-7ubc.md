@@ -8,8 +8,8 @@ labels: [integration, phase-1, delivered]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:20Z
 created_by: speed
-updated_at: 2026-09-20T04:09:17Z
-content_hash: "sha256:e063a8e9c0ba917792c7094b3db1b51c6ed9d0b96a81fffda9865f637b3b5d62"
+updated_at: 2026-09-20T04:09:49Z
+content_hash: "sha256:f6ab17ac4bee91566c2c0a24f19a6239eb923b68db02fe5bb513ecd88a9867ee"
 blocks: [VK-ldg1]
 was_blocked_by: [VK-mfn6]
 assignee: dev-VK-7ubc
@@ -92,7 +92,64 @@ status: new
 
 
 ## Notes
+## Delivery Evidence Addendum
 
+Commands run:
+
+```bash
+cd /Users/Shared/HermesWorkspace/gauntlet/.claude/worktrees/dev-VK-7ubc
+uv run --frozen --group dev pytest -q tests/model/test_adaptation.py
+uv run --frozen --group dev pytest -q
+python3 -m py_compile src/gauntlet/model/adaptation.py src/gauntlet/model/__init__.py tests/model/test_adaptation.py
+pvg verify src/gauntlet/model/adaptation.py src/gauntlet/model/__init__.py --format=text
+git diff --check
+```
+
+### CI/Test Results
+
+```text
+tests/model/test_adaptation.py: 7 passed, 0 failed, 0 skipped
+full suite: 66 passed, 0 failed, 0 skipped
+py_compile: PASS
+pvg verify: PASSED, 2 files scanned, 0 issues
+git diff --check: PASS
+```
+
+The full suite prints the pre-existing intentional synthetic projection `AGGREGATE: BLOCKED` for two disclosed rules, but pytest exits 0 with 66 passed.
+
+### AC Verification
+
+| AC | Result | Evidence |
+|---|---|---|
+| 1. Prior trial registration and exact hashes | PASS | Trial precedes training; exact hashes are recorded. |
+| 2. Boundary-crossing target rejected | PASS | Targeted test proves `FOLD_BOUNDARY_LEAK`. |
+| 3. No future normalization/checkpoint selection | PASS | Train-only normalization and validation-only selection are asserted. |
+| 4. Fold/checkpoint audit logs | PASS | Actor, UTC timestamp, metric input hashes, and reason are asserted. |
+| 5. Frozen population mutation | PASS | New child trial preserves prior immutable bytes. |
+| 6. Replay resolution | PASS | Complete replay metadata is asserted; gaps fail closed. |
+
+## Summary
+
+Implemented the frozen-split Kronos adaptation contract with immutable trial registration, leakage fail-closed checks, validation-only checkpoint selection, complete replay metadata, immutable artifacts/events, and real integration coverage.
+
+Commit SHA: `05e06326e02d0e3fd9b19c5e9b21be672f941413`
+
+## nd_contract
+status: delivered
+
+### evidence
+- Targeted suite: 7/7 passed.
+- Full suite: 66/66 passed.
+- Scoped verifier: 2 files, 0 issues.
+- Story commit: `05e06326e02d0e3fd9b19c5e9b21be672f941413`.
+
+### proof
+- [x] AC #1: Prior registration and exact hash binding.
+- [x] AC #2: Boundary leakage rejected.
+- [x] AC #3: Future normalization/selection excluded.
+- [x] AC #4: Fold/checkpoint audit logs complete.
+- [x] AC #5: Population mutation creates a new trial.
+- [x] AC #6: Replay metadata complete and fail-closed.
 
 ## nd_contract
 status: delivered
