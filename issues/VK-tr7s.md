@@ -1,17 +1,19 @@
 ---
 id: VK-tr7s
 title: "E2e: compare four policy baselines on frozen evidence"
-status: in_progress
+status: closed
 priority: 1
 type: task
 parent: VK-1rbc
 created_at: 2026-09-20T17:12:45Z
 created_by: speed
 updated_at: 2026-09-20T19:06:11Z
-content_hash: "sha256:96a4f29683382fa1d11aa16fe455d35a0301a0c90890426cf5d2d0b33ab3dedb"
+content_hash: "sha256:7edd32658850746dc70fcb85897cb73b644c06af15e2bd16926737239ff4414d"
 labels: [e2e, capstone, walking-skeleton, delivered]
 assignee: dev-VK-tr7s
 follows: [VK-aej2]
+closed_at: 2026-09-20T19:06:11Z
+close_reason: "Accepted: independent local gates and required GitHub CI pass; all 11 AC verified."
 ---
 
 ## Description
@@ -173,6 +175,7 @@ status: delivered
 - 2026-09-20T17:13:08Z auto-follows: linked to predecessor VK-aej2
 - 2026-09-20T17:13:08Z claimed by dev-VK-tr7s
 - 2026-09-20T19:03:42Z status: in_progress -> in_progress
+- 2026-09-20T19:06:11Z status: in_progress -> closed
 
 ## Links
 - Parent: [[VK-1rbc]]
