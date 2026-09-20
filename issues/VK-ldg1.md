@@ -9,10 +9,10 @@ parent: VK-u40v
 created_at: 2026-09-18T23:31:38Z
 created_by: speed
 updated_at: 2026-09-19T01:38:27Z
-content_hash: "sha256:20e6f841803b502e1ab02b8225e0c3b2e8d9118eba61dd9902528c8efb0f6fed"
-blocked_by: [VK-pg9j, VK-pol1, VK-bbmn, VK-jvku, VK-si5s, VK-jbae, VK-4qfy]
+content_hash: "sha256:2ed1aef02d643606f6f7a839e10e88745420a406284d886f2e8ca10ad047e1a1"
+blocked_by: [VK-pg9j, VK-pol1, VK-bbmn, VK-jvku, VK-si5s, VK-jbae, VK-0pfo, VK-4qfy]
 blocks: [VK-hiuk]
-was_blocked_by: [VK-mfn6, VK-7ubc, VK-0pfo]
+was_blocked_by: [VK-mfn6, VK-7ubc]
 ---
 
 ## Description
@@ -133,12 +133,11 @@ status: new
 - 2026-09-19T01:37:44Z dep_added: blocked_by VK-4qfy
 - 2026-09-19T17:06:08Z dep_removed: was_blocked_by VK-mfn6
 - 2026-09-20T04:15:27Z dep_removed: was_blocked_by VK-7ubc
-- 2026-09-20T14:53:41Z dep_removed: was_blocked_by VK-0pfo
 
 ## Links
 - Parent: [[VK-u40v]]
 - Blocks: [[VK-hiuk]]
-- Blocked by: [[VK-pg9j]], [[VK-pol1]], [[VK-bbmn]], [[VK-jvku]], [[VK-si5s]], [[VK-jbae]], [[VK-4qfy]]
-- Was blocked by: [[VK-mfn6]], [[VK-7ubc]], [[VK-0pfo]]
+- Blocked by: [[VK-pg9j]], [[VK-pol1]], [[VK-bbmn]], [[VK-jvku]], [[VK-si5s]], [[VK-jbae]], [[VK-0pfo]], [[VK-4qfy]]
+- Was blocked by: [[VK-mfn6]], [[VK-7ubc]]
 
 ## Comments

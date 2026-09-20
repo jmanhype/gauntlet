@@ -9,10 +9,9 @@ parent: VK-rakf
 created_at: 2026-09-18T23:31:33Z
 created_by: speed
 updated_at: 2026-09-19T01:38:27Z
-content_hash: "sha256:902257cdbd7d6d1fb0fdf3ff890e6f8dcafd00a4dce18dc56d1dc82bb7c4a0e6"
-blocked_by: [VK-bns7, VK-jvku, VK-rkdr]
+content_hash: "sha256:8ae2e00a598fa996d6a3f00113d2390c4002bff6451a774c18557e91cd6bb114"
+blocked_by: [VK-bns7, VK-jvku, VK-0pfo, VK-rkdr]
 blocks: [VK-ealt, VK-hiuk]
-was_blocked_by: [VK-0pfo]
 ---
 
 ## Description
@@ -127,12 +126,10 @@ status: new
 - 2026-09-18T23:31:35Z dep_added: blocks VK-ealt
 - 2026-09-18T23:31:46Z dep_added: blocks VK-hiuk
 - 2026-09-19T01:37:43Z dep_added: blocked_by VK-rkdr
-- 2026-09-20T14:53:40Z dep_removed: was_blocked_by VK-0pfo
 
 ## Links
 - Parent: [[VK-rakf]]
 - Blocks: [[VK-ealt]], [[VK-hiuk]]
-- Blocked by: [[VK-bns7]], [[VK-jvku]], [[VK-rkdr]]
-- Was blocked by: [[VK-0pfo]]
+- Blocked by: [[VK-bns7]], [[VK-jvku]], [[VK-0pfo]], [[VK-rkdr]]
 
 ## Comments

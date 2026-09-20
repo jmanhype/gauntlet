@@ -9,13 +9,12 @@ parent: VK-u40v
 created_at: 2026-09-18T23:31:20Z
 created_by: speed
 updated_at: 2026-09-20T04:16:35Z
-content_hash: "sha256:1850fe06fcb4d5bfd03a1760860730fe7cdcd04f87708577fe39731913170165"
+content_hash: "sha256:82724269b5171a116c3ab04b7c32d1f7f57ac9e21d54a3df3d1b713386b31162"
 was_blocked_by: [VK-mfn6]
 assignee: dev-VK-7ubc
 follows: [VK-mfn6]
 closed_at: 2026-09-20T04:15:27Z
 close_reason: "Accepted: independently reran targeted/full tests, compile, scoped verify, static/secret checks, reviewed all six AC and immutable trial/replay evidence. Structural verify-delivery EOF warning is a recorded note-ordering false negative; substantive proof is complete."
-led_to: [VK-0pfo]
 ---
 
 ## Description
@@ -279,7 +278,6 @@ LEARNINGS: Reusing the registered model/descriptor/ledger primitives kept adapta
 - Parent: [[VK-u40v]]
 - Was blocked by: [[VK-mfn6]]
 - Follows: [[VK-mfn6]]
-- Led to: [[VK-0pfo]]
 
 ## Comments
 

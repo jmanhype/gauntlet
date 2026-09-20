@@ -1,20 +1,19 @@
 ---
 id: VK-0pfo
 title: "Separate portfolio risk from evidence gates"
-status: closed
+status: in_progress
 priority: 2
 type: feature
-labels: [integration, phase-1, accepted]
+labels: [integration, phase-1]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:21Z
 created_by: speed
-updated_at: 2026-09-20T14:53:41Z
-content_hash: "sha256:1003ff23362b5e512f809d5ef8ce7c26e6ce4fc0403442f07665230024c42b9a"
+updated_at: 2026-09-20T04:02:58Z
+content_hash: "sha256:27938f66ea317e1b510f9365795f3f10aa1def651e41bf69124bc51e0ae91b64"
+blocks: [VK-2e0k, VK-1ptl, VK-ldg1]
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-0pfo
-follows: [VK-wa2q, VK-kmbs, VK-jkkn, VK-7ubc, VK-mfn6]
-closed_at: 2026-09-20T14:53:40Z
-close_reason: "Accepted: independently reviewed the five-file 649-line diff; verified complete QTS lineage mapping and owner authorization, fifteen paper-risk checks, requested/adjusted sizing, immutable HOLD/QUARANTINE/STOP events, MODELED evidence-domain separation, trial-history input, and absence of order/real-money interfaces. Reran targeted suite 7/7, full suite 66/66, py_compile, scoped pvg verify 3/0, static/secret scans, and whitespace checks."
+follows: [VK-wa2q, VK-kmbs, VK-jkkn]
 ---
 
 ## Description
@@ -101,116 +100,7 @@ status: new
 
 
 ## Notes
-Delivery commit addendum: eda2e1e357e8dcadaf89039d1e076c9bf0267c28
 
-Commit SHA: eda2e1e357e8dcadaf89039d1e076c9bf0267c28
-Final delivery commit correction: 28ea5312d3fe797f55291856ffa61b5adaa936ea
-
-Commit SHA: 28ea5312d3fe797f55291856ffa61b5adaa936ea
-
-Final validation after the PM hardening changes: targeted 7/7 passed; full suite 66/66 passed; py_compile PASS; scoped pvg verify 3 files, 0 issues; diff 649 insertions.
-
-
-## nd_contract
-status: accepted
-
-### evidence
-- PM closeout applied via pvg story accept on 2026-09-20.
-
-### proof
-- [x] Story closed after accepted label was applied.
-
-
-## nd_contract
-status: delivered
-
-### evidence
-- Transitioned via pvg story deliver on 2026-09-20.
-
-### proof
-- [ ] Developer evidence block must remain authoritative above this contract.
-
-
-## nd_contract
-status: delivered
-
-### evidence
-- Transitioned via pvg story deliver on 2026-09-20.
-
-### proof
-- [ ] Developer evidence block must remain authoritative above this contract.
-
-
-## nd_contract
-status: delivered
-
-### evidence
-- Transitioned via pvg story deliver on 2026-09-20.
-
-### proof
-- [ ] Developer evidence block must remain authoritative above this contract.
-
-
-## Implementation Evidence
-
-Commands run:
-
-```bash
-cd /Users/speed/Documents/Codex/2026-09-18/yes-paivot-pvg-is-designed-for/work/gauntlet-vk0pfo-writable
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/src" /Users/Shared/HermesWorkspace/gauntlet/.venv/bin/python -m pytest -q tests/risk/test_policy_kernel.py
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/src" /Users/Shared/HermesWorkspace/gauntlet/.venv/bin/python -m pytest -q
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/src" /Users/Shared/HermesWorkspace/gauntlet/.venv/bin/python -m py_compile src/gauntlet/risk/__init__.py src/gauntlet/risk/import_qts.py src/gauntlet/risk/kernel.py tests/risk/test_policy_kernel.py
-pvg verify src/gauntlet/risk/import_qts.py src/gauntlet/risk/kernel.py src/gauntlet/risk/__init__.py --format=text
-git diff --check
-git diff --cached --check
-```
-
-### CI/Test Results
-
-```text
-tests/risk/test_policy_kernel.py: 7 passed, 0 failed, 0 skipped
-full suite: 66 passed, 0 failed, 0 skipped
-py_compile: PASS
-pvg verify: PASSED, 3 files scanned, 0 issues
-git diff checks: PASS
-story diff: 5 files, 649 insertions, within 650 ceiling
-```
-
-The full suite retains the repository’s intentional synthetic projection (`AGGREGATE: BLOCKED` with two disclosed rules) while pytest exits 0.
-
-### AC Verification
-
-| AC | Result | Evidence |
-|---|---|---|
-| 1. Canonical, immutable, lineage-complete policy | PASS | `qts.risk@v1` validates under `gauntlet.policy.v1`; every QTS leaf has unit, scope, semantic, and original-to-GAUNTLET mapping; exact source and owner authorization hashes are checked. |
-| 2. Requested/approved size, checks, warnings, version, venue | PASS | `RiskCheckResult` records requested/approved size, 15 checks, warnings, policy identity/hash, and venue applicability. |
-| 3. Boundary events | PASS | HOLD/QUARANTINE/STOP events append actor, timestamp, state, duration, reason, affected track, and chain hashes. |
-| 4. Sizing/stop/exposure changes create trial input | PASS | `trial_history_input` binds policy hash and enumerates sizing, stop, and exposure fields requiring a new trial. |
-| 5. MODELED domain separation | PASS | Risk output is MODELED and copies evidence state unchanged; risk arithmetic never reads it. |
-| 6. Risk boundary beats evidence PASS | PASS | Parameterized tests prove STOP, HOLD, and QUARANTINE with evidence PASS and approved size zero. |
-| 7. No order or real-money interface | PASS | No order API exists; AST test rejects order/real-money activation calls. |
-
-Summary: implemented and independently tested the canonical QTS policy import plus paper-portfolio risk kernel with requested/adjusted sizing, fifteen fail-closed checks, immutable boundary events, MODELED domain separation, and no order-placement surface.
-
-Commit SHA: `eda2e1e010edb9cdec7465af667c28e8d28f5851`
-
-## nd_contract
-status: delivered
-
-### evidence
-- Targeted suite: 7/7 passed.
-- Full suite: 66/66 passed.
-- Scoped verifier: 3 files, 0 issues.
-- Story commit: `eda2e1e010edb9cdec7465af667c28e8d28f5851`.
-
-### proof
-- [x] AC #1: Canonical QTS policy lineage and authorization verified.
-- [x] AC #2: Complete sizing/check output verified.
-- [x] AC #3: Boundary-event append verified.
-- [x] AC #4: Trial-history input verified.
-- [x] AC #5: MODELED domain separation verified.
-- [x] AC #6: Risk boundary precedence over evidence PASS verified.
-- [x] AC #7: No order or real-money interface verified.
 
 ## History
 - 2026-09-18T23:31:21Z dep_added: blocked_by VK-jkkn
@@ -227,25 +117,11 @@ status: delivered
 - 2026-09-20T04:02:58Z auto-follows: linked to predecessor VK-kmbs
 - 2026-09-20T04:02:58Z auto-follows: linked to predecessor VK-jkkn
 - 2026-09-20T04:02:58Z claimed by dev-VK-0pfo
-- 2026-09-20T14:49:17Z status: in_progress -> open
-- 2026-09-20T14:49:30Z status: open -> in_progress
-- 2026-09-20T14:49:30Z auto-follows: linked to predecessor VK-7ubc
-- 2026-09-20T14:49:30Z claimed by dev-VK-0pfo
-- 2026-09-20T14:50:22Z status: in_progress -> in_progress
-- 2026-09-20T14:50:22Z auto-follows: linked to predecessor VK-mfn6
-- 2026-09-20T14:50:46Z status: in_progress -> in_progress
-- 2026-09-20T14:53:22Z status: in_progress -> in_progress
-- 2026-09-20T14:53:40Z status: in_progress -> closed
-- 2026-09-20T14:53:40Z dep_removed: no_longer_blocks VK-2e0k
-- 2026-09-20T14:53:40Z dep_removed: no_longer_blocks VK-1ptl
-- 2026-09-20T14:53:41Z dep_removed: no_longer_blocks VK-ldg1
 
 ## Links
 - Parent: [[VK-u40v]]
+- Blocks: [[VK-2e0k]], [[VK-1ptl]], [[VK-ldg1]]
 - Was blocked by: [[VK-wa2q]], [[VK-kmbs]], [[VK-jkkn]]
-- Follows: [[VK-wa2q]], [[VK-kmbs]], [[VK-jkkn]], [[VK-7ubc]], [[VK-mfn6]]
+- Follows: [[VK-wa2q]], [[VK-kmbs]], [[VK-jkkn]]
 
 ## Comments
-
-### 2026-09-20T14:49:17Z speed
-loop: reset orphaned in_progress to open (no developer worktree found; prior session presumed dead)
