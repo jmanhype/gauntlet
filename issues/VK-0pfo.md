@@ -1,15 +1,15 @@
 ---
 id: VK-0pfo
 title: "Separate portfolio risk from evidence gates"
-status: in_progress
+status: open
 priority: 2
 type: feature
 labels: [integration, phase-1]
 parent: VK-u40v
 created_at: 2026-09-18T23:31:21Z
 created_by: speed
-updated_at: 2026-09-20T04:02:58Z
-content_hash: "sha256:27938f66ea317e1b510f9365795f3f10aa1def651e41bf69124bc51e0ae91b64"
+updated_at: 2026-09-20T14:49:17Z
+content_hash: "sha256:8db85dea0f6ee7004cfe9b35cdc32720da9d0408be4c22eca2c90648716b6276"
 blocks: [VK-2e0k, VK-1ptl, VK-ldg1]
 was_blocked_by: [VK-wa2q, VK-kmbs, VK-jkkn]
 assignee: dev-VK-0pfo
@@ -117,6 +117,7 @@ status: new
 - 2026-09-20T04:02:58Z auto-follows: linked to predecessor VK-kmbs
 - 2026-09-20T04:02:58Z auto-follows: linked to predecessor VK-jkkn
 - 2026-09-20T04:02:58Z claimed by dev-VK-0pfo
+- 2026-09-20T14:49:17Z status: in_progress -> open
 
 ## Links
 - Parent: [[VK-u40v]]
